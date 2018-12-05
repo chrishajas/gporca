@@ -18,7 +18,7 @@ namespace gpopt
 {
 	// fwd declaration
 	class CDistributionSpec;
-	
+
 	//---------------------------------------------------------------------------
 	//	@class:
 	//		CPhysicalHashAgg
@@ -30,6 +30,9 @@ namespace gpopt
 	class CPhysicalHashAgg : public CPhysicalAgg
 	{
 		private:
+
+			// should we enforce distribution or not for this operator
+			BOOL m_should_enforce_distribution;
 
 			// private copy ctor
 			CPhysicalHashAgg(const CPhysicalHashAgg &);
@@ -47,7 +50,8 @@ namespace gpopt
 				CColRefArray *pdrgpcrArgDQA,
 				BOOL fMultiStage,
 				BOOL isAggFromSplitDQA,
-				CLogicalGbAgg::EAggStage aggStage
+				CLogicalGbAgg::EAggStage aggStage,
+				BOOL should_enforce_distribution = true
 				);
 
 			// dtor
@@ -56,14 +60,14 @@ namespace gpopt
 
 
 			// ident accessors
-			virtual 
+			virtual
 			EOperatorId Eopid() const
 			{
 				return EopPhysicalHashAgg;
 			}
 
 			// return a string for operator name
-			virtual 
+			virtual
 			const CHAR *SzId() const
 			{
 				return "CPhysicalHashAgg";
@@ -85,7 +89,7 @@ namespace gpopt
 				ULONG ulOptReq
 				)
 				const;
-		
+
 			//-------------------------------------------------------------------------------------
 			// Derived Plan Properties
 			//-------------------------------------------------------------------------------------
@@ -104,7 +108,7 @@ namespace gpopt
 				(
 				CExpressionHandle &exprhdl,
 				const CEnfdOrder *peo
-				) 
+				)
 				const;
 
 			//-------------------------------------------------------------------------------------
@@ -124,7 +128,7 @@ namespace gpopt
 
 				return reinterpret_cast<CPhysicalHashAgg*>(pop);
 			}
-		
+
 	}; // class CPhysicalHashAgg
 
 }

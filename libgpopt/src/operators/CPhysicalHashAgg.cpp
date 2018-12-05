@@ -39,7 +39,8 @@ CPhysicalHashAgg::CPhysicalHashAgg
 	CColRefArray *pdrgpcrArgDQA,
 	BOOL fMultiStage,
 	BOOL isAggFromSplitDQA,
-	CLogicalGbAgg::EAggStage aggStage
+	CLogicalGbAgg::EAggStage aggStage,
+	BOOL should_enforce_distribution
 	)
 	:
 	CPhysicalAgg
@@ -52,9 +53,12 @@ CPhysicalHashAgg::CPhysicalHashAgg
 	pdrgpcrArgDQA,
 	fMultiStage,
 	isAggFromSplitDQA,
-	aggStage
+	aggStage,
+	should_enforce_distribution
 	)
-{}
+{
+	m_should_enforce_distribution = should_enforce_distribution;
+}
 
 
 //---------------------------------------------------------------------------

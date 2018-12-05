@@ -18,7 +18,7 @@ namespace gpopt
 {
 	// fwd declaration
 	class CDistributionSpec;
-	
+
 	//---------------------------------------------------------------------------
 	//	@class:
 	//		CPhysicalStreamAgg
@@ -42,6 +42,8 @@ namespace gpopt
 
 			// construct order spec on grouping column so that it covers required order spec
 			COrderSpec *PosCovering(IMemoryPool *mp, COrderSpec *posRequired, CColRefArray *pdrgpcrGrp) const;
+
+			BOOL m_should_enforce_distribution;
 
 		protected:
 
@@ -72,7 +74,8 @@ namespace gpopt
 				CColRefArray *pdrgpcrArgDQA,
 				BOOL fMultiStage,
 				BOOL isAggFromSplitDQA,
-				CLogicalGbAgg::EAggStage aggStage
+				CLogicalGbAgg::EAggStage aggStage,
+				BOOL should_enforce_distribution
 				);
 
 			// dtor
@@ -81,19 +84,19 @@ namespace gpopt
 
 
 			// ident accessors
-			virtual 
+			virtual
 			EOperatorId Eopid() const
 			{
 				return EopPhysicalStreamAgg;
 			}
 
 			// return a string for operator name
-			virtual 
+			virtual
 			const CHAR *SzId() const
 			{
 				return "CPhysicalStreamAgg";
 			}
-	
+
 			//-------------------------------------------------------------------------------------
 			// Required Plan Properties
 			//-------------------------------------------------------------------------------------
@@ -132,7 +135,7 @@ namespace gpopt
 				(
 				CExpressionHandle &exprhdl,
 				const CEnfdOrder *peo
-				) 
+				)
 				const;
 
 			//-------------------------------------------------------------------------------------
@@ -152,7 +155,7 @@ namespace gpopt
 
 				return reinterpret_cast<CPhysicalStreamAgg*>(pop);
 			}
-		
+
 	}; // class CPhysicalStreamAgg
 
 }
