@@ -296,11 +296,6 @@ namespace gpopt
 				return dynamic_cast<CLogicalGbAgg*>(pop);
 			}
 
-			BOOL IsLocalAndDifferentGroupingCRS() const
-			{
-				return COperator::EgbaggtypeLocal == m_egbaggtype && m_has_different_local_gb_crs;
-			}
-
 			// debug print
 			virtual
 			IOstream &OsPrint(IOstream &os) const;
@@ -337,8 +332,6 @@ namespace gpopt
 			// which type of multi-stage agg it is
 			EAggStage m_aggStage;
 
-			// is the group by columns for local different from the global agg
-			BOOL m_has_different_local_gb_crs;
 	}; // class CLogicalGbAgg
 
 }
