@@ -20,11 +20,11 @@ namespace gpopt
 	using namespace gpos;
 
 	//---------------------------------------------------------------------------
-	//  @class:
-	//      CXformEagerAgg
+	//	@class:
+	//		CXformEagerAgg
 	//
-	//  @doc:
-	//      Eagerly push aggregates below join when there is no primary/foreign keys
+	//	@doc:
+	//		Eagerly push aggregates below join
 	//
 	//---------------------------------------------------------------------------
 	class CXformEagerAgg : public CXformExploration
@@ -117,9 +117,10 @@ namespace gpopt
 
 			// return true if xform should be applied only once
 			virtual
-			BOOL IsApplyOnce(){
+			BOOL IsApplyOnce()
+			{
 				return true;
-			 };
+			};
 	}; // class CXformEagerAgg
 }
 

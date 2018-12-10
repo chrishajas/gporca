@@ -56,9 +56,7 @@ CPhysicalHashAgg::CPhysicalHashAgg
 	aggStage,
 	should_enforce_distribution
 	)
-{
-	m_should_enforce_distribution = should_enforce_distribution;
-}
+{}
 
 
 //---------------------------------------------------------------------------

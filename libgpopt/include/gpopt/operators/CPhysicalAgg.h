@@ -68,7 +68,9 @@ namespace gpopt
 			static
 			CDistributionSpec *PdsMaximalHashed(IMemoryPool *mp, CColRefArray *colref_array);
 
-			// should distribution be enforced on this agg
+			// should distribution be enforced on this agg? - when the local and
+			// global split of an aggregate apply on different grouping columns,
+			// we don't need to enforce different distributions between them
 			BOOL m_should_enforce_distribution;
 
 		protected:

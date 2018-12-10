@@ -52,6 +52,11 @@ namespace gpopt
 				BOOL isAggFromSplitDQA,
 				CLogicalGbAgg::EAggStage aggStage,
 				BOOL should_enforce_distribution = true
+					// should_enforce_distribution should be set to false if
+					// 'local' and 'global' splits don't need to have different
+					// distributions. This is currently set by CXformGbAgg2*Agg
+					// transforms, if the local aggregate has been created by
+					// CXformEagerAgg.
 				);
 
 			// dtor
