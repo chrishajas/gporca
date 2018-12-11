@@ -333,7 +333,12 @@ namespace gpmd
 			// does a datum of this type need bytea to double mapping for statistics computation
 			static
 			BOOL HasByte2DoubleMapping(const IMDId *mdid);
-
+        
+        
+            // is this a double type
+            static
+            BOOL IsDoubleType(const IMDId *mdid);
+        
 			// is this a time-related type
 			static
 			BOOL IsTimeRelatedType(const IMDId *mdid);

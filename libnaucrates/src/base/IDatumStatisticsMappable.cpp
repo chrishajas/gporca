@@ -10,6 +10,10 @@
 //---------------------------------------------------------------------------
 
 #include "naucrates/base/IDatumStatisticsMappable.h"
+#include "gpopt/base/CUtils.h"
+#include "naucrates/md/CMDTypeGenericGPDB.h"
+#include "naucrates/md/IMDType.h"
+
 
 using namespace gpnaucrates;
 using namespace gpmd;
@@ -236,13 +240,18 @@ IDatumStatisticsMappable::StatsAreComparable
 	GPOS_ASSERT(NULL != datum);
 
 	const IDatumStatisticsMappable *datum_cast = dynamic_cast<const IDatumStatisticsMappable*>(datum);
-
+    if ((CMDTypeGenericGPDB::IsDoubleType(this->MDId()) && CMDTypeGenericGPDB::IsDoubleType(datum_cast->MDId()))
+        || ((CUtils::FIntType(this->MDId()) || this->GetDatumType() == IMDType::EtiOid)
+        && (CUtils::FIntType(datum_cast->MDId()) || datum_cast->GetDatumType() == IMDType::EtiOid)))
+        return true;
+    
+    BOOL types_match = this->MDId()->Equals(datum_cast->MDId());
 	// datums can be compared based on either LINT or Doubles or BYTEA values
-	BOOL is_double_comparison = this->IsDatumMappableToDouble() && datum_cast->IsDatumMappableToDouble();
-	BOOL is_lint_comparison = this->IsDatumMappableToLINT() && datum_cast->IsDatumMappableToLINT();
-	BOOL is_binary_comparison = this->SupportsBinaryComp(datum_cast) && datum_cast->SupportsBinaryComp(this);
-
-	return is_double_comparison || is_lint_comparison || is_binary_comparison;
+	BOOL is_double_comparison = this->IsDatumMappableToDouble();
+	BOOL is_lint_comparison = this->IsDatumMappableToLINT();
+	BOOL is_binary_comparison = this->SupportsBinaryComp(datum_cast);
+    
+	return types_match && (is_double_comparison || is_lint_comparison || is_binary_comparison);
 }
 
 //EOF

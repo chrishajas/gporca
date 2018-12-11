@@ -57,7 +57,7 @@ namespace gpnaucrates
 			{};
 
 			// accessor for datum type
-			virtual IMDType::ETypeInfo GetDatumType() = 0;
+			virtual IMDType::ETypeInfo GetDatumType() const = 0;
 
 			// accessor of metadata id
 			virtual

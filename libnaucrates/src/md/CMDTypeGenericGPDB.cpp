@@ -586,6 +586,17 @@ CMDTypeGenericGPDB::HasByte2DoubleMapping
 			|| IsNetworkRelatedType(mdid);
 }
 
+BOOL
+CMDTypeGenericGPDB::IsDoubleType
+    (
+    const IMDId *mdid
+     )
+{
+    return mdid->Equals(&CMDIdGPDB::m_mdid_numeric)
+            || mdid->Equals(&CMDIdGPDB::m_mdid_float4)
+            || mdid->Equals(&CMDIdGPDB::m_mdid_float8);
+}
+
 //---------------------------------------------------------------------------
 //	@function:
 //		CMDTypeGenericGPDB::IsTimeRelatedType
