@@ -334,10 +334,13 @@ namespace gpmd
 			static
 			BOOL HasByte2DoubleMapping(const IMDId *mdid);
         
-        
             // is this a double type
             static
             BOOL IsDoubleType(const IMDId *mdid);
+        
+            // is this a text type
+            static
+            BOOL IsTextType(const IMDId *mdid);
         
 			// is this a time-related type
 			static

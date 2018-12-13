@@ -1087,7 +1087,8 @@ CStatsPredUtils::ExtractJoinStatsFromJoinPred
 	BOOL fSupportedScIdentComparison = IsPredCmpColsOrIgnoreCast(join_pred_expr, &col_ref_left, &stats_cmp_type, &col_ref_right);
 	if (fSupportedScIdentComparison && CStatsPred::EstatscmptOther != stats_cmp_type )
 	{
-		if (CStatsPred::EstatscmptEqNDV != stats_cmp_type && !IMDType::StatsAreComparable(col_ref_left->RetrieveType(), col_ref_right->RetrieveType()))
+        // TODO
+		if (CStatsPred::EstatscmptEq != stats_cmp_type && CStatsPred::EstatscmptEqNDV != stats_cmp_type && !IMDType::StatsAreComparable(col_ref_left->RetrieveType(), col_ref_right->RetrieveType()))
 		{
 			// unsupported statistics comparison between the histogram boundaries of the columns
 			join_pred_expr->AddRef();

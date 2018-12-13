@@ -597,6 +597,17 @@ CMDTypeGenericGPDB::IsDoubleType
             || mdid->Equals(&CMDIdGPDB::m_mdid_float8);
 }
 
+BOOL
+CMDTypeGenericGPDB::IsTextType
+(
+ const IMDId *mdid
+ )
+{
+    return mdid->Equals(&CMDIdGPDB::m_mdid_bpchar)
+            || mdid->Equals(&CMDIdGPDB::m_mdid_varchar)
+            || mdid->Equals(&CMDIdGPDB::m_mdid_text);
+}
+
 //---------------------------------------------------------------------------
 //	@function:
 //		CMDTypeGenericGPDB::IsTimeRelatedType
