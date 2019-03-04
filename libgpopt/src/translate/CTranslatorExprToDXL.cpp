@@ -3597,6 +3597,13 @@ CTranslatorExprToDXL::PdxlnResultFromNLJoinOuter
 		{
 			// get the original condition from the filter node
 			// create a new AND expression
+
+			// if the scalar condition is a constant TRUE, just translate the child
+			if (CTranslatorExprToDXLUtils::FScalarConstTrue(m_pmda, pdxlnCond))
+			{
+				pdxlnCond->Release();
+				break;
+			}
 			ULONG ulIndexFilter = UlIndexFilter(edxlopid);
 			GPOS_ASSERT(ulIndexFilter != gpos::ulong_max);
 			CDXLNode *pdxlnOrigFilter = (*pdxlnResult)[ulIndexFilter];
