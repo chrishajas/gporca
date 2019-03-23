@@ -156,6 +156,7 @@ namespace gpos
 		// acquire lock
 		void Lock()
         {
+			return;
 #ifdef GPOS_DEBUG
             GPOS_ASSERT_IMP(0 < rank && IWorker::Self(),
                             IWorker::Self()->CanAcquireSpinlock(this) &&
@@ -225,6 +226,7 @@ namespace gpos
 		// release
 		void Unlock()
         {
+			return;
 #ifdef GPOS_DEBUG
             if (0 < rank && NULL != IWorker::Self())
             {

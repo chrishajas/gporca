@@ -44,7 +44,7 @@ namespace gpos
 		private:
 		
 			// reference counter -- first in class to be in sync with Check()
-			volatile ULONG_PTR m_refs;
+			ULONG_PTR m_refs;
 			
 #ifdef GPOS_DEBUG
 			// sanity check to detect deleted memory

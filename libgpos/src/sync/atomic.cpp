@@ -59,6 +59,23 @@ gpos::ExchangeAddUlongPtrWithInt
 	GPOS_CPL_ASSERT(!"no atomic add primitive defined");
 #endif
 }
+unsigned long
+gpos::ExchangeAddUlongPtrWithInt
+(
+ ULONG_PTR *ul,
+ INT i
+ )
+{
+	// check for alignment of the address
+	GPOS_ASSERT(ALIGNED_32(ul));
+#ifdef GPOS_GCC_FETCH_ADD_32
+	return *ul+i;
+#else
+	// unknown primitive
+	GPOS_CPL_ASSERT(!"no atomic add primitive defined");
+#endif
+}
+
 
 //---------------------------------------------------------------------------
 //	@function:

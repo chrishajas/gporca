@@ -243,7 +243,7 @@ namespace gpopt
 			ReqdPropPlanToCostMap *m_pcostmap;
 
 			// number of optimization contexts
-			volatile ULONG_PTR m_ulpOptCtxts;
+			ULONG_PTR m_ulpOptCtxts;
 
 			// current state
 			EState m_estate;
@@ -275,7 +275,7 @@ namespace gpopt
 			// increment number of optimization contexts
 			ULONG_PTR UlpIncOptCtxts()
 			{
-				return ExchangeAddUlongPtrWithInt(&m_ulpOptCtxts, 1);
+				return ++m_ulpOptCtxts;
 			}
 
 			// the following functions are only accessed through group proxy
