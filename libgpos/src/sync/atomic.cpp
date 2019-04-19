@@ -53,7 +53,9 @@ gpos::ExchangeAddUlongPtrWithInt
 	GPOS_ASSERT(ALIGNED_32(ul));
 
 #ifdef GPOS_GCC_FETCH_ADD_32
-	return __sync_fetch_and_add(ul, i);
+	ULONG_PTR orig = *ul;
+	*ul = *ul + i;
+	return orig;
 #else
 	// unknown primitive
 	GPOS_CPL_ASSERT(!"no atomic add primitive defined");
