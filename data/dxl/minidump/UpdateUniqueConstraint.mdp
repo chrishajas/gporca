@@ -331,8 +331,8 @@
                     <dxl:Cost StartupCost="0" TotalCost="2.075195" Rows="2.000000" Width="22"/>
                   </dxl:Properties>
                   <dxl:ProjList>
-                    <dxl:ProjElem ColId="9" Alias="c">
-                      <dxl:Ident ColId="9" ColName="c" TypeMdid="0.23.1.0"/>
+                    <dxl:ProjElem ColId="0" Alias="c">
+                      <dxl:Ident ColId="0" ColName="c" TypeMdid="0.23.1.0"/>
                     </dxl:ProjElem>
                     <dxl:ProjElem ColId="1" Alias="d">
                       <dxl:Ident ColId="1" ColName="d" TypeMdid="0.23.1.0"/>
@@ -342,6 +342,9 @@
                     </dxl:ProjElem>
                     <dxl:ProjElem ColId="8" Alias="gp_segment_id">
                       <dxl:Ident ColId="8" ColName="gp_segment_id" TypeMdid="0.23.1.0"/>
+                    </dxl:ProjElem>
+                    <dxl:ProjElem ColId="9" Alias="c">
+                      <dxl:Ident ColId="9" ColName="c" TypeMdid="0.23.1.0"/>
                     </dxl:ProjElem>
                     <dxl:ProjElem ColId="10" Alias="ColRef_0010">
                       <dxl:DMLAction/>

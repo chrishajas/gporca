@@ -298,8 +298,8 @@
               <dxl:ProjElem ColId="0" Alias="v_date_old">
                 <dxl:Ident ColId="0" ColName="v_date_old" TypeMdid="0.1114.1.0"/>
               </dxl:ProjElem>
-              <dxl:ProjElem ColId="2" Alias="s_varchar_old">
-                <dxl:Ident ColId="2" ColName="s_varchar_old" TypeMdid="0.1043.1.0" TypeModifier="14"/>
+              <dxl:ProjElem ColId="1" Alias="v_varchar1_old">
+                <dxl:Ident ColId="1" ColName="v_varchar1_old" TypeMdid="0.1043.1.0" TypeModifier="14"/>
               </dxl:ProjElem>
               <dxl:ProjElem ColId="2" Alias="s_varchar_old">
                 <dxl:Ident ColId="2" ColName="s_varchar_old" TypeMdid="0.1043.1.0" TypeModifier="14"/>
