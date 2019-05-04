@@ -20,25 +20,11 @@
 
 #define GPOS_CHECK_ABORT	(IWorker::CheckAbort(__FILE__, __LINE__))
 
-#define GPOS_CHECK_STACK_SIZE \
-	do \
-	{ \
-		if (NULL != IWorker::Self()) \
-		{ \
-			(void) IWorker::Self()->CheckStackSize(); \
-		} \
-	} \
-	while (0)
+#define GPOS_CHECK_STACK_SIZE
 
 
 // assert no spinlock
-#define GPOS_ASSERT_NO_SPINLOCK  \
-		GPOS_ASSERT_IMP \
-		( \
-			NULL != IWorker::Self(), \
-			(!IWorker::Self()->OwnsSpinlocks()) && "Must not hold a spinlock!" \
-		)
-
+#define GPOS_ASSERT_NO_SPINLOCK  
 
 #if (GPOS_SunOS)
 #define GPOS_CHECK_ABORT_MAX_INTERVAL_MSEC   (ULONG(2000))

@@ -64,6 +64,7 @@ namespace gpos
 			// acquire lock
 			void Lock()
 			{
+				return;
 				m_mutex.Lock();
 				++m_lock_count;
 			}
@@ -71,6 +72,7 @@ namespace gpos
 			// attempt locking
 			BOOL TryLock()
 			{
+				return true;
 				if (m_mutex.TryLock())
 				{
 					++m_lock_count;
@@ -82,6 +84,7 @@ namespace gpos
 			// release lock
 			void Unlock()
 			{
+				return;
 				GPOS_ASSERT(0 < m_lock_count && "GetMutex not locked");
 				
 				--m_lock_count;

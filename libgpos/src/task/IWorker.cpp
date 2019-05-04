@@ -58,6 +58,7 @@ IWorker::CheckAbort
 	ULONG line_num
 	)
 {
+	return;
 	IWorker *worker = Self();
 	if (NULL != worker)
 	{
