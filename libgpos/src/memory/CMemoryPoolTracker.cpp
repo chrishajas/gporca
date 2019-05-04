@@ -96,10 +96,10 @@ CMemoryPoolTracker::Allocate
 {
 	GPOS_ASSERT(GPOS_MEM_ALLOC_MAX >= bytes);
 
-	CAutoSpinlock as(m_lock);
+	//CAutoSpinlock as(m_lock);
 
 	ULONG alloc = GPOS_MEM_BYTES_TOTAL(bytes);
-	const BOOL mem_available = Reserve(as, alloc);
+	const BOOL mem_available = Reserve(alloc);
 
 	// allocate from underlying
 	void *ptr;
@@ -115,7 +115,7 @@ CMemoryPoolTracker::Allocate
 	// check if allocation failed
 	if (NULL == ptr)
 	{
-		Unreserve(as, alloc, mem_available);
+		Unreserve(alloc, mem_available);
 
 		return NULL;
 	}
@@ -125,14 +125,14 @@ CMemoryPoolTracker::Allocate
 
 	// scope indicating locking
 	{
-		SLock(as);
+		//SLock(as);
 
 		m_memory_pool_statistics.RecordAllocation(bytes, alloc);
 		m_allocations_list.Prepend(header);
 		header->m_serial = m_alloc_sequence;
 		++m_alloc_sequence;
 
-		SUnlock(as);
+		//SUnlock(as);
 	}
 
 	header->m_filename = file;
@@ -162,7 +162,6 @@ CMemoryPoolTracker::Allocate
 BOOL
 CMemoryPoolTracker::Reserve
 	(
-	CAutoSpinlock &as,
 	ULONG alloc
 	)
 {
@@ -174,7 +173,7 @@ CMemoryPoolTracker::Reserve
 	}
 	else
 	{
-		SLock(as);
+		//SLock(as);
 
 		if (alloc + m_reserved <= m_capacity)
 		{
@@ -182,7 +181,7 @@ CMemoryPoolTracker::Reserve
 			mem_available = true;
 		}
 
-		SUnlock(as);
+		//SUnlock(as);
 	}
 
 	return mem_available;
@@ -200,12 +199,11 @@ CMemoryPoolTracker::Reserve
 void
 CMemoryPoolTracker::Unreserve
 	(
-	CAutoSpinlock &as,
 	ULONG alloc,
 	BOOL mem_available
 	)
 {
-	SLock(as);
+	//SLock(as);
 
 	// return reserved memory
 	if (mem_available)
@@ -215,7 +213,7 @@ CMemoryPoolTracker::Unreserve
 
 	m_memory_pool_statistics.RecordFailedAllocation();
 
-	SUnlock(as);
+//	SUnlock(as);
 }
 
 
@@ -233,7 +231,7 @@ CMemoryPoolTracker::Free
 	void *ptr
 	)
 {
-	CAutoSpinlock as(m_lock);
+	//CAutoSpinlock as(m_lock);
 
 	SAllocHeader *header = static_cast<SAllocHeader*>(ptr) - 1;
 	ULONG user_size = header->m_size;
@@ -247,13 +245,13 @@ CMemoryPoolTracker::Free
 
 	// scope indicating locking
 	{
-		SLock(as);
+		//SLock(as);
 
 		// update stats and allocation list
 		m_memory_pool_statistics.RecordFree(user_size, total_size);
 		m_allocations_list.Remove(header);
 
-		SUnlock(as);
+		//SUnlock(as);
 	}
 
 	// pass request to underlying memory pool;
@@ -262,11 +260,11 @@ CMemoryPoolTracker::Free
 	// update committed memory value
 	if (m_capacity != gpos::ullong_max)
 	{
-		SLock(as);
+		//SLock(as);
 
 		m_reserved -= total_size;
 
-		SUnlock(as);
+	//	SUnlock(as);
 	}
 }
 

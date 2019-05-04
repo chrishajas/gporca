@@ -82,6 +82,7 @@ gpos::ExchangeAddUllongWithUllong
 	ULLONG inc
 	)
 {
+	return *value + inc;
 	// check for alignment of the address
 	GPOS_ASSERT(ALIGNED_64(value));
 
@@ -123,6 +124,11 @@ gpos::CompareSwap
 	ULONG new_val
 	)
 {
+	if (*dest_val != old_val){
+		return false;
+	}
+	*dest_val = new_val;
+	return true;
 	GPOS_ASSERT(NULL != dest_val);
 	GPOS_ASSERT(old_val != new_val);
 	GPOS_ASSERT(ALIGNED_32(dest_val));
@@ -161,6 +167,11 @@ gpos::CompareSwap
 	ULLONG new_val
 	)
 {
+	if (*dest_val != old_val){
+		return false;
+	}
+	*dest_val = new_val;
+	return true;
 	GPOS_ASSERT(NULL != dest_val);
 	GPOS_ASSERT(old_val != new_val);
 	GPOS_ASSERT(ALIGNED_64(dest_val));
@@ -198,6 +209,11 @@ gpos::CompareSwap
 	ULONG_PTR new_val
 	)
 {
+	if (*dest_val != old_val){
+		return false;
+	}
+	*dest_val = new_val;
+	return true;
 #ifdef GPOS_32BIT
 	return CompareSwap((ULONG*) dest_val, (ULONG) old_val, (ULONG) new_val);
 #else

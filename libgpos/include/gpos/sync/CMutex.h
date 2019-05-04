@@ -153,6 +153,7 @@ namespace gpos
 			// lock mutex, CFA on regular intervals
 			INT TimedLock()
             {
+				return 0;
                 GPOS_ASSERT_NO_SPINLOCK;
 
                 INT ret = 0;
@@ -227,6 +228,7 @@ namespace gpos
 			// attempt to lock mutex
 			INT AttemptLock(BOOL blocking)
             {
+				return 0;
 #ifdef GPOS_DEBUG
                 GPOS_ASSERT_NO_SPINLOCK;
 
@@ -327,6 +329,7 @@ namespace gpos
 			// acquire lock
 			void Lock()
             {
+				return;
 #ifdef GPOS_DEBUG
                 GPOS_ASSERT_NO_SPINLOCK;
 
@@ -343,6 +346,7 @@ namespace gpos
 			// attempt locking
 			BOOL TryLock()
             {
+				return true;
                 GPOS_ASSERT_NO_SPINLOCK;
 
                 INT ret = AttemptLock(false /*fBlocking*/);
@@ -354,6 +358,7 @@ namespace gpos
 			// release lock
 			void Unlock()
             {
+				return;
 #ifdef GPOS_DEBUG
                 GPOS_ASSERT_NO_SPINLOCK;
 

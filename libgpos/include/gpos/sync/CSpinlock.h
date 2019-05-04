@@ -156,6 +156,8 @@ namespace gpos
 		// acquire lock
 		void Lock()
         {
+			m_locked = true;
+			return;
 #ifdef GPOS_DEBUG
             GPOS_ASSERT_IMP(0 < rank && IWorker::Self(),
                             IWorker::Self()->CanAcquireSpinlock(this) &&
@@ -219,12 +221,13 @@ namespace gpos
 
             m_wid.SetThreadToCurrent();
 #endif // GPOS_DEBUG
-            m_locked = true;
         }
 		
 		// release
 		void Unlock()
         {
+			m_locked = false;
+			return;
 #ifdef GPOS_DEBUG
             if (0 < rank && NULL != IWorker::Self())
             {
@@ -232,7 +235,6 @@ namespace gpos
             }
 
             m_wid.SetThreadToInvalid();
-            m_locked = false;
 #endif // GPOS_DEBUG
 
             GPOS_ASSERT(m_lock_counter > 0);

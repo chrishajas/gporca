@@ -89,10 +89,10 @@ namespace gpos
 			CList<SAllocHeader> m_allocations_list;
 
 			// attempt to reserve memory for allocation
-			BOOL Reserve(CAutoSpinlock &as, ULONG ulAlloc);
+			BOOL Reserve( ULONG ulAlloc);
 
 			// revert memory reservation
-			void Unreserve(CAutoSpinlock &as, ULONG alloc, BOOL mem_available);
+			void Unreserve(ULONG alloc, BOOL mem_available);
 
 			// acquire spinlock if pool is thread-safe
 			void SLock(CAutoSpinlock &as)
