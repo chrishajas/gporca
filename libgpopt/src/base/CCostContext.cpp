@@ -674,7 +674,7 @@ CCostContext::DRowsPerHost() const
 			return CDouble(rows / ulHosts);
 		}
 
-		ULongPtrArray *pdrgpul = GPOS_NEW(m_mp) ULongPtrArray(m_mp);
+		ULongPtrArray *pdrgpul = GPOS_NEW(m_mp) ULongPtrArray(m_mp, pcrsUsed->Size());
 		pcrsUsed->ExtractColIds(m_mp, pdrgpul);
 		pcrsUsed->Release();
 
