@@ -52,9 +52,9 @@ IMemoryPool::NewImpl
 	ULONG alloc_size = CMemoryPool::GetAllocSize((ULONG) size);
 	void *ptr = Allocate(alloc_size, filename, line);
 
-	GPOS_OOM_CHECK(ptr);
+	//GPOS_OOM_CHECK(ptr);
 
-	return dynamic_cast<CMemoryPool*>(this)->FinalizeAlloc(ptr, (ULONG) size, eat);
+	return static_cast<CMemoryPool*>(this)->FinalizeAlloc(ptr, (ULONG) size, eat);
 }
 
 //---------------------------------------------------------------------------
