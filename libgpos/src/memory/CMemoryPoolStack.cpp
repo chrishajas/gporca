@@ -23,7 +23,7 @@
 #include "gpos/memory/CMemoryPoolManager.h"
 
 
-#define GPOS_MEM_BLOCK_SIZE (1024 * 1024)
+#define GPOS_MEM_BLOCK_SIZE (1024 * 1024 )
 
 #define GPOS_MEM_BLOCK_HEADER_SIZE \
 	(GPOS_MEM_ALIGNED_STRUCT_SIZE(SBlockDescriptor))

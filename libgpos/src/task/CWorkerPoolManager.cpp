@@ -99,8 +99,8 @@ CWorkerPoolManager::Init
 	IMemoryPool *mp =
 		CMemoryPoolManager::GetMemoryPoolMgr()->Create
 			(
-			CMemoryPoolManager::EatTracker,
-			true /*fThreadSafe*/,
+			CMemoryPoolManager::EatStack,
+			false /*fThreadSafe*/,
 			GPOS_WORKERPOOL_MEM_POOL_SIZE
 			);
 

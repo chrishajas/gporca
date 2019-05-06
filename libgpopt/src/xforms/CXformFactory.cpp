@@ -356,8 +356,8 @@ CXformFactory::Init()
 	// create xform factory memory pool
 	IMemoryPool *mp = CMemoryPoolManager::GetMemoryPoolMgr()->Create
 							(
-							CMemoryPoolManager::EatTracker,
-							true /*fThreadSafe*/,
+							CMemoryPoolManager::EatStack,
+							false /*fThreadSafe*/,
 							gpos::ullong_max
 							);
 	GPOS_TRY

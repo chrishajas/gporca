@@ -72,7 +72,7 @@ CMemoryPoolManager::CMemoryPoolManager
 		);
 
 	// create pool used in allocations made using global new operator
-	m_global_memory_pool = Create(EatTracker, true, gpos::ullong_max);
+	m_global_memory_pool = Create(EatStack, true, gpos::ullong_max);
 }
 
 //---------------------------------------------------------------------------
@@ -288,7 +288,7 @@ CMemoryPoolManager::CreatePoolStack
 				);
 
 	// put tracker on top of the stack
-	return New(EatTracker, FPSim, capacity, thread_safe, true /*fOwnsUnderlying*/);
+	return New(EatStack, FPSim, capacity, thread_safe, true /*fOwnsUnderlying*/);
 }
 
 #endif // GPOS_DEBUG
