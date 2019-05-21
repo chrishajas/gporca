@@ -202,8 +202,14 @@ CDrvdPropRelational::GetRelationalProperties
 {
 	GPOS_ASSERT(NULL != pdp);
 	GPOS_ASSERT(EptRelational == pdp->Ept() && "This is not a relational properties container");
-
-	return dynamic_cast<CDrvdPropRelational*>(pdp);
+	if (EptRelational == pdp->Ept())
+	{
+		return static_cast<CDrvdPropRelational*>(pdp);
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 

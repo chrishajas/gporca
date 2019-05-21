@@ -152,7 +152,7 @@ namespace gpos
 			// lookup worker in worker pool manager
 			static CWorker *Self()
 			{
-				return dynamic_cast<CWorker*>(IWorker::Self());
+				return static_cast<CWorker*>(IWorker::Self());
 			}
 
 			// host system callback function to report abort requests

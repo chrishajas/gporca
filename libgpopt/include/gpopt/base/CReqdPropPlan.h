@@ -228,7 +228,7 @@ namespace gpopt
 			{
 				GPOS_ASSERT(NULL != prp);
 
-				return dynamic_cast<CReqdPropPlan*>(prp);
+				return static_cast<CReqdPropPlan*>(prp);
 			}
 
 			//generate empty required properties

@@ -136,8 +136,14 @@ namespace gpmd
 			const CMDIdGPDB *CastMdid(const IMDId *mdid)
 			{
 				GPOS_ASSERT(NULL != mdid && EmdidGPDB == mdid->MdidType());
-
-				return dynamic_cast<const CMDIdGPDB *>(mdid);
+				if (EmdidGPDB == mdid->MdidType())
+				{
+					return static_cast<const CMDIdGPDB *>(mdid);
+				}
+				else
+				{
+					return NULL;
+				}
 			}
 			
 			// non-const converter
@@ -145,8 +151,14 @@ namespace gpmd
 			CMDIdGPDB *CastMdid(IMDId *mdid)
 			{
 				GPOS_ASSERT(NULL != mdid && (EmdidGPDB == mdid->MdidType() || EmdidGPDBCtas == mdid->MdidType()));
-
-				return dynamic_cast<CMDIdGPDB *>(mdid);
+				if (EmdidGPDB == mdid->MdidType())
+				{
+					return static_cast<CMDIdGPDB *>(mdid);
+				}
+				else
+				{
+					return NULL;
+				}
 			}
 			
 			// invalid mdid

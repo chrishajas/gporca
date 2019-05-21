@@ -736,7 +736,7 @@ CMDAccessor::RetrieveType
 		GPOS_RAISE(gpdxl::ExmaMD, gpdxl::ExmiMDCacheEntryNotFound, mdid->GetBuffer());
 	}
 
-	return dynamic_cast<const IMDType*>(pmdobj);
+	return static_cast<const IMDType*>(pmdobj);
 }
 
 //---------------------------------------------------------------------------

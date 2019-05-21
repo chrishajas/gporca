@@ -82,7 +82,7 @@ namespace gpos
 			{
 				GPOS_ASSERT(NULL != mp);
 
-				return dynamic_cast<CMemoryPool*>(mp);
+				return static_cast<CMemoryPool*>(mp);
 			}
 
 			// private ctor

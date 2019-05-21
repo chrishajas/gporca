@@ -161,8 +161,14 @@ CDrvdPropScalar::GetDrvdScalarProps
 {
 	GPOS_ASSERT(NULL != pdp);
 	GPOS_ASSERT(EptScalar == pdp->Ept() && "This is not a scalar properties container");
-
-	return dynamic_cast<CDrvdPropScalar*>(pdp);
+	if (EptScalar == pdp->Ept())
+	{
+		return static_cast<CDrvdPropScalar*>(pdp);
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 

@@ -54,7 +54,7 @@ IMemoryPool::NewImpl
 
 	GPOS_OOM_CHECK(ptr);
 
-	return dynamic_cast<CMemoryPool*>(this)->FinalizeAlloc(ptr, (ULONG) size, eat);
+	return static_cast<CMemoryPool*>(this)->FinalizeAlloc(ptr, (ULONG) size, eat);
 }
 
 //---------------------------------------------------------------------------
