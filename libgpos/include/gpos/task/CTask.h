@@ -292,7 +292,7 @@ namespace gpos
 			static
 			CTask *Self()
 			{
-				return dynamic_cast<CTask *>(ITask::Self());
+				return static_cast<CTask *>(ITask::Self());
 			}
 
 	}; // class CTask

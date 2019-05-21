@@ -78,8 +78,14 @@ CDrvdPropPlan::Pdpplan
 {
 	GPOS_ASSERT(NULL != pdp);
 	GPOS_ASSERT(EptPlan == pdp->Ept() && "This is not a plan properties container");
-
-	return dynamic_cast<CDrvdPropPlan*>(pdp);
+	if (EptPlan == pdp->Ept())
+	{
+		return static_cast<CDrvdPropPlan*>(pdp);
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 

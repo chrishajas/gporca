@@ -146,8 +146,14 @@ namespace gpopt
 			{
 				GPOS_ASSERT(NULL != pop);
 				GPOS_ASSERT(EopScalarCmp == pop->Eopid());
-
-				return dynamic_cast<CScalarCmp*>(pop);
+				if (EopScalarCmp == pop->Eopid())
+				{
+					return static_cast<CScalarCmp*>(pop);
+				}
+				else
+				{
+					return NULL;
+				}
 			}
 		
 			// get commuted scalar comparision operator

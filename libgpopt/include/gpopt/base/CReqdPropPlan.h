@@ -227,8 +227,11 @@ namespace gpopt
 			CReqdPropPlan *Prpp(CReqdProp *prp)
 			{
 				GPOS_ASSERT(NULL != prp);
-
-				return dynamic_cast<CReqdPropPlan*>(prp);
+				if (prp->FPlan())
+				{
+					return static_cast<CReqdPropPlan*>(prp);
+				}
+				return NULL;
 			}
 
 			//generate empty required properties
