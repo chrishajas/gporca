@@ -29,7 +29,7 @@ CXformFactory* CXformFactory::m_pxff = NULL;
 //---------------------------------------------------------------------------
 CXformFactory::CXformFactory
 	(
-	IMemoryPool *mp
+	CMemoryPool *mp
 	)
 	:
 	m_mp(mp),
@@ -354,7 +354,7 @@ CXformFactory::Init()
 	GPOS_RESULT eres = GPOS_OK;
 
 	// create xform factory memory pool
-	IMemoryPool *mp = CMemoryPoolManager::GetMemoryPoolMgr()->Create
+	CMemoryPool *mp = CMemoryPoolManager::GetMemoryPoolMgr()->Create
 							(
 							CMemoryPoolManager::EatTracker,
 							true /*fThreadSafe*/,
@@ -407,7 +407,7 @@ CXformFactory::Shutdown()
 	GPOS_ASSERT(NULL != pxff &&
 				"Xform factory has not been initialized");
 
-	IMemoryPool *mp = pxff->m_mp;
+	CMemoryPool *mp = pxff->m_mp;
 
 	// destroy xform factory
 	CXformFactory::m_pxff = NULL;

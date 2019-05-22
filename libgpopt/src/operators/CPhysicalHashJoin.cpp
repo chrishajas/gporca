@@ -45,7 +45,7 @@ using namespace gpopt;
 //---------------------------------------------------------------------------
 CPhysicalHashJoin::CPhysicalHashJoin
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionArray *pdrgpexprOuterKeys,
 	CExpressionArray *pdrgpexprInnerKeys
 	)
@@ -122,7 +122,7 @@ CPhysicalHashJoin::~CPhysicalHashJoin()
 void
 CPhysicalHashJoin::CreateHashRedistributeRequests
 	(
-	IMemoryPool *mp
+	CMemoryPool *mp
 	)
 {
 	GPOS_ASSERT(NULL == m_pdrgpdsRedistributeRequests);
@@ -176,7 +176,7 @@ CPhysicalHashJoin::CreateHashRedistributeRequests
 COrderSpec *
 CPhysicalHashJoin::PosRequired
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle &, //exprhdl
 	COrderSpec *, // posInput,
 	ULONG
@@ -209,7 +209,7 @@ CPhysicalHashJoin::PosRequired
 CRewindabilitySpec *
 CPhysicalHashJoin::PrsRequired
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle &exprhdl,
 	CRewindabilitySpec *prsRequired,
 	ULONG child_index,
@@ -257,7 +257,7 @@ CPhysicalHashJoin::PrsRequired
 CDistributionSpec *
 CPhysicalHashJoin::PdsMatch
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CDistributionSpec *pds,
 	ULONG ulSourceChildIndex
 	)
@@ -312,7 +312,7 @@ CPhysicalHashJoin::PdsMatch
 CDistributionSpecHashed *
 CPhysicalHashJoin::PdshashedMatching
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CDistributionSpecHashed *pdshashed,
 	ULONG ulSourceChild // index of child that delivered the given hashed distribution
 	)
@@ -397,7 +397,7 @@ CPhysicalHashJoin::PdshashedMatching
 CDistributionSpec *
 CPhysicalHashJoin::PdsRequiredSingleton
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle  &, // exprhdl
 	CDistributionSpec *, // pdsInput
 	ULONG  child_index,
@@ -453,7 +453,7 @@ CPhysicalHashJoin::PdsRequiredSingleton
 CDistributionSpec *
 CPhysicalHashJoin::PdsRequiredReplicate
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle  &exprhdl,
 	CDistributionSpec *pdsInput,
 	ULONG  child_index,
@@ -519,7 +519,7 @@ CPhysicalHashJoin::PdsRequiredReplicate
 CDistributionSpecHashed *
 CPhysicalHashJoin::PdshashedPassThru
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle  &exprhdl,
 	CDistributionSpecHashed *pdshashedInput,
 	ULONG  , // child_index
@@ -597,7 +597,7 @@ CPhysicalHashJoin::PdshashedPassThru
 CDistributionSpec *
 CPhysicalHashJoin::PdsRequiredRedistribute
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle &exprhdl,
 	CDistributionSpec *, // pdsInput
 	ULONG  child_index,
@@ -675,7 +675,7 @@ CPhysicalHashJoin::PdsRequiredRedistribute
 CDistributionSpec *
 CPhysicalHashJoin::PdsRequired
 	(
-	IMemoryPool *mp,
+	CMemoryPool *mp,
 	CExpressionHandle &exprhdl,
 	CDistributionSpec *pdsInput,
 	ULONG child_index,
@@ -749,7 +749,7 @@ CPhysicalHashJoin::PdsRequired
 CDistributionSpecHashed *
 CPhysicalHashJoin::PdshashedRequired
 	(
-	IMemoryPool *, // mp
+	CMemoryPool *, // mp
 	ULONG, // child_index
 	ULONG ulReqIndex
 	)

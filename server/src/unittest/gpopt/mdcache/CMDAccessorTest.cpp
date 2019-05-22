@@ -106,7 +106,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_Basic()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	
 	// setup a file-based provider
 	CMDProviderMemory *pmdp = CTestUtils::m_pmdpf;
@@ -232,7 +232,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_Datum()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 
 	// setup a file-based provider
 	CMDProviderMemory *pmdp = CTestUtils::m_pmdpf;
@@ -305,7 +305,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_DatumGeneric()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 
 	// Setup an MD cache with a file-based provider
 	CMDProviderMemory *pmdp = CTestUtils::m_pmdpf;
@@ -331,7 +331,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_Navigate()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	
 	// setup a file-based provider
 	CMDProviderMemory *pmdp = CTestUtils::m_pmdpf;
@@ -395,7 +395,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_Indexes()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	
 	CAutoTrace at(mp);
 
@@ -469,7 +469,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_CheckConstraint()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 
 	CAutoTrace at(mp);
 
@@ -549,7 +549,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_IndexPartConstraint()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 
 	CAutoTrace at(mp);
 
@@ -624,7 +624,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_Cast()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 
 	CAutoTrace at(mp);
 
@@ -687,7 +687,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_ScCmp()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 
 	CAutoTrace at(mp);
 
@@ -732,7 +732,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_Negative()
 {
 	CAutoMemoryPool amp(CAutoMemoryPool::ElcNone);
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	
 	// Setup an MD cache with a file-based provider
 	CMDProviderMemory *pmdp = CTestUtils::m_pmdpf;
@@ -762,12 +762,12 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_ConcurrentAccessSingleMDA()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	CWorkerPoolManager *pwpm = CWorkerPoolManager::WorkerPoolManager();
 	
 	// task memory pool
 	CAutoMemoryPool ampTask;
-	IMemoryPool *pmpTask = ampTask.Pmp();
+	CMemoryPool *pmpTask = ampTask.Pmp();
 	
 	// setup a file-based provider
 	// Setup an MD cache with a file-based provider
@@ -835,7 +835,7 @@ GPOS_RESULT
 CMDAccessorTest::EresUnittest_ConcurrentAccessMultipleMDA()
 {
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	CWorkerPoolManager *pwpm = CWorkerPoolManager::WorkerPoolManager();
 
 #ifdef GPOS_DEBUG
@@ -917,7 +917,7 @@ CMDAccessorTest::PvLookupSingleObj
 	
 	CMDAccessor *md_accessor = pmdtaskparams->m_pmda;
 
-	IMemoryPool *mp = pmdtaskparams->m_mp;
+	CMemoryPool *mp = pmdtaskparams->m_mp;
 	
 	GPOS_ASSERT(NULL != mp);
 	GPOS_ASSERT(NULL != md_accessor);
@@ -992,12 +992,12 @@ CMDAccessorTest::PvInitMDAAndLookup
 	CMDAccessor::MDCache *pcache = (CMDAccessor::MDCache *) pv;
 
 	CAutoMemoryPool amp;
-	IMemoryPool *mp = amp.Pmp();
+	CMemoryPool *mp = amp.Pmp();
 	CWorkerPoolManager *pwpm = CWorkerPoolManager::WorkerPoolManager();
 	
 	// task memory pool
 	CAutoMemoryPool ampTask;
-	IMemoryPool *pmpTask = ampTask.Pmp();
+	CMemoryPool *pmpTask = ampTask.Pmp();
 	
 	// scope for MD accessor
 	{			
