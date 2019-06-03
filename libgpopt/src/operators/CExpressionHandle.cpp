@@ -1070,7 +1070,7 @@ CExpressionHandle::GetRelationalProperties
 		if (Pexpr()->Pop()->FPhysical())
 		{
 			// relational props were copied from memo, return props directly
-			return CDrvdPropRelational::GetRelationalProperties((*Pexpr())[child_index]->Pdp(DrvdPropArray::EptRelational));
+			return (*Pexpr())[child_index]->GetDrvdPropRelational();
 		}
 
 		// return props after calling derivation function
@@ -1112,7 +1112,7 @@ CExpressionHandle::GetRelationalProperties() const
 		if (Pexpr()->Pop()->FPhysical())
 		{
 			// relational props were copied from memo, return props directly
-			return CDrvdPropRelational::GetRelationalProperties(Pexpr()->Pdp(DrvdPropArray::EptRelational));
+			return Pexpr()->GetDrvdPropRelational();
 		}
 		// return props after calling derivation function
 		return CDrvdPropRelational::GetRelationalProperties(Pexpr()->PdpDerive());

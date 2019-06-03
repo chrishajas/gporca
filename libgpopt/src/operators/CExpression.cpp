@@ -398,6 +398,26 @@ CExpression::Pdp
 	return NULL;
 }
 
+CDrvdPropRelational *
+CExpression::GetDrvdPropRelational()
+	const
+{
+	return m_pdprel;
+}
+
+CDrvdPropPlan *
+CExpression::GetDrvdPropPlan()
+	const
+{
+	return m_pdpplan;
+}
+
+CDrvdPropScalar *
+CExpression::GetDrvdPropScalar()
+	const
+{
+	return m_pdpscalar;
+}
 
 //---------------------------------------------------------------------------
 //	@function:
@@ -1461,7 +1481,7 @@ CExpression::FValidPlan
 		pdpctxtplan->CopyCTEProducerProps(pdpplan, ulCTEId);
 	}
 
-	CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(Pdp(DrvdPropArray::EptRelational));
+	CDrvdPropRelational *pdprel = GetDrvdPropRelational();
 
 	return prpp->FCompatible(exprhdl, CPhysical::PopConvert(m_pop), pdprel, pdpplan)
 	        && FValidChildrenDistribution(pdpctxtplan)
@@ -1526,7 +1546,7 @@ CExpression::FValidPartEnforcers
 {
 	GPOS_ASSERT(Pop()->FPhysical());
 
-	CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(Pdp(DrvdPropArray::EptRelational));
+	CDrvdPropRelational *pdprel = GetDrvdPropRelational();
 	CPartInfo *ppartinfo = pdprel->Ppartinfo();
 	GPOS_ASSERT(NULL != ppartinfo);
 
