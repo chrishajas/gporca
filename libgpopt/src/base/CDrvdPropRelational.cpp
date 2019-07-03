@@ -120,7 +120,7 @@ CDrvdPropRelational::Derive
 	m_pcrsOutput = popLogical->PcrsDeriveOutput(mp, exprhdl);
 
 	// derive outer-references
-	m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, exprhdl);
+	//m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, exprhdl);
 	
 	// derive not null columns
 	m_pcrsNotNull = popLogical->PcrsDeriveNotNull(mp, exprhdl);
@@ -439,8 +439,18 @@ CDrvdPropRelational::PcrsOutput() const
 
 // outer references
 CColRefSet *
-CDrvdPropRelational::PcrsOuter() const
+CDrvdPropRelational::PcrsOuter()
 {
+	if (NULL == m_pcrsOuter)
+	{
+		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+		CExpressionHandle exprhdl(mp);
+		exprhdl.Attach(m_expr);
+		CLogical *popLogical = CLogical::PopConvert(m_expr->Pop());
+		// derive outer-references
+		m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, exprhdl);
+	}
+
 	return m_pcrsOuter;
 }
 
