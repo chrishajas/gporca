@@ -129,7 +129,7 @@ CDrvdPropRelational::Derive
 	m_pkc = popLogical->PkcDeriveKeys(mp, exprhdl);
 	
 	// derive constraint
-	m_ppc = popLogical->PpcDeriveConstraint(mp, exprhdl);
+	//m_ppc = popLogical->PpcDeriveConstraint(mp, exprhdl);
 
 	// compute max card
 	m_maxcard = popLogical->Maxcard(mp, exprhdl);
@@ -529,8 +529,19 @@ CDrvdPropRelational::Ppartinfo() const
 
 // constraint property
 CPropConstraint *
-CDrvdPropRelational::Ppc() const
+CDrvdPropRelational::Ppc()
 {
+	if (NULL == m_ppc)
+	{
+		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+		CExpressionHandle exprhdl(mp);
+		exprhdl.Attach(m_expr);
+		CLogical *popLogical = CLogical::PopConvert(m_expr->Pop());
+
+		// derive constraint
+		m_ppc = popLogical->PpcDeriveConstraint(mp, exprhdl);
+	}
+
 	return m_ppc;
 }
 

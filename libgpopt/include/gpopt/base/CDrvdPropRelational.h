@@ -158,7 +158,7 @@ namespace gpopt
 			CPartInfo *Ppartinfo() const;
 
 			// constraint property
-			CPropConstraint *Ppc() const;
+			CPropConstraint *Ppc();
 
 			// function properties
 			CFunctionProp *Pfp() const;
