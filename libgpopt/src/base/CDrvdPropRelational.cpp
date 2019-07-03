@@ -117,13 +117,10 @@ CDrvdPropRelational::Derive
 	CLogical *popLogical = CLogical::PopConvert(exprhdl.Pop());
 
 	// call output derivation function on the operator
-	m_pcrsOutput = popLogical->PcrsDeriveOutput(mp, exprhdl);
+	//m_pcrsOutput = popLogical->PcrsDeriveOutput(mp, exprhdl);
 
 	// derive outer-references
 	//m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, exprhdl);
-	
-	// derive not null columns
-	m_pcrsNotNull = popLogical->PcrsDeriveNotNull(mp, exprhdl);
 
 	// derive correlated apply columns
 	m_pcrsCorrelatedApply = popLogical->PcrsDeriveCorrelatedApply(mp, exprhdl);
@@ -148,7 +145,7 @@ CDrvdPropRelational::Derive
 	{
 		GPOS_ASSERT(NULL == m_pkc);
 		
-		if (0 < m_pcrsOutput->Size())
+		if (0 < PcrsOutput()->Size())
 		{
 			m_pcrsOutput->AddRef();
 			m_pkc = GPOS_NEW(mp) CKeyCollection(mp, m_pcrsOutput);
@@ -434,6 +431,15 @@ CDrvdPropRelational::OsPrint
 CColRefSet *
 CDrvdPropRelational::PcrsOutput() const
 {
+	if (NULL == m_pcrsOutput)
+	{
+			CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+			CExpressionHandle exprhdl(mp);
+			exprhdl.Attach(m_expr);
+			CLogical *popLogical = CLogical::PopConvert(m_expr->Pop());
+			// call output derivation function on the operator
+			m_pcrsOutput = popLogical->PcrsDeriveOutput(mp, exprhdl);
+	}
 	return m_pcrsOutput;
 }
 
@@ -456,8 +462,19 @@ CDrvdPropRelational::PcrsOuter()
 
 // nullable columns
 CColRefSet *
-CDrvdPropRelational::PcrsNotNull() const
+CDrvdPropRelational::PcrsNotNull()
 {
+	if (NULL == m_pcrsNotNull)
+	{
+				CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+				CExpressionHandle exprhdl(mp);
+				exprhdl.Attach(m_expr);
+				CLogical *popLogical = CLogical::PopConvert(m_expr->Pop());
+
+				// derive not null columns
+				m_pcrsNotNull = popLogical->PcrsDeriveNotNull(mp, exprhdl);
+	}
+
 	return m_pcrsNotNull;
 }
 

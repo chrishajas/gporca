@@ -57,7 +57,7 @@ namespace gpopt
 			CDrvdPropCtxt *m_drvd_prop_ctxt;
 
 			// output columns
-			CColRefSet *m_pcrsOutput;
+			mutable CColRefSet *m_pcrsOutput;
 
 			// columns not defined in the underlying operator tree
 			CColRefSet *m_pcrsOuter;
@@ -134,7 +134,7 @@ namespace gpopt
 			CColRefSet *PcrsOuter();
 			
 			// nullable columns
-			CColRefSet *PcrsNotNull() const;
+			CColRefSet *PcrsNotNull();
 
 			// columns from the inner child of a correlated-apply expression that can be used above the apply expression
 			CColRefSet *PcrsCorrelatedApply() const;
