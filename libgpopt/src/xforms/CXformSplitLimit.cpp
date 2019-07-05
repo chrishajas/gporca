@@ -61,7 +61,7 @@ CXformSplitLimit::Exfp
 	)
 	const
 {
-	if (0 < exprhdl.GetRelationalProperties()->PcrsOuter()->Size())
+	if (0 < exprhdl.PcrsOuter()->Size())
 	{
 		return CXform::ExfpNone;
 	}

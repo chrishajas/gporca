@@ -1929,4 +1929,26 @@ CExpressionHandle::PcrsUsedColumns
 	return pcrs;
 }
 
+CColRefSet *
+CExpressionHandle::PcrsOuter(INT child_index)
+{
+	CDrvdPropRelational* drvdPops;
+	if (child_index == -1)
+	{
+		drvdPops= this->GetRelationalProperties();
+	}
+	else
+	{
+		drvdPops= this->GetRelationalProperties(child_index);
+	}
+
+	if (NULL == drvdPops->m_pcrsOuter)
+	{
+		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+		CLogical *popLogical = CLogical::PopConvert(this->Pop());
+		// derive outer-references
+		drvdPops->m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, *this);
+	}
+	return drvdPops->m_pcrsOuter;
+}
 // EOF

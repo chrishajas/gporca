@@ -471,7 +471,7 @@ CJoinStatsProcessor::DeriveJoinStats
 	CExpression *expr_with_outer_refs = NULL;
 
 	// get outer references from expression handle
-	CColRefSet *outer_refs = exprhdl.GetRelationalProperties()->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.PcrsOuter();
 
 	CPredicateUtils::SeparateOuterRefs(mp, join_pred_expr, outer_refs, &local_expr, &expr_with_outer_refs);
 	join_pred_expr->Release();

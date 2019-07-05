@@ -49,6 +49,7 @@ namespace gpopt
 	//---------------------------------------------------------------------------
 	class CDrvdPropRelational : public DrvdPropArray
 	{
+		friend class CExpressionHandle;
 
 		private:
 

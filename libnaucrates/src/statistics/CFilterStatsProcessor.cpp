@@ -37,7 +37,7 @@ CFilterStatsProcessor::MakeStatsFilterForScalarExpr
 	GPOS_ASSERT(NULL != outer_refs_scalar_expr);
 	GPOS_ASSERT(NULL != all_outer_stats);
 
-	CColRefSet *outer_refs = exprhdl.GetRelationalProperties()->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.PcrsOuter();
 
 	// TODO  June 13 2014, we currently only cap ndvs when we have a filter
 	// immediately on top of tables

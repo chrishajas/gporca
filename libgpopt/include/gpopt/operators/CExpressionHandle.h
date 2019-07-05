@@ -301,6 +301,8 @@ namespace gpopt
 			// as columns used by all its scalar children
 			CColRefSet *PcrsUsedColumns(CMemoryPool *mp);
 
+			CColRefSet *PcrsOuter(INT child_index = -1);
+
 	}; // class CExpressionHandle
 	
 }

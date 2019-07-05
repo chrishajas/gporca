@@ -1265,7 +1265,7 @@ CStatsPredUtils::ExtractJoinStatsFromExprHandle
 
 	// TODO:  02/29/2012 replace with constraint property info once available
 	CExpression *scalar_expr = expr_handle.PexprScalarChild(expr_handle.Arity() - 1);
-	CColRefSet *outer_refs = expr_handle.GetRelationalProperties()->PcrsOuter();
+	CColRefSet *outer_refs = expr_handle.PcrsOuter();
 
 	CStatsPredJoinArray *join_pred_stats = ExtractJoinStatsFromExpr(mp, expr_handle, scalar_expr, output_col_refsets, outer_refs);
 

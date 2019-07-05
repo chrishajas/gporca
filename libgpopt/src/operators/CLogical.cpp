@@ -499,7 +499,7 @@ CLogical::PcrsDeriveOuter
 			pcrsOutput->Union(pdprel->PcrsOutput());
 
 			// add outer references from relational children
-			outer_refs->Union(pdprel->PcrsOuter());
+			outer_refs->Union(exprhdl.PcrsOuter(i));
 		}
 	}
 
