@@ -1021,7 +1021,7 @@ namespace gpopt
 		CExpression *pexprInner = PexprLogicalSelectCorrelated(mp, outer_refs, 3);
 		CExpression *pexprPredicate = CUtils::PexprScalarConstBool(mp, true /*value*/);
 
-		CColRefSet *pcrsOuterRef = CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->PcrsOuter();
+		CColRefSet *pcrsOuterRef = pexprInner->PcrsOuter();
 		GPOS_ASSERT(1 == pcrsOuterRef->Size());
 		CColRef *colref = pcrsOuterRef->PcrFirst();
 
