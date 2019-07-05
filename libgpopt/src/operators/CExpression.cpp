@@ -822,7 +822,7 @@ CExpression::ResetStats()
 BOOL
 CExpression::HasOuterRefs()
 {
-	return (0 < CDrvdPropRelational::GetRelationalProperties(PdpDerive())->PcrsOuter()->Size());
+	return (0 < this->GetDrvdPropRelational().PcrsOuter()->Size());
 }
 
 //---------------------------------------------------------------------------

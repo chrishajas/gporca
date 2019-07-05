@@ -1280,7 +1280,7 @@ CNormalizer::PexprPullUpAndCombineProjects
 		CColRefSet *availableCRs = GPOS_NEW(mp) CColRefSet(mp);
 
 		availableCRs->Include(childRelProps->PcrsOutput());
-		availableCRs->Include(childRelProps->PcrsOuter());
+		availableCRs->Include(pexprRelational->GetDrvdPropRelational().PcrsOuter()->Size(););
 		// check that the new project node has all the values it needs
 		GPOS_ASSERT(availableCRs->ContainsAll(CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed()));
 		availableCRs->Release();

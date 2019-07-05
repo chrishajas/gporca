@@ -1252,7 +1252,8 @@ CSubqueryHandler::FCreateCorrelatedApplyForExistentialSubquery
 		// we can use correlated semi/anti-semi apply here since the subquery is used in filtering context
 		if (COperator::EopScalarSubqueryExists == eopidSubq)
 		{
-			CColRefSet *outer_refs = pdpInner->PcrsOuter();
+			CColRefSet *outer_refs = pexprInner->GetDrvdPropRelational().PcrsOuter();
+
 			if (0 == outer_refs->Size())
 			{
 				// add a limit operator on top of the inner child if the subquery does not have
