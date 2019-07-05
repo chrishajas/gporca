@@ -286,7 +286,7 @@ CLogicalSequenceProject::FHasLocalOuterRefs
 {
 	GPOS_ASSERT(this == exprhdl.Pop());
 
-	CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.PcrsOuter();
 
 	return !(outer_refs->IsDisjoint(m_pcrsLocalUsed));
 }
@@ -471,7 +471,7 @@ CLogicalSequenceProject::PopRemoveLocalOuterRefs
 {
 	GPOS_ASSERT(this == exprhdl.Pop());
 
-	CColRefSet *outer_refs = exprhdl.GetRelationalProperties()->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.PcrsOuter();
 	CDistributionSpec *pds = m_pds;
 	if (CDistributionSpec::EdtHashed == m_pds->Edt())
 	{

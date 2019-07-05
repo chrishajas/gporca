@@ -1475,7 +1475,7 @@ CNormalizer::FLocalColsSubsetOfInputCols
 
 		// check if the operator's locally used columns are a subset of the input columns
 		CColRefSet *pcrsUsedOp = exprhdl.PcrsUsedColumns(mp);
-		pcrsUsedOp->Exclude(exprhdl.GetRelationalProperties()->PcrsOuter());
+		pcrsUsedOp->Exclude(exprhdl.PcrsOuter());
 
 		fValid = pcrsInput->ContainsAll(pcrsUsedOp);
 
