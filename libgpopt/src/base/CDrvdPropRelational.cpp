@@ -102,9 +102,6 @@ CDrvdPropRelational::Derive
 
 	// call output derivation function on the operator
 	m_pcrsOutput = popLogical->PcrsDeriveOutput(mp, exprhdl);
-
-	// derive outer-references
-	m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, exprhdl);
 	
 	// derive not null columns
 	m_pcrsNotNull = popLogical->PcrsDeriveNotNull(mp, exprhdl);
@@ -419,13 +416,6 @@ CColRefSet *
 CDrvdPropRelational::PcrsOutput() const
 {
 	return m_pcrsOutput;
-}
-
-// outer references
-CColRefSet *
-CDrvdPropRelational::PcrsOuter() const
-{
-	return m_pcrsOuter;
 }
 
 // nullable columns

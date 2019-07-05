@@ -126,9 +126,6 @@ namespace gpopt
 
 			// output columns
 			CColRefSet *PcrsOutput() const;
-
-			// outer references
-			CColRefSet *PcrsOuter() const;
 			
 			// nullable columns
 			CColRefSet *PcrsNotNull() const;

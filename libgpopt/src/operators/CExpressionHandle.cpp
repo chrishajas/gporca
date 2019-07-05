@@ -1932,6 +1932,8 @@ CColRefSet *
 CExpressionHandle::PcrsOuter(INT child_index)
 {
 	CDrvdPropRelational* drvdPops;
+	COperator* pop = this->Pop();
+	
 	if (child_index == -1)
 	{
 		drvdPops= this->GetRelationalProperties();
@@ -1939,12 +1941,19 @@ CExpressionHandle::PcrsOuter(INT child_index)
 	else
 	{
 		drvdPops= this->GetRelationalProperties(child_index);
+
 	}
 
 	if (NULL == drvdPops->m_pcrsOuter)
 	{
+		if (!this->Pop()->FLogical())
+		{
+			pop = this->Pgexpr()->PgexprOrigin()->Pop();
+		}
+		
 		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
-		CLogical *popLogical = CLogical::PopConvert(this->Pop());
+
+		CLogical *popLogical = CLogical::PopConvert(pop);
 		// derive outer-references
 		drvdPops->m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, *this);
 	}
