@@ -3283,10 +3283,7 @@ CTranslatorExprToDXL::PcrsOuterRefsForCorrelatedNLJoin
 
 	CExpression *pexprInnerChild = (*pexpr)[1];
 
-	// get inner child's relational properties
-	CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(pexprInnerChild->Pdp(DrvdPropArray::EptRelational));
-
-	return pdprel->PcrsOuter();
+	return pexprInnerChild->PcrsOuter();
 }
 
 

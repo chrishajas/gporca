@@ -269,6 +269,8 @@ namespace gpopt
 			// check for outer references
 			BOOL HasOuterRefs();
 
+			CColRefSet* PcrsOuter(INT child_index = -1);
+
 			// print driver
 			IOstream &OsPrint
 						(

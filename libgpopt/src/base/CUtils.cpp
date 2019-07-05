@@ -988,8 +988,7 @@ CUtils::HasOuterRefs
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(pexpr->Pop()->FLogical());
 
-	DrvdPropArray *pdp = pexpr->PdpDerive();
-	return 0 < CDrvdPropRelational::GetRelationalProperties(pdp)->PcrsOuter()->Size();
+	return 0 < pexpr->PcrsOuter()->Size();
 }
 
 // check if a given operator is a logical join

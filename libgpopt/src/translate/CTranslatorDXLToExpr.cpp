@@ -1220,7 +1220,7 @@ CTranslatorDXLToExpr::PexprLogicalCTEAnchor
 	GPOS_ASSERT(NULL != pexprProducer);
 	m_ulCTEId = ulCTEPrevious;
 	
-	CColRefSet *pcrsProducerOuter = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->PcrsOuter();
+	CColRefSet *pcrsProducerOuter = pexprProducer->PcrsOuter();
 	if (0 < pcrsProducerOuter->Size())
 	{
 		GPOS_RAISE

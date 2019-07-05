@@ -771,9 +771,16 @@ CExpression::ResetStats()
 BOOL
 CExpression::HasOuterRefs()
 {
-	return (0 < CDrvdPropRelational::GetRelationalProperties(PdpDerive())->PcrsOuter()->Size());
+	return (0 < this->PcrsOuter()->Size());
 }
 
+CColRefSet*
+CExpression::PcrsOuter(INT child_index)
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return exprhdl.PcrsOuter(child_index);
+}
 //---------------------------------------------------------------------------
 //	@function:
 //		CExpression::PrppCompute

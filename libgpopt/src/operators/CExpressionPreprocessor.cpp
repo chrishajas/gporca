@@ -292,7 +292,7 @@ CExpressionPreprocessor::PexprUnnestScalarSubqueries
 			// make sure that inner subquery has no outer references to Const Table
 			// since Const Table will be eliminated in output expression
 			CColRefSet *pcrsConstTableOutput = CDrvdPropRelational::GetRelationalProperties(pexprConstTable->PdpDerive())->PcrsOutput();
-			CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties((*pexprInnerSubq)[0]->PdpDerive())->PcrsOuter();
+			CColRefSet *outer_refs = (*pexprInnerSubq)[0]->PcrsOuter();
 			if (0 == outer_refs->Size() || outer_refs->IsDisjoint(pcrsConstTableOutput))
 			{
 				// recursively process inner subquery
@@ -487,7 +487,7 @@ CExpressionPreprocessor::PexprRemoveSuperfluousOuterRefs
 	{
 		if (COperator::EopLogicalLimit == op_id)
 		{
-			CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->PcrsOuter();
+			CColRefSet *outer_refs = pexpr->PcrsOuter();
 
 			CLogicalLimit *popLimit = CLogicalLimit::PopConvert(pop);
 			COrderSpec *pos = popLimit->Pos();
@@ -1644,7 +1644,7 @@ CExpressionPreprocessor::CollectCTEPredicates
 	if (
 			COperator::EopLogicalSelect == pexpr->Pop()->Eopid() &&
 			COperator::EopLogicalCTEConsumer == (*pexpr)[0]->Pop()->Eopid() &&
-			0 == CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->PcrsOuter()->Size() // no outer references in selection predicate
+			0 == pexpr->PcrsOuter()->Size() // no outer references in selection predicate
 		)
 	{
 		CExpression *pexprScalar = (*pexpr)[1];
