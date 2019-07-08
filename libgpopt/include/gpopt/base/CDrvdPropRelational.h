@@ -129,7 +129,6 @@ namespace gpopt
 			CColRefSet *PcrsOutput() const;
 
 			// outer references
-			CColRefSet *PcrsOuter() const;
 			CColRefSet *PcrsOuter(CExpression *);
 			CColRefSet *PcrsOuter(CExpressionHandle &);
 

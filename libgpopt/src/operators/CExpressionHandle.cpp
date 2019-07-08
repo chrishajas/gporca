@@ -335,7 +335,6 @@ CExpressionHandle::PdrgpstatOuterRefs
 	IStatisticsArray *statistics_array,
 	ULONG child_index
 	)
-	const
 {
 	GPOS_ASSERT(NULL != statistics_array);
 	GPOS_ASSERT(child_index < Arity());
@@ -347,7 +346,7 @@ CExpressionHandle::PdrgpstatOuterRefs
 	}
 
 	IStatisticsArray *pdrgpstatResult = GPOS_NEW(m_mp) IStatisticsArray(m_mp);
-	CColRefSet *outer_refs = GetRelationalProperties(child_index)->PcrsOuter();
+	CColRefSet *outer_refs = GetRelationalProperties(child_index)->PcrsOuter(*this);
 	GPOS_ASSERT(0 < outer_refs->Size());
 
 	const ULONG size = statistics_array->Size();
