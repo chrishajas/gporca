@@ -107,7 +107,8 @@ CDrvdPropScalar::Derive
 
 			// parent operator is a subquery, add outer references
 			// from its relational child as used columns
- 			m_pcrsUsed->Union(exprhdl.PcrsOuter(0));
+			//FIXME
+ 			//m_pcrsUsed->Union(exprhdl.PcrsOuter(0));
 		}
 	}
 

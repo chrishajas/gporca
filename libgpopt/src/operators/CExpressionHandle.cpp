@@ -1946,12 +1946,13 @@ CExpressionHandle::PcrsOuter(INT child_index)
 
 	if (NULL == drvdPops->m_pcrsOuter)
 	{
+		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+
 		if (!this->Pop()->FLogical())
 		{
 			pop = this->Pgexpr()->PgexprOrigin()->Pop();
 		}
 		
-		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
 
 		CLogical *popLogical = CLogical::PopConvert(pop);
 		// derive outer-references
