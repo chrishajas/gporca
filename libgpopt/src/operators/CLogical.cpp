@@ -493,13 +493,17 @@ CLogical::PcrsDeriveOuter
 			CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(i);
 			pcrsUsed->Union(pdpscalar->PcrsUsed());
 		}
-		else
+		else if (exprhdl.Arity() > 0)
 		{
 			CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties(i);
 			pcrsOutput->Union(pdprel->PcrsOutput());
-
+			CExpressionHandle exprhdl2(mp);
+			exprhdl2.Attach((*(exprhdl.Pexpr()))[i]);
 			// add outer references from relational children
-			outer_refs->Union(pdprel->PcrsOuter(exprhdl));
+			outer_refs->Union(pdprel->PcrsOuter(exprhdl2));
+		}
+		else {
+			GPOS_ASSERT(false);
 		}
 	}
 

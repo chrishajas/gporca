@@ -514,6 +514,7 @@ CDrvdPropRelational::PcrsOuter(CExpression *expr)
 	{
 		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
 		CExpressionHandle exprhdl(mp);
+
 		exprhdl.Attach(expr);
 		CLogical *popLogical = CLogical::PopConvert(expr->Pop());
 		// derive outer-references
