@@ -286,7 +286,7 @@ CLogicalSequenceProject::FHasLocalOuterRefs
 {
 	GPOS_ASSERT(this == exprhdl.Pop());
 
-	CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.GetRelationalProperties()->PcrsOuter(exprhdl);
 
 	return !(outer_refs->IsDisjoint(m_pcrsLocalUsed));
 }

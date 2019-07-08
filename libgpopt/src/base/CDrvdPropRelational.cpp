@@ -500,6 +500,21 @@ CDrvdPropRelational::PcrsOuter() const
 
 // outer references
 CColRefSet *
+CDrvdPropRelational::PcrsOuter(CExpressionHandle &exprhdl)
+{
+	if (NULL == m_pcrsOuter)
+	{
+		CMemoryPool *mp = COptCtxt::PoctxtFromTLS()->Pmp();
+		CLogical *popLogical = CLogical::PopConvert(exprhdl.Pop());
+		// derive outer-references
+		m_pcrsOuter = popLogical->PcrsDeriveOuter(mp, exprhdl);
+	}
+
+	return m_pcrsOuter;
+}
+
+// outer references
+CColRefSet *
 CDrvdPropRelational::PcrsOuter(CExpression *expr)
 {
 	if (NULL == m_pcrsOuter)

@@ -241,7 +241,7 @@ namespace gpopt
 				)
 				const
 			{
-				return (0 < GetRelationalProperties(child_index)->PcrsOuter()->Size());
+				return (0 < GetRelationalProperties(child_index)->PcrsOuter(this)->Size());
 			}
 
 			// get next child index based on child optimization order, return true if such index could be found

@@ -185,7 +185,7 @@ CLogicalSelect::PstatsDerive
 	CExpression *expr_with_outer_refs = NULL;
 
 	// get outer references from expression handle
-	CColRefSet *outer_refs = exprhdl.GetRelationalProperties()->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.GetRelationalProperties()->PcrsOuter(exprhdl);
 
 	CPredicateUtils::SeparateOuterRefs(mp, pexprPredicate, outer_refs, &local_expr, &expr_with_outer_refs);
 	pexprPredicate->Release();
