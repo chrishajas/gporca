@@ -334,7 +334,7 @@ CSubqueryHandler::Psd
 	GPOS_ASSERT(NULL != pexprOuter);
 
 	CExpression *pexprInner = (*pexprSubquery)[0];
-	CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties((*pexprSubquery)[0]->PdpDerive())->PcrsOuter();
+	CColRefSet *outer_refs = (*pexprSubquery)[0]->GetDrvdPropRelational().PcrsOuter();
 	CColRefSet *pcrsOuterOutput = CDrvdPropRelational::GetRelationalProperties(pexprOuter->PdpDerive())->PcrsOutput();
 
 	SSubqueryDesc *psd = GPOS_NEW(mp) SSubqueryDesc();
@@ -1877,7 +1877,7 @@ CSubqueryHandler::FRemoveExistentialSubquery
 
 		if (COperator::EopScalarSubqueryExists == op_id)
 		{
-			CColRefSet *outer_refs = pdpInner->PcrsOuter();
+			CColRefSet *outer_refs = pexprInner->GetDrvdPropRelational().PcrsOuter();
 
 			if (0 == outer_refs->Size())
 			{

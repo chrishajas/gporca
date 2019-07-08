@@ -213,7 +213,7 @@ CDecorrelator::FProcess
 	GPOS_ASSERT_IMP
 		(
 		fSuccess,
-		0 == CDrvdPropRelational::GetRelationalProperties((*ppexprDecorrelated)->PdpDerive())->PcrsOuter()->Size()
+		0 == (*ppexprDecorrelated)->GetDrvdPropRelational().PcrsOuter()->Size()
 		);
 
 	return fSuccess;
