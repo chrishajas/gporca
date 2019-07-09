@@ -266,7 +266,7 @@ CLogicalGet::PcrsDeriveNotNull
 {
 	// get all output columns
 	CColRefSet *pcrs = GPOS_NEW(mp) CColRefSet(mp);
-	pcrs->Include(CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->PcrsOutput());
+	pcrs->Include(exprhdl.PcrsOutput());
 
 	// filters out nullable columns
 	CColRefSetIter crsi(*CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->PcrsOutput());

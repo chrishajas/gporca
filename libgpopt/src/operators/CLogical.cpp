@@ -228,7 +228,7 @@ CLogical::PcrsDeriveOutputPassThru
 	// may have additional children that are ignored, e.g., scalar children
 	GPOS_ASSERT(1 <= exprhdl.Arity());
 	
-	CColRefSet *pcrs = exprhdl.GetRelationalProperties(0)->PcrsOutput();
+	CColRefSet *pcrs = exprhdl.PcrsOutput(0);
 	pcrs->AddRef();
 	
 	return pcrs;
@@ -282,7 +282,7 @@ CLogical::PcrsDeriveOutputCombineLogical
 	ULONG arity = exprhdl.Arity();
 	for (ULONG ul = 0; ul < arity - 1; ul++)
 	{
-		CColRefSet *pcrsChild = exprhdl.GetRelationalProperties(ul)->PcrsOutput();
+		CColRefSet *pcrsChild = exprhdl.PcrsOutput(ul);
 		GPOS_ASSERT(pcrs->IsDisjoint(pcrsChild) && "Input columns are not disjoint");
 
 		pcrs->Union(pcrsChild);
@@ -497,10 +497,7 @@ CLogical::PcrsDeriveOuter
 		{
 			// add outer references from relational children
 			outer_refs->Union(exprhdl.PcrsOuter(i));
-
-			CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties(i);
-			pcrsOutput->Union(pdprel->PcrsOutput());
-
+			pcrsOutput->Union(exprhdl.PcrsOutput(i));
 		}
 	}
 
@@ -1162,7 +1159,7 @@ CLogical::PcrsReqdChildStats
 	pcrs->Union(pcrsUsed);
 
 	// intersect with the output columns of relational child
-	pcrs->Intersection(exprhdl.GetRelationalProperties(child_index)->PcrsOutput());
+	pcrs->Intersection(exprhdl.PcrsOutput(child_index));
 
 	return pcrs;
 }
@@ -1237,8 +1234,7 @@ CLogical::PstatsBaseTable
 		pcrsHist->Include(pcrsHistExtra);
 	}
 
-	CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties();
-	CColRefSet *pcrsOutput = pdprel->PcrsOutput();
+	CColRefSet *pcrsOutput = exprhdl.PcrsOutput();
 	CColRefSet *pcrsWidth = GPOS_NEW(mp) CColRefSet(mp);
 	pcrsWidth->Include(pcrsOutput);
 	pcrsWidth->Exclude(pcrsHist);

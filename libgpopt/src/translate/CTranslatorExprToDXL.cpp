@@ -1667,7 +1667,7 @@ CTranslatorExprToDXL::PdxlnResultFromFilter
 	CDXLNode *child_dxlnode = CreateDXLNode(pexprRelational, NULL /* colref_array */, pdrgpdsBaseTables, pulNonGatherMotions, pfDML, false /*fRemap*/, false /*fRoot*/);
 
 	// translate scalar expression in to filter and one time filter dxl nodes
-	CColRefSet *relational_child_colrefset = pexprRelational->GetDrvdPropRelational()->PcrsOutput();
+	CColRefSet *relational_child_colrefset = pexprRelational->PcrsOutput();
 	// get all the scalar conditions in an array
 	CExpressionArray *scalar_exprs = CPredicateUtils::PdrgpexprConjuncts(m_mp, pexprScalar);
 	// array to hold scalar conditions which will qualify for filter condition
@@ -2212,7 +2212,7 @@ CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 	{
 		GPOS_ASSERT(NULL != pdrgpcrCTGOutput);
 
-		CColRefSet *pcrsOutput = pexprCTG->GetDrvdPropRelational()->PcrsOutput();
+		CColRefSet *pcrsOutput = pexprCTG->PcrsOutput();
 		pdxlnPrL = PdxlnProjList(pcrsOutput, pdrgpcrCTGOutput);
 
 		CDXLNode *pdxlnValuesScan = CTranslatorExprToDXLUtils::PdxlnValuesScan
@@ -2970,7 +2970,7 @@ CTranslatorExprToDXL::PdxlnQuantifiedSubplan
 	{
 		// overwrite required inner column based on scalar expression
 
-		CColRefSet *pcrsInner = pexprInner->GetDrvdPropRelational()->PcrsOutput();
+		CColRefSet *pcrsInner = pexprInner->PcrsOutput();
 		CColRefSet *pcrsUsed = GPOS_NEW(m_mp) CColRefSet (m_mp, *pexprScalar->GetDrvdPropScalar()->PcrsUsed());
 		pcrsUsed->Intersection(pcrsInner);
 		if (0 < pcrsUsed->Size())
@@ -3744,11 +3744,9 @@ CTranslatorExprToDXL::PdxlnNLJoin
 
 
 #ifdef GPOS_DEBUG
-	// get children's relational properties
-	CDrvdPropRelational *pdprelOuter = pexprOuterChild->GetDrvdPropRelational();
 	GPOS_ASSERT_IMP(COperator::EopPhysicalInnerIndexNLJoin != pop->Eopid() &&
 					COperator::EopPhysicalLeftOuterIndexNLJoin != pop->Eopid()
-			, pexprInnerChild->PcrsOuter()->IsDisjoint(pdprelOuter->PcrsOutput()) &&
+			, pexprInnerChild->PcrsOuter()->IsDisjoint(pexprOuterChild->PcrsOutput()) &&
 			"detected outer references in NL inner child");
 #endif // GPOS_DEBUG
 

@@ -213,7 +213,7 @@ CXformSubqJoin2Apply::PexprSubqueryPushDown
 	for (ULONG ul = 0; ul < arity - 1; ul++)
 	{
 		CExpression *pexprChild = (*pexprJoin)[ul];
-		CColRefSet *pcrsOutput = CDrvdPropRelational::GetRelationalProperties(pexprChild->PdpDerive())->PcrsOutput();
+		CColRefSet *pcrsOutput = pexprChild->PcrsOutput();
 		pcrsOutput->AddRef();
 		pdrgpcrs->Append(pcrsOutput);
 
@@ -323,7 +323,7 @@ CXformSubqJoin2Apply::Transform
 	CExpression *pexprJoin = (*pexprSubqsPushedDown)[0];
 	CExpression *pexprJoinCondition = (*pexprJoin)[pexprJoin->Arity() - 1];
 	CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprJoinCondition->PdpDerive())->PcrsUsed();
-	CColRefSet *pcrsJoinOutput = CDrvdPropRelational::GetRelationalProperties(pexprJoin->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsJoinOutput = pexprJoin->PcrsOutput();
 	if (!pcrsJoinOutput->ContainsAll(pcrsUsed))
 	{
 		// discard expression after subquery push down

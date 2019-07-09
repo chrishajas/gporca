@@ -212,7 +212,7 @@ namespace gpopt
 #ifdef GPOS_DEBUG
                 CExpressionHandle exprhdl(pxfctxt->Pmp());
                 exprhdl.Attach(pexprApply);
-                GPOS_ASSERT_IMP(CUtils::HasOuterRefs((*pexprApply)[1]), !exprhdl.PcrsOuter(1)->ContainsAll(exprhdl.GetRelationalProperties(0)->PcrsOutput())
+                GPOS_ASSERT_IMP(CUtils::HasOuterRefs((*pexprApply)[1]), !exprhdl.PcrsOuter(1)->ContainsAll(exprhdl.PcrsOutput(0))
                                 && "Apply's inner child can only use external columns");
 #endif // GPOS_DEBUG
 

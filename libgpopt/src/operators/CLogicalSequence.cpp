@@ -95,7 +95,7 @@ CLogicalSequence::PcrsDeriveOutput
 	GPOS_ASSERT(1 <= exprhdl.Arity());
 	
 	// get output columns of last child
-	CColRefSet *pcrs = exprhdl.GetRelationalProperties(exprhdl.Arity() - 1)->PcrsOutput();
+	CColRefSet *pcrs = exprhdl.PcrsOutput(exprhdl.Arity() - 1);
 	pcrs->AddRef();
 	
 	return pcrs;

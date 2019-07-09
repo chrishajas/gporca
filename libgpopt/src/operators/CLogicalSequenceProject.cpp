@@ -239,7 +239,7 @@ CLogicalSequenceProject::PcrsDeriveOutput
 
 	CColRefSet *pcrs = GPOS_NEW(mp) CColRefSet(mp);
 
-	pcrs->Union(exprhdl.GetRelationalProperties(0)->PcrsOutput());
+	pcrs->Union(exprhdl.PcrsOutput(0));
 
 	// the scalar child defines additional columns
 	pcrs->Union(exprhdl.GetDrvdScalarProps(1)->PcrsDefined());

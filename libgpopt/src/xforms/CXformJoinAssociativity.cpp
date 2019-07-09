@@ -96,8 +96,8 @@ CXformJoinAssociativity::CreatePredicates
 	
 	// columns for new lower join
 	CColRefSet *pcrsLower = GPOS_NEW(mp) CColRefSet(mp);
-	pcrsLower->Union(CDrvdPropRelational::GetRelationalProperties(pexprLeftLeft->PdpDerive())->PcrsOutput());
-	pcrsLower->Union(CDrvdPropRelational::GetRelationalProperties(pexprRight->PdpDerive())->PcrsOutput());
+	pcrsLower->Union(pexprLeftLeft->PcrsOutput());
+	pcrsLower->Union(pexprRight->PcrsOutput());
 	
 	// convert current predicates into arrays of conjuncts
 	CExpressionArray *pdrgpexprOrig = GPOS_NEW(mp) CExpressionArray(mp);

@@ -199,7 +199,7 @@ CLogicalSplit::PcrsDeriveOutput
 	GPOS_ASSERT(2 == exprhdl.Arity());
 
 	CColRefSet *pcrs = GPOS_NEW(mp) CColRefSet(mp);
-	pcrs->Union(exprhdl.GetRelationalProperties(0)->PcrsOutput());
+	pcrs->Union(exprhdl.PcrsOutput(0));
 	pcrs->Include(m_pcrAction);
 	
 	if (NULL != m_pcrTupleOid)

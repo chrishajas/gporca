@@ -165,7 +165,7 @@ CEngine::Init
 	GPOS_ASSERT(NULL != pqc);
 	GPOS_ASSERT_IMP
 		(
-		0 == CDrvdPropRelational::GetRelationalProperties(pqc->Pexpr()->PdpDerive())->PcrsOutput()->Size(),
+		0 == pqc->Pexpr()->PcrsOutput()->Size(),
 		0 == pqc->Prpp()->PcrsRequired()->Size() &&
 		"requiring columns from a zero column expression"
 		);

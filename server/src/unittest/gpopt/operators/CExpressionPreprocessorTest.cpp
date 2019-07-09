@@ -426,8 +426,8 @@ CExpressionPreprocessorTest::PexprJoinHelper
 	if (fIntermediateInnerjoin)
 	{
 		CExpression *pexprGet = CTestUtils::PexprLogicalGet(mp);
-		CColRef *pcrLeft = CDrvdPropRelational::GetRelationalProperties((*pexprBottomJoin)[0]->PdpDerive())->PcrsOutput()->PcrAny();
-		CColRef *pcrRight = CDrvdPropRelational::GetRelationalProperties(pexprGet->PdpDerive())->PcrsOutput()->PcrAny();
+		CColRef *pcrLeft = (*pexprBottomJoin)[0]->PcrsOutput()->PcrAny();
+		CColRef *pcrRight = pexprGet->PcrsOutput()->PcrAny();
 		CExpression *pexprEquality = CUtils::PexprScalarEqCmp(mp, pcrLeft, pcrRight);
 
 		pexprBottomJoin = GPOS_NEW(mp) CExpression(mp, GPOS_NEW(mp) CLogicalInnerJoin(mp), pexprBottomJoin, pexprGet, pexprEquality);
@@ -438,8 +438,8 @@ CExpressionPreprocessorTest::PexprJoinHelper
 	{
 		// generate cascaded LOJ expression
 		CExpression *pexprGet = CTestUtils::PexprLogicalGet(mp);
-		CColRef *pcrLeft = CDrvdPropRelational::GetRelationalProperties(pexprBottomJoin->PdpDerive())->PcrsOutput()->PcrAny();
-		CColRef *pcrRight = CDrvdPropRelational::GetRelationalProperties(pexprGet->PdpDerive())->PcrsOutput()->PcrAny();
+		CColRef *pcrLeft = pexprBottomJoin->PcrsOutput()->PcrAny();
+		CColRef *pcrRight = pexprGet->PcrsOutput()->PcrAny();
 		CExpression *pexprEquality = CUtils::PexprScalarEqCmp(mp, pcrLeft, pcrRight);
 
 		pexprResult = GPOS_NEW(mp) CExpression(mp, GPOS_NEW(mp) CLogicalLeftOuterJoin(mp), pexprBottomJoin, pexprGet, pexprEquality);
@@ -477,7 +477,7 @@ CExpressionPreprocessorTest::PexprWindowFuncWithLOJHelper
 	if (!fOuterChildPred && fCascadedLOJ)
 	{
 		// add another predicate on inner child of top LOJ
-		CColRef *pcrInner = CDrvdPropRelational::GetRelationalProperties((*pexprLOJ)[1]->PdpDerive())->PcrsOutput()->PcrAny();
+		CColRef *pcrInner = (*pexprLOJ)[1]->PcrsOutput()->PcrAny();
 		if (fAddWindowFunction)
 		{
 			pdrgpcrPartitionBy->Append(pcrInner);
@@ -774,11 +774,11 @@ CExpressionPreprocessorTest::EresTestLOJ
 					CColRef *colref = NULL;
 					if (fOuterChildPred)
 					{
-						colref = CDrvdPropRelational::GetRelationalProperties((*pexprLOJ)[0]->PdpDerive())->PcrsOutput()->PcrAny();
+						colref = (*pexprLOJ)[0]->PcrsOutput()->PcrAny();
 					}
 					else
 					{
-						colref = CDrvdPropRelational::GetRelationalProperties((*pexprLOJ)[1]->PdpDerive())->PcrsOutput()->PcrAny();
+						colref = (*pexprLOJ)[1]->PcrsOutput()->PcrAny();
 					}
 
 					pexprLOJ = PexprJoinHelper(mp, pexprLOJ, fCascadedLOJ, fIntermediateInnerjoin);
@@ -1417,7 +1417,7 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessNestedScalarSubqueries()
 					);
 
 	CExpression *pexprGet = CTestUtils::PexprLogicalGet(mp);
-	const CColRef *pcrInner = CDrvdPropRelational::GetRelationalProperties(pexprGet->PdpDerive())->PcrsOutput()->PcrAny();
+	const CColRef *pcrInner = pexprGet->PcrsOutput()->PcrAny();
 	CExpression *pexprSubqInner = GPOS_NEW(mp) CExpression(mp, GPOS_NEW(mp) CScalarSubquery(mp, pcrInner, false /*fGeneratedByExist*/, false /*fGeneratedByQuantified*/), pexprGet);
 	CExpression *pexprCTG1 = CUtils::PexprLogicalCTGDummy(mp);
 	CExpression *pexprPrj1 = CUtils::PexprAddProjection(mp, pexprCTG1, pexprSubqInner);
@@ -1472,7 +1472,7 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessOuterJoin()
 	CAutoOptCtxt aoc(mp, &mda, NULL /*pceeval*/, CTestUtils::GetCostModel(mp));
 
 	CExpression *pexprLOJ = CTestUtils::PexprLogicalJoin<CLogicalLeftOuterJoin>(mp);
-	CColRefSet *pcrsInner = CDrvdPropRelational::GetRelationalProperties((*pexprLOJ)[1]->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsInner = (*pexprLOJ)[1]->PcrsOutput();
 
 	// test case 1: generate a single comparison predicate between an inner column and const
 	CColRef *pcrInner = pcrsInner->PcrAny();
@@ -1490,7 +1490,7 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessOuterJoin()
 
 
  	// test case 2: generate a conjunction of predicates involving inner columns
- 	CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties((*pexprLOJ)[0]->PdpDerive())->PcrsOutput();
+ 	CColRefSet *outer_refs = (*pexprLOJ)[0]->PcrsOutput();
 	CColRef *pcrOuter = outer_refs->PcrAny();
 	CExpression *pexprCmp1 = CUtils::PexprScalarEqCmp(mp, pcrInner, pcrOuter);
 	CExpression *pexprCmp2 = CUtils::PexprScalarEqCmp(mp, pcrInner, CUtils::PexprScalarConstInt4(mp, 1 /*val*/));
@@ -1654,12 +1654,12 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessOrPrefilters()
 	CAutoOptCtxt aoc(mp, &mda, NULL /*pceeval*/, CTestUtils::GetCostModel(mp));
 	CExpression *pexprJoin = CTestUtils::PexprLogicalJoin<CLogicalInnerJoin>(mp);
 
-	CColRefSet *pcrsInner = CDrvdPropRelational::GetRelationalProperties((*pexprJoin)[1]->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsInner = (*pexprJoin)[1]->PcrsOutput();
 	CColRefArray *pdrgpcrInner = pcrsInner->Pdrgpcr(mp);
 	GPOS_ASSERT(pdrgpcrInner != NULL);
 	GPOS_ASSERT(3 <= pdrgpcrInner->Size());
 
-	CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties((*pexprJoin)[0]->PdpDerive())->PcrsOutput();
+	CColRefSet *outer_refs = (*pexprJoin)[0]->PcrsOutput();
 	CColRefArray *pdrgpcrOuter = outer_refs->Pdrgpcr(mp);
 	GPOS_ASSERT(pdrgpcrOuter != NULL);
 	GPOS_ASSERT(3 <= pdrgpcrOuter->Size());
@@ -1866,12 +1866,12 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessOrPrefiltersPartialPush()
 	CAutoOptCtxt aoc(mp, &mda, NULL /*pceeval*/, CTestUtils::GetCostModel(mp));
 	CExpression *pexprJoin = CTestUtils::PexprLogicalJoin<CLogicalInnerJoin>(mp);
 
-	CColRefSet *pcrsInner = CDrvdPropRelational::GetRelationalProperties((*pexprJoin)[1]->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsInner = (*pexprJoin)[1]->PcrsOutput();
 	CColRefArray *pdrgpcrInner = pcrsInner->Pdrgpcr(mp);
 	GPOS_ASSERT(NULL != pdrgpcrInner);
 	GPOS_ASSERT(3 <= pdrgpcrInner->Size());
 
-	CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties((*pexprJoin)[0]->PdpDerive())->PcrsOutput();
+	CColRefSet *outer_refs = (*pexprJoin)[0]->PcrsOutput();
 	CColRefArray *pdrgpcrOuter = outer_refs->Pdrgpcr(mp);
 	GPOS_ASSERT(NULL != pdrgpcrOuter);
 	GPOS_ASSERT(3 <= pdrgpcrOuter->Size());
@@ -2243,7 +2243,7 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessConvert2InPredicate()
 	popGet->AddRef();
 
 	// Create a disjunct, add as a child
-	CColRef *pcrLeft = CDrvdPropRelational::GetRelationalProperties(apexprGet->PdpDerive())->PcrsOutput()->PcrAny();
+	CColRef *pcrLeft = apexprGet->PcrsOutput()->PcrAny();
 	CScalarBoolOp *pscboolop = GPOS_NEW(mp) CScalarBoolOp(mp, CScalarBoolOp::EboolopOr);
 	CExpression *pexprDisjunct =
 			GPOS_NEW(mp) CExpression(
@@ -2298,7 +2298,7 @@ CExpressionPreprocessorTest::PexprCreateConvertableArray
 	}
 	CExpression *pexpr(CTestUtils::PexprLogicalSelectArrayCmp(mp, earrcmp, ecmptype));
 	// get a ref to the comparison column
-	CColRef *pcrLeft = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->PcrsOutput()->PcrAny();
+	CColRef *pcrLeft = pexpr->PcrsOutput()->PcrAny();
 
 	// remove the array child and then make an OR node with two equality comparisons
 	CExpression *pexprArrayComp = (*pexpr->PdrgPexpr())[1];
@@ -2409,7 +2409,7 @@ CExpressionPreprocessorTest::EresUnittest_PreProcessConvert2InPredicateDeepExpre
 	popGet->AddRef();
 
 	// get a column ref from the outermost Get expression
-	CAutoRef<CColRefArray> apdrgpcr(CDrvdPropRelational::GetRelationalProperties(apexprGet->PdpDerive())->PcrsOutput()->Pdrgpcr(mp));
+	CAutoRef<CColRefArray> apdrgpcr(apexprGet->PcrsOutput()->Pdrgpcr(mp));
 	GPOS_ASSERT(1 < apdrgpcr->Size());
 	CColRef *pcrLeft = (*apdrgpcr)[0];
 	CColRef *pcrRight = (*apdrgpcr)[1];

@@ -71,7 +71,7 @@ CXformLeftSemiJoin2InnerJoin::Exfp
 		return ExfpNone;
 	}
 
-	CColRefSet *pcrsInnerOutput = exprhdl.GetRelationalProperties(1 /*child_index*/)->PcrsOutput();
+	CColRefSet *pcrsInnerOutput = exprhdl.PcrsOutput(1 /*child_index*/);
 	CExpression *pexprScalar = exprhdl.PexprScalarChild(2 /*child_index*/);
 	CAutoMemoryPool amp;
 
@@ -119,7 +119,7 @@ CXformLeftSemiJoin2InnerJoin::Transform
 
 	// construct grouping columns by collecting used columns in the join predicate
 	// that come from join's inner child
-	CColRefSet *pcrsOuterOutput = CDrvdPropRelational::GetRelationalProperties(pexprOuter->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsOuterOutput = pexprOuter->PcrsOutput();
 	CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed();
 	CColRefSet *pcrsGb = GPOS_NEW(mp) CColRefSet(mp);
 	pcrsGb->Include(pcrsUsed);

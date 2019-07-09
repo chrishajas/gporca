@@ -328,8 +328,7 @@ CLogicalGbAgg::PcrsDeriveOutput
 
 	// include the intersection of the grouping columns and the child's output
 	pcrs->Include(Pdrgpcr());
-	CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties(0);
-	pcrs->Intersection(pdprel->PcrsOutput());
+	pcrs->Intersection(exprhdl.PcrsOutput(0));
 
 	// the scalar child defines additional columns
 	pcrs->Union(exprhdl.GetDrvdScalarProps(1 /*child_index*/)->PcrsDefined());

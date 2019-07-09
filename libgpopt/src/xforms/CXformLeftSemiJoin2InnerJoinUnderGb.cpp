@@ -62,7 +62,7 @@ CXformLeftSemiJoin2InnerJoinUnderGb::Exfp
 	)
 	const
 {
-	CColRefSet *pcrsInnerOutput = exprhdl.GetRelationalProperties(1)->PcrsOutput();
+	CColRefSet *pcrsInnerOutput = exprhdl.PcrsOutput(1);
 	CExpression *pexprScalar = exprhdl.PexprScalarChild(2);
 	CAutoMemoryPool amp;
 	if (exprhdl.HasOuterRefs() ||

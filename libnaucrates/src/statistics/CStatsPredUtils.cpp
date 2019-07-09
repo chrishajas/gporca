@@ -1324,7 +1324,7 @@ CStatsPredUtils::ExtractJoinStatsFromExprHandle
 	const ULONG size = expr_handle.Arity();
 	for (ULONG ul = 0; ul < size - 1; ul++)
 	{
-		CColRefSet *output_col_ref_set = expr_handle.GetRelationalProperties(ul)->PcrsOutput();
+		CColRefSet *output_col_ref_set = expr_handle.PcrsOutput(ul);
 		output_col_ref_set->AddRef();
 		output_col_refsets->Append(output_col_ref_set);
 	}

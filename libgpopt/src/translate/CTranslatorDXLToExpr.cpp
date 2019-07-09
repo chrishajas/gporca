@@ -822,7 +822,7 @@ CTranslatorDXLToExpr::BuildSetOpChild
 
 	const ULongPtrArray *pdrgpulInput = dxl_op->GetInputColIdArrayAt(child_index);
 	const ULONG ulInputCols = pdrgpulInput->Size();
-	CColRefSet *pcrsChildOutput = CDrvdPropRelational::GetRelationalProperties((*ppexprChild)->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsChildOutput = (*ppexprChild)->PcrsOutput();
 	for (ULONG ulColPos = 0; ulColPos < ulInputCols; ulColPos++)
 	{
 		// column identifier of the input column

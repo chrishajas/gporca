@@ -163,7 +163,7 @@ CLogicalPartitionSelector::PcrsDeriveOutput
 {
 	CColRefSet *pcrsOutput = GPOS_NEW(mp) CColRefSet(mp);
 
-	pcrsOutput->Union(exprhdl.GetRelationalProperties(0)->PcrsOutput());
+	pcrsOutput->Union(exprhdl.PcrsOutput(0));
 	pcrsOutput->Include(m_pcrOid);
 
 	return pcrsOutput;

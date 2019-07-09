@@ -174,7 +174,7 @@ CLogicalSetOp::PcrsDeriveOutput
 	const ULONG arity = exprhdl.Arity();
 	for (ULONG ul = 0; ul < arity; ul++)
 	{
-		CColRefSet *pcrsChildOutput = exprhdl.GetRelationalProperties(ul)->PcrsOutput();
+		CColRefSet *pcrsChildOutput = exprhdl.PcrsOutput(ul);
 		CColRefSet *pcrsInput = (*m_pdrgpcrsInput)[ul];
 		GPOS_ASSERT(pcrsChildOutput->ContainsAll(pcrsInput) &&
 				"Unexpected outer references in SetOp input");

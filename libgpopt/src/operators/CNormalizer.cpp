@@ -143,7 +143,7 @@ CNormalizer::FPushable
 	CColRefSet *pcrsUsed =
 		CDrvdPropScalar::GetDrvdScalarProps(pexprPred->PdpDerive())->PcrsUsed();
 	CColRefSet *pcrsOutput =
-		CDrvdPropRelational::GetRelationalProperties(pexprLogical->PdpDerive())->PcrsOutput();
+		pexprLogical->PcrsOutput();
 
 	return pcrsOutput->ContainsAll(pcrsUsed);
 }
@@ -374,7 +374,7 @@ CNormalizer::FSimplifySelectOnOuterJoin
 	CExpression *pexprOuterJoinInnerChild = (*pexprOuterJoin)[1];
 	CExpression *pexprOuterJoinPred = (*pexprOuterJoin)[2];
 
-	CColRefSet *pcrsOutput = CDrvdPropRelational::GetRelationalProperties(pexprOuterJoinInnerChild->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsOutput = pexprOuterJoinInnerChild->PcrsOutput();
 	if (!GPOS_FTRACE(EopttraceDisableOuterJoin2InnerJoinRewrite) &&
 		CPredicateUtils::FNullRejecting(mp, pexprPred, pcrsOutput))
 	{
@@ -432,7 +432,7 @@ CNormalizer::FSimplifySelectOnFullJoin
 	CExpression *pexprRightChild = (*pexprFullJoin)[1];
 	CExpression *pexprJoinPred = (*pexprFullJoin)[2];
 
-	CColRefSet *pcrsOutputLeftChild = CDrvdPropRelational::GetRelationalProperties(pexprLeftChild->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsOutputLeftChild = pexprLeftChild->PcrsOutput();
 
 	if (CPredicateUtils::FNullRejecting(mp, pexprPred, pcrsOutputLeftChild))
 	{
@@ -1231,7 +1231,7 @@ CNormalizer::PexprPullUpAndCombineProjects
 	CExpressionHandle exprhdl(mp);
 	exprhdl.Attach(pexpr);
 
-	CColRefSet *pcrsOutput = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsOutput = pexpr->PcrsOutput();
 
 	// extract the columns used by the scalar expression and the operator itself (for grouping, sorting, etc.)
 	CColRefSet *pcrsUsed = exprhdl.PcrsUsedColumns(mp);
@@ -1276,10 +1276,9 @@ CNormalizer::PexprPullUpAndCombineProjects
 		CExpression *pexprPrjList = GPOS_NEW(mp) CExpression(mp, GPOS_NEW(mp) CScalarProjectList(mp), pdrgpexprPrElPullUp);
 
 #ifdef GPOS_DEBUG
-		CDrvdPropRelational *childRelProps = CDrvdPropRelational::GetRelationalProperties(pexprRelational->PdpDerive());
 		CColRefSet *availableCRs = GPOS_NEW(mp) CColRefSet(mp);
 
-		availableCRs->Include(childRelProps->PcrsOutput());
+		availableCRs->Include(pexprRelational->PcrsOutput());
 		availableCRs->Include(pexprRelational->PcrsOuter());
 		// check that the new project node has all the values it needs
 		GPOS_ASSERT(availableCRs->ContainsAll(CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed()));
@@ -1301,7 +1300,7 @@ CNormalizer::PexprPullUpAndCombineProjects
 	// some project elements were pulled - add a project on top of output expression
 	*pfSuccess = true;
 	CExpression *pexprPrjList = GPOS_NEW(mp) CExpression(mp, GPOS_NEW(mp) CScalarProjectList(mp), pdrgpexprPrElPullUp);
-	GPOS_ASSERT(CDrvdPropRelational::GetRelationalProperties(pexprOutput->PdpDerive())->PcrsOutput()->ContainsAll(CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed()));
+	GPOS_ASSERT(pexprOutput->PcrsOutput()->ContainsAll(CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed()));
 
 	return GPOS_NEW(mp) CExpression(mp, GPOS_NEW(mp) CLogicalProject(mp), pexprOutput, pexprPrjList);
 }
@@ -1468,8 +1467,7 @@ CNormalizer::FLocalColsSubsetOfInputCols
 		{
 			if (!exprhdl.FScalarChild(ul))
 			{
-				CDrvdPropRelational *pdprelChild = exprhdl.GetRelationalProperties(ul);
-				pcrsInput->Include(pdprelChild->PcrsOutput());
+				pcrsInput->Include(exprhdl.PcrsOutput(ul));
 			}
 		}
 

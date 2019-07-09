@@ -291,7 +291,7 @@ CExpressionPreprocessor::PexprUnnestScalarSubqueries
 
 			// make sure that inner subquery has no outer references to Const Table
 			// since Const Table will be eliminated in output expression
-			CColRefSet *pcrsConstTableOutput = CDrvdPropRelational::GetRelationalProperties(pexprConstTable->PdpDerive())->PcrsOutput();
+			CColRefSet *pcrsConstTableOutput = pexprConstTable->PcrsOutput();
 			CColRefSet *outer_refs = (*pexprInnerSubq)[0]->PcrsOuter();
 			if (0 == outer_refs->Size() || outer_refs->IsDisjoint(pcrsConstTableOutput))
 			{
@@ -315,7 +315,7 @@ CExpressionPreprocessor::PexprUnnestScalarSubqueries
 	else if (CUtils::FScalarSubqWithConstTblGet(pexpr))
 	{
 		const CColRef *pcrSubq = CScalarSubquery::PopConvert(pexpr->Pop())->Pcr();
-		CColRefSet *pcrsConstTableOutput = CDrvdPropRelational::GetRelationalProperties((*pexpr)[0]->PdpDerive())->PcrsOutput();
+		CColRefSet *pcrsConstTableOutput = (*pexpr)[0]->PcrsOutput();
 
 		// if the subquery has outer ref, we do not make use of the output columns of constant table get.
 		// In this scenairo, we replace the entire scalar subquery with a CScalarIdent with the outer reference.
@@ -994,7 +994,7 @@ CExpressionPreprocessor::PexprProjBelowSubquery
 		CExpression *pexprRel = (*pexpr)[0];
 		CExpression *pexprRelNew = PexprProjBelowSubquery(mp, pexprRel, false /* fUnderPrList */);
 
-		const CColRefSet *prcsOutput = CDrvdPropRelational::GetRelationalProperties(pexprRelNew->PdpDerive())->PcrsOutput();
+		const CColRefSet *prcsOutput = pexprRelNew->PcrsOutput();
 		const CColRef *pcrSubquery = CScalarSubquery::PopConvert(pop)->Pcr();
 		if (NULL != prcsOutput && !prcsOutput->FMember(pcrSubquery))
 		{
@@ -1154,7 +1154,7 @@ CExpressionPreprocessor::PexprOuterJoinToInnerJoin
 			BOOL fNewChild = false;
 			if (COperator::EopLogicalLeftOuterJoin == pexprChild->Pop()->Eopid())
 			{
-				CColRefSet *pcrsLOJInnerOutput = CDrvdPropRelational::GetRelationalProperties((*pexprChild)[1]->PdpDerive())->PcrsOutput();
+				CColRefSet *pcrsLOJInnerOutput = (*pexprChild)[1]->PcrsOutput();
 				if (!GPOS_FTRACE(EopttraceDisableOuterJoin2InnerJoinRewrite) &&
 					CPredicateUtils::FNullRejecting(mp, pexprScalar, pcrsLOJInnerOutput))
 				{
@@ -1462,7 +1462,7 @@ CExpressionPreprocessor::PexprWithImpliedPredsOnLOJInnerChild
 	CPropConstraint *ppc = CLogical::PpcDeriveConstraintFromPredicates(mp, exprhdl);
 
 	// use the computed constraint to derive a scalar predicate on the inner child
-	CColRefSet *pcrsInnerOutput = CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->PcrsOutput();
+	CColRefSet *pcrsInnerOutput = pexprInner->PcrsOutput();
 	CColRefSet *pcrsInnerNotNull = CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->PcrsNotNull();
 
 	// generate a scalar predicate from the computed constraint, restricted to LOJ inner child
@@ -1600,13 +1600,9 @@ CExpressionPreprocessor::PexprFromConstraints
 		// process child
 		CExpression *pexprChildNew = PexprFromConstraints(mp, pexprChild, pcrsProcessed);
 
-		// we already called derive at the beginning, so child properties are already derived
-		CDrvdPropRelational *pdprelChild = pexprChild->GetDrvdPropRelational();
-
 		CColRefSet *pcrsOutChild = GPOS_NEW(mp) CColRefSet(mp);
-
 		// output columns on which predicates must be inferred
-		pcrsOutChild->Include(pdprelChild->PcrsOutput());
+		pcrsOutChild->Include(pexprChild->PcrsOutput());
 
 		// exclude column references on which predicates had been already inferred,
 		// this avoids generating duplicate predicates on the parent node if a
@@ -1653,7 +1649,7 @@ CExpressionPreprocessor::PexprPruneEmptySubtrees
 		if (0 == pdprel->Maxcard())
 		{
 			// output columns
-			CColRefArray *colref_array = pdprel->PcrsOutput()->Pdrgpcr(mp);
+			CColRefArray *colref_array = pexpr->PcrsOutput()->Pdrgpcr(mp);
 
 			// empty output data
 			IDatum2dArray *pdrgpdrgpdatum = GPOS_NEW(mp) IDatum2dArray(mp);
@@ -2299,7 +2295,7 @@ CExpressionPreprocessor::PexprExistWithPredFromINSubq
 		{
 			// perform conversion if subquery does not output any of the columns from relational child
 			const CColRef *pcrSubquery = CScalarSubqueryAny::PopConvert(pop)->Pcr();
-			CColRefSet *pcrsRelationalChild = CDrvdPropRelational::GetRelationalProperties((*pexpr)[0]->PdpDerive())->PcrsOutput();
+			CColRefSet *pcrsRelationalChild = (*pexpr)[0]->PcrsOutput();
 			if (pcrsRelationalChild->FMember(pcrSubquery))
 			{
 				return pexprNew;

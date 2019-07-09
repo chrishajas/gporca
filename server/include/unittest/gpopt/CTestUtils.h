@@ -889,8 +889,7 @@ namespace gpopt
 	{
 		// create an outer Get expression and extract a random column from it
 		CExpression *pexprGet = PexprLogicalGet(mp);
-		CColRefSet *pcrs = CDrvdPropRelational::GetRelationalProperties(pexprGet->PdpDerive())->PcrsOutput();
-		CColRef *colref =  pcrs->PcrAny();
+		CColRef *colref =  pexprGet->PcrsOutput()->PcrAny();
 
 		// create an inner partitioned Get expression
 		CExpression *pexprGetPartitioned = PexprLogicalGetPartitioned(mp);
@@ -942,11 +941,8 @@ namespace gpopt
 		GPOS_ASSERT(NULL != pexprRight);
 
 		// get any two columns; one from each side
-		CDrvdPropRelational *pdprelLeft = CDrvdPropRelational::GetRelationalProperties(pexprLeft->PdpDerive());
-		CColRef *pcrLeft = pdprelLeft->PcrsOutput()->PcrAny();
-
-		CDrvdPropRelational *pdprelRight = CDrvdPropRelational::GetRelationalProperties(pexprRight->PdpDerive());
-		CColRef *pcrRight = pdprelRight->PcrsOutput()->PcrAny();
+		CColRef *pcrLeft = pexprLeft->PcrsOutput()->PcrAny();
+		CColRef *pcrRight = pexprRight->PcrsOutput()->PcrAny();
 		CExpression *pexprEquality = CUtils::PexprScalarEqCmp(mp, pcrLeft, pcrRight);
 
 		return CUtils::PexprLogicalJoin<T>(mp, pexprLeft, pexprRight, pexprEquality);
@@ -991,7 +987,7 @@ namespace gpopt
 	 )
 	{
 		CExpression *pexprOuter = PexprLogicalGet(mp);
-		CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties(pexprOuter->PdpDerive())->PcrsOutput();
+		CColRefSet *outer_refs = pexprOuter->PcrsOutput();
 
 		CExpression *pexprInner = PexprLogicalSelectCorrelated(mp, outer_refs, 3);
 		CExpression *pexprPredicate = CUtils::PexprScalarConstBool(mp, true /*value*/);
@@ -1016,7 +1012,7 @@ namespace gpopt
 	 )
 	{
 		CExpression *pexprOuter = PexprLogicalGet(mp);
-		CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties(pexprOuter->PdpDerive())->PcrsOutput();
+		CColRefSet *outer_refs = pexprOuter->PcrsOutput();
 
 		CExpression *pexprInner = PexprLogicalSelectCorrelated(mp, outer_refs, 3);
 		CExpression *pexprPredicate = CUtils::PexprScalarConstBool(mp, true /*value*/);

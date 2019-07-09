@@ -465,7 +465,7 @@ CReqdPropPlan::FProvidesReqdCols
 		return false;
 	}
 
-	CColRefSet *pcrsOutput = exprhdl.GetRelationalProperties()->PcrsOutput();
+	CColRefSet *pcrsOutput = exprhdl.PcrsOutput();
 
 	// check if property spec members use columns from operator output
 	BOOL fProvidesReqdCols = true;
