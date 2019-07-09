@@ -102,7 +102,7 @@ CXformSubqJoin2Apply::CollectSubqueries
 	if (CUtils::FSubquery(pop))
 	{
 		// extract outer references below subquery
-		CColRefSet *outer_refs = GPOS_NEW(mp) CColRefSet(mp, *CDrvdPropRelational::GetRelationalProperties((*pexpr)[0]->PdpDerive())->PcrsOuter());
+		CColRefSet *outer_refs = GPOS_NEW(mp) CColRefSet(mp, *((*pexpr)[0]->PcrsOuter()));
 
 		// add columns used by subquery
 		outer_refs->Union(CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive())->PcrsUsed());

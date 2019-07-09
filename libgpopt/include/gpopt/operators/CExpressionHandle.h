@@ -90,7 +90,7 @@ namespace gpopt
 			void DerivePlanProps(CDrvdPropCtxtPlan *pdpctxtplan);
 
 			// return an array of stats objects starting from the first stats object referenced by child
-			IStatisticsArray *PdrgpstatOuterRefs(IStatisticsArray *statistics_array, ULONG child_index) const;
+			IStatisticsArray *PdrgpstatOuterRefs(IStatisticsArray *statistics_array, ULONG child_index);
 
 			// check if stats are derived for attached expression and its children
 			BOOL FStatsDerived() const;
@@ -224,9 +224,9 @@ namespace gpopt
 			}
 
 			// check for outer references
-			BOOL HasOuterRefs() const
+			BOOL HasOuterRefs()
 			{
-				return (0 < GetRelationalProperties()->PcrsOuter()->Size());
+				return (0 < PcrsOuter()->Size());
 			}
 
 			// check if attached expression must execute on a single host
@@ -240,9 +240,8 @@ namespace gpopt
 				(
 				ULONG child_index
 				)
-				const
 			{
-				return (0 < GetRelationalProperties(child_index)->PcrsOuter()->Size());
+				return (0 < PcrsOuter(child_index)->Size());
 			}
 
 			// get next child index based on child optimization order, return true if such index could be found

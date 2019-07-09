@@ -1280,7 +1280,7 @@ CNormalizer::PexprPullUpAndCombineProjects
 		CColRefSet *availableCRs = GPOS_NEW(mp) CColRefSet(mp);
 
 		availableCRs->Include(childRelProps->PcrsOutput());
-		availableCRs->Include(childRelProps->PcrsOuter());
+		availableCRs->Include(pexprRelational->PcrsOuter());
 		// check that the new project node has all the values it needs
 		GPOS_ASSERT(availableCRs->ContainsAll(CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed()));
 		availableCRs->Release();
@@ -1475,7 +1475,7 @@ CNormalizer::FLocalColsSubsetOfInputCols
 
 		// check if the operator's locally used columns are a subset of the input columns
 		CColRefSet *pcrsUsedOp = exprhdl.PcrsUsedColumns(mp);
-		pcrsUsedOp->Exclude(exprhdl.GetRelationalProperties()->PcrsOuter());
+		pcrsUsedOp->Exclude(exprhdl.PcrsOuter());
 
 		fValid = pcrsInput->ContainsAll(pcrsUsedOp);
 

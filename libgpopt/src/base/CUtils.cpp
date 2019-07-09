@@ -988,8 +988,7 @@ CUtils::HasOuterRefs
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(pexpr->Pop()->FLogical());
 
-	DrvdPropArray *pdp = pexpr->PdpDerive();
-	return 0 < CDrvdPropRelational::GetRelationalProperties(pdp)->PcrsOuter()->Size();
+	return 0 < pexpr->PcrsOuter()->Size();
 }
 
 // check if a given operator is a logical join
@@ -3291,7 +3290,7 @@ CUtils::FInnerUsesExternalCols
 {
 	GPOS_ASSERT(3 == exprhdl.Arity());
 
-	CColRefSet *outer_refs = exprhdl.GetRelationalProperties(1 /*child_index*/)->PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.PcrsOuter(1 /*child_index*/);
 	if (0 == outer_refs->Size())
 	{
 		return false;
@@ -3309,7 +3308,7 @@ CUtils::FInnerUsesExternalColsOnly
 	)
 {
 	return FInnerUsesExternalCols(exprhdl) &&
-			exprhdl.GetRelationalProperties(1)->PcrsOuter()->IsDisjoint(exprhdl.GetRelationalProperties(0)->PcrsOutput());
+			exprhdl.PcrsOuter(1)->IsDisjoint(exprhdl.GetRelationalProperties(0)->PcrsOutput());
 }
 
 // check if given columns have available comparison operators
