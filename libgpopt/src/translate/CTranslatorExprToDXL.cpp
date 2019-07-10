@@ -327,8 +327,8 @@ CTranslatorExprToDXL::PdxlnTranslate
 
 	if (0 == ulNonGatherMotions)
 	{
-		CDrvdPropRelational *pdprel = pexpr->GetDrvdPropRelational();
-		CTranslatorExprToDXLUtils::SetDirectDispatchInfo(m_mp, m_pmda, dxlnode, pdprel, pdrgpdsBaseTables);
+
+		CTranslatorExprToDXLUtils::SetDirectDispatchInfo(m_mp, m_pmda, dxlnode, pexpr, pdrgpdsBaseTables);
 	}
 	
 	pdrgpdsBaseTables->Release();
@@ -5713,7 +5713,7 @@ CTranslatorExprToDXL::GetDXLDirectDispatchInfo
 	GPOS_ASSERT(ulPos < ptabdesc->Pdrgpcoldesc()->Size() && "Column not found");
 
 	CColRef *pcrDistrCol = (*popDML->PdrgpcrSource())[ulPos];
-	CPropConstraint *ppc = (*pexprDML)[0]->GetDrvdPropRelational()->Ppc();
+	CPropConstraint *ppc = (*pexprDML)[0]->Ppc();
 
 	if (NULL == ppc->Pcnstr())
 	{

@@ -355,7 +355,7 @@ CLogicalSetOp::PdrgpcrsInputMapped
 	)
 	const
 {
-	CColRefSetArray *pdrgpcrsInput = exprhdl.GetRelationalProperties(ulChild)->Ppc()->PdrgpcrsEquivClasses();
+	CColRefSetArray *pdrgpcrsInput = exprhdl.Ppc(ulChild)->PdrgpcrsEquivClasses();
 	const ULONG length = pdrgpcrsInput->Size();
 
 	CColRefSet* pcrsChildInput = (*m_pdrgpcrsInput)[ulChild];
@@ -443,7 +443,7 @@ CLogicalSetOp::PcnstrColumn
 	GPOS_ASSERT(ulChild < exprhdl.Arity());
 
 	// constraint from child
-	CConstraint *pcnstrChild = exprhdl.GetRelationalProperties(ulChild)->Ppc()->Pcnstr();
+	CConstraint *pcnstrChild = exprhdl.Ppc(ulChild)->Pcnstr();
 	if (NULL == pcnstrChild)
 	{
 		return NULL;

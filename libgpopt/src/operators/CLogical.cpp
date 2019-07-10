@@ -693,8 +693,7 @@ CLogical::PpcDeriveConstraintFromPredicates
 		}
 		else
 		{
-			CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties(ul);
-			CPropConstraint *ppc = pdprel->Ppc();
+			CPropConstraint *ppc = exprhdl.Ppc(ul);
 
 			// equivalence classes coming from child
 			CColRefSetArray *pdrgpcrsChild = ppc->PdrgpcrsEquivClasses();
@@ -887,7 +886,7 @@ CLogical::PpcDeriveConstraintPassThru
 	)
 {
 	// return constraint property of child
-	CPropConstraint *ppc = exprhdl.GetRelationalProperties(ulChild)->Ppc();
+	CPropConstraint *ppc = exprhdl.Ppc(ulChild);
 	if (NULL != ppc)
 	{
 		ppc->AddRef();
@@ -912,7 +911,7 @@ CLogical::PpcDeriveConstraintRestrict
 	)
 {
 	// constraint property from relational child
-	CPropConstraint *ppc = exprhdl.GetRelationalProperties(0)->Ppc();
+	CPropConstraint *ppc = exprhdl.Ppc(0);
 	CColRefSetArray *pdrgpcrs = ppc->PdrgpcrsEquivClasses();
 
 	// construct new array of equivalence classes
@@ -1125,7 +1124,7 @@ CLogical::Maxcard
 		( (CUtils::FScalarConstFalse(pexprScalar) &&
 				(COperator::EopLogicalFullOuterJoin != exprhdl.Pop()->Eopid() &&
 						COperator::EopLogicalLeftOuterJoin != exprhdl.Pop()->Eopid()))
-		|| CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->Ppc()->FContradiction()))
+		|| exprhdl.Ppc()->FContradiction()))
 	{
 		return CMaxCard(0 /*ull*/);
 	}

@@ -2765,8 +2765,7 @@ CUtils::PdrgpcrsCopyChildEquivClasses
 	{
 		if (!exprhdl.FScalarChild(ul))
 		{
-			CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties(ul);
-			CColRefSetArray *pdrgpcrsChild = pdprel->Ppc()->PdrgpcrsEquivClasses();
+			CColRefSetArray *pdrgpcrsChild = exprhdl.Ppc(ul)->PdrgpcrsEquivClasses();
 
 			CColRefSetArray *pdrgpcrsChildCopy = GPOS_NEW(mp) CColRefSetArray(mp);
 			const ULONG size = pdrgpcrsChild->Size();

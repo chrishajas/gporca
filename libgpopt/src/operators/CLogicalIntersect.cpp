@@ -86,7 +86,7 @@ CLogicalIntersect::Maxcard
 	const
 {
 	// contradictions produce no rows
-	if (CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->Ppc()->FContradiction())
+	if (exprhdl.Ppc()->FContradiction())
 	{
 		return CMaxCard(0 /*ull*/);
 	}

@@ -166,7 +166,7 @@ CLogicalAssert::Maxcard
 	GPOS_ASSERT(NULL != pexprScalar);
 
 	if (CUtils::FScalarConstFalse(pexprScalar) ||
-		CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->Ppc()->FContradiction())
+		exprhdl.Ppc()->FContradiction())
 	{
 		return CMaxCard(1 /*ull*/);
 	}

@@ -382,7 +382,7 @@ CLogicalCTEConsumer::PpcDeriveConstraint
 {
 	CExpression *pexprProducer = COptCtxt::PoctxtFromTLS()->Pcteinfo()->PexprCTEProducer(m_id);
 	GPOS_ASSERT(NULL != pexprProducer);
-	CPropConstraint *ppc = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->Ppc();
+	CPropConstraint *ppc = pexprProducer->Ppc();
 	CColRefSetArray *pdrgpcrs = ppc->PdrgpcrsEquivClasses();
 	CConstraint *pcnstr = ppc->Pcnstr();
 

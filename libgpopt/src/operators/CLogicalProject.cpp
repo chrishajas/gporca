@@ -273,7 +273,7 @@ CLogicalProject::PpcDeriveConstraint
 		return PpcDeriveConstraintPassThru(exprhdl, 0 /*ulChild*/);
 	}
 
-	CPropConstraint *ppcChild = exprhdl.GetRelationalProperties(0 /*ulChild*/)->Ppc();
+	CPropConstraint *ppcChild = exprhdl.Ppc(0 /* ulChild */);
 
 	// equivalence classes coming from child
 	CColRefSetArray *pdrgpcrsChild = ppcChild->PdrgpcrsEquivClasses();

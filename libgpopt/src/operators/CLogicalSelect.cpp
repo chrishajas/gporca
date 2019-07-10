@@ -138,7 +138,7 @@ CLogicalSelect::Maxcard
 	// in case of a false condition or a contradiction, maxcard should be zero
 	CExpression *pexprScalar = exprhdl.PexprScalarChild(1);
 	if ((NULL != pexprScalar && (CUtils::FScalarConstFalse(pexprScalar) ||  CUtils::FScalarConstBoolNull(pexprScalar))) ||
-		CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->Ppc()->FContradiction())
+		exprhdl.Ppc()->FContradiction())
 	{
 		return CMaxCard(0 /*ull*/);
 	}
