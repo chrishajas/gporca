@@ -114,7 +114,7 @@ CLogicalCTEProducer::PcrsDeriveNotNull
 	const
 {
 	CColRefSet *pcrs = GPOS_NEW(mp) CColRefSet(mp, m_pdrgpcr);
-	pcrs->Intersection(exprhdl.GetRelationalProperties(0)->PcrsNotNull());
+	pcrs->Intersection(exprhdl.PcrsNotNull(0));
 
 	return pcrs;
 }

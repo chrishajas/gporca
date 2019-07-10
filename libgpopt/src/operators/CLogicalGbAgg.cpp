@@ -482,7 +482,7 @@ CLogicalGbAgg::PcrsDeriveNotNull
 	pcrs->Include(Pdrgpcr());
 
 	// intersect with not nullable columns from relational child
-	pcrs->Intersection(exprhdl.GetRelationalProperties(0)->PcrsNotNull());
+	pcrs->Intersection(exprhdl.PcrsNotNull(0));
 
 	// TODO,  03/18/2012, add nullability info of computed columns
 

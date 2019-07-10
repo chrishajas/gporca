@@ -633,7 +633,7 @@ CSubqueryHandler::PexprInnerSelect
 {
 	CExpression *predToUse = NULL;
 	CScalarCmp *pscalarCmp = CScalarCmp::PopConvert(pexprPredicate->Pop());
-	BOOL innerIsNullable = !CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->PcrsNotNull()->FMember(pcrInner);
+	BOOL innerIsNullable = !pexprInner->PcrsNotNull()->FMember(pcrInner);
 
 	GPOS_ASSERT(NULL != pscalarCmp);
 

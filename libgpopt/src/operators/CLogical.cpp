@@ -253,7 +253,7 @@ CLogical::PcrsDeriveNotNullPassThruOuter
 	// may have additional children that are ignored, e.g., scalar children
 	GPOS_ASSERT(1 <= exprhdl.Arity());
 
-	CColRefSet *pcrs = exprhdl.GetRelationalProperties(0)->PcrsNotNull();
+	CColRefSet *pcrs = exprhdl.PcrsNotNull(0);
 	pcrs->AddRef();
 
 	return pcrs;
@@ -314,7 +314,7 @@ CLogical::PcrsDeriveNotNullCombineLogical
 	ULONG arity = exprhdl.Arity();
 	for (ULONG ul = 0; ul < arity - 1; ul++)
 	{
-		CColRefSet *pcrsChild = exprhdl.GetRelationalProperties(ul)->PcrsNotNull();
+		CColRefSet *pcrsChild = exprhdl.PcrsNotNull(ul);
 		GPOS_ASSERT(pcrs->IsDisjoint(pcrsChild) && "Input columns are not disjoint");
 
 		pcrs->Union(pcrsChild);

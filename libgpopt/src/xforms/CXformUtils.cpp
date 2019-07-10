@@ -1444,7 +1444,7 @@ CXformUtils::PexprAssertNotNull
 	CColumnDescriptorArray *pdrgpcoldesc = ptabdesc->Pdrgpcoldesc();
 
 	const ULONG num_cols = pdrgpcoldesc->Size();
-	CColRefSet *pcrsNotNull = CDrvdPropRelational::GetRelationalProperties(pexprChild->PdpDerive())->PcrsNotNull();
+	CColRefSet *pcrsNotNull = pexprChild->PcrsNotNull();
 
 	CExpressionArray *pdrgpexprAssertConstraints = GPOS_NEW(mp) CExpressionArray(mp);
 

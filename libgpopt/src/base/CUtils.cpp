@@ -856,7 +856,7 @@ CUtils::FUsesNullableCol
 	GPOS_ASSERT(pexprScalar->Pop()->FScalar());
 	GPOS_ASSERT(pexprLogical->Pop()->FLogical());
 
-	CColRefSet *pcrsNotNull = CDrvdPropRelational::GetRelationalProperties(pexprLogical->PdpDerive())->PcrsNotNull();
+	CColRefSet *pcrsNotNull = pexprLogical->PcrsNotNull();
 	CColRefSet *pcrsUsed = GPOS_NEW(mp) CColRefSet(mp);
 	pcrsUsed->Include(CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed());
 	pcrsUsed->Intersection(pexprLogical->PcrsOutput());

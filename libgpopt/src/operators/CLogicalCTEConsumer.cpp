@@ -154,7 +154,7 @@ CLogicalCTEConsumer::PcrsDeriveNotNull
 	GPOS_ASSERT(NULL != pexprProducer);
 
 	// find producer's not null columns
-	CColRefSet *pcrsProducerNotNull = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->PcrsNotNull();
+	CColRefSet *pcrsProducerNotNull = pexprProducer->PcrsNotNull();
 
 	// map producer's not null columns to consumer's output columns
 	CColRefSet *pcrsConsumerNotNull = CUtils::PcrsRemap(mp, pcrsProducerNotNull, m_phmulcr, true /*must_exist*/);

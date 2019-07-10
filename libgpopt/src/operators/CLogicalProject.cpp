@@ -248,7 +248,7 @@ CLogicalProject::PpcDeriveConstraint
 		}
 		else
 		{
-			CColRefSet *not_null_columns = exprhdl.GetRelationalProperties(0 /*ulChild*/)->PcrsNotNull();
+			CColRefSet *not_null_columns = exprhdl.PcrsNotNull(0 /*ulChild*/);
 			CColRefSetArray *pdrgpcrsChild = PdrgpcrsEquivClassFromScIdent(mp, pexprPrEl, not_null_columns);
 
 			if (NULL != pdrgpcrsChild)

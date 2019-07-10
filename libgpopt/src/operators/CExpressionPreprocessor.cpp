@@ -1460,7 +1460,7 @@ CExpressionPreprocessor::PexprWithImpliedPredsOnLOJInnerChild
 
 	// use the computed constraint to derive a scalar predicate on the inner child
 	CColRefSet *pcrsInnerOutput = pexprInner->PcrsOutput();
-	CColRefSet *pcrsInnerNotNull = CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->PcrsNotNull();
+	CColRefSet *pcrsInnerNotNull = pexprInner->PcrsNotNull();
 
 	// generate a scalar predicate from the computed constraint, restricted to LOJ inner child
 	CColRefSet *pcrsProcessed = GPOS_NEW(mp) CColRefSet(mp);
@@ -1576,11 +1576,9 @@ CExpressionPreprocessor::PexprFromConstraints
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(pexpr->Pop()->FLogical());
 
-	CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive());
-
 	const ULONG ulChildren = pexpr->Arity();
 	CPropConstraint *ppc = pexpr->Ppc();
-	CColRefSet *pcrsNotNull = pdprel->PcrsNotNull();
+	CColRefSet *pcrsNotNull = pexpr->PcrsNotNull();
 
 	CExpressionArray *pdrgpexprChildren = GPOS_NEW(mp) CExpressionArray(mp);
 
