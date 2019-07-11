@@ -142,7 +142,7 @@ CLogicalSequence::Maxcard
 	const
 {
 	// pass on max card of last child
-	return exprhdl.GetRelationalProperties(exprhdl.Arity() - 1)->Maxcard();
+	return exprhdl.Maxcard(exprhdl.Arity() - 1);
 }
 
 //---------------------------------------------------------------------------

@@ -187,7 +187,7 @@ CExpressionPreprocessor::PexprSimplifyQuantifiedSubqueries
 
 	COperator *pop = pexpr->Pop();
 	if (CUtils::FQuantifiedSubquery(pop) &&
-		1 == CDrvdPropRelational::GetRelationalProperties((*pexpr)[0]->PdpDerive())->Maxcard().Ull())
+		1 == (*pexpr)[0]->Maxcard().Ull())
 	{
 		CExpression *pexprInner = (*pexpr)[0];
 
@@ -1638,10 +1638,8 @@ CExpressionPreprocessor::PexprPruneEmptySubtrees
 	COperator *pop = pexpr->Pop();
 	if (pop->FLogical() && !CUtils::FLogicalDML(pop))
 	{
-		CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive());
-
 		// if maxcard = 0: return a const table get with same output columns and zero tuples
-		if (0 == pdprel->Maxcard())
+		if (0 == pexpr->Maxcard())
 		{
 			// output columns
 			CColRefArray *colref_array = pexpr->PcrsOutput()->Pdrgpcr(mp);

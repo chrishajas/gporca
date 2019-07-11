@@ -91,8 +91,8 @@ CLogicalIntersect::Maxcard
 		return CMaxCard(0 /*ull*/);
 	}
 
-	CMaxCard maxcardL = exprhdl.GetRelationalProperties(0)->Maxcard();
-	CMaxCard maxcardR = exprhdl.GetRelationalProperties(1)->Maxcard();
+	CMaxCard maxcardL = exprhdl.Maxcard(0);
+	CMaxCard maxcardR = exprhdl.Maxcard(1);
 
 	if (maxcardL <= maxcardR)
 	{

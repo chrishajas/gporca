@@ -56,8 +56,8 @@ CLogicalFullOuterJoin::Maxcard
 	const
 {
 
-	CMaxCard left_child_maxcard = exprhdl.GetRelationalProperties(0)->Maxcard();
-	CMaxCard right_child_maxcard = exprhdl.GetRelationalProperties(1)->Maxcard();
+	CMaxCard left_child_maxcard = exprhdl.Maxcard(0);
+	CMaxCard right_child_maxcard = exprhdl.Maxcard(1);
 
 	if (left_child_maxcard.Ull() > 0 && right_child_maxcard.Ull() > 0)
 	{

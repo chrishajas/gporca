@@ -91,7 +91,7 @@ CLogicalDifferenceAll::Maxcard
 		return CMaxCard(0 /*ull*/);
 	}
 
-	return exprhdl.GetRelationalProperties(0)->Maxcard();
+	return exprhdl.Maxcard(0);
 }
 
 //---------------------------------------------------------------------------

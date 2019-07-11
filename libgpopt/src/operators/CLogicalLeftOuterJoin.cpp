@@ -55,7 +55,7 @@ CLogicalLeftOuterJoin::Maxcard
 	)
 	const
 {
-	return CLogical::Maxcard(exprhdl, 2 /*ulScalarIndex*/, exprhdl.GetRelationalProperties(0)->Maxcard());
+	return CLogical::Maxcard(exprhdl, 2 /*ulScalarIndex*/, exprhdl.Maxcard(0));
 }
 
 //---------------------------------------------------------------------------

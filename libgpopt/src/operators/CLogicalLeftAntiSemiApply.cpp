@@ -57,7 +57,7 @@ CLogicalLeftAntiSemiApply::Maxcard
 	const
 {
 	// pass on max card of first child
-	return exprhdl.GetRelationalProperties(0)->Maxcard();
+	return exprhdl.Maxcard(0);
 }
 
 

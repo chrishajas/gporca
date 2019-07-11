@@ -339,7 +339,7 @@ CSubqueryHandler::Psd
 	CColRefSet *pcrsOuterOutput = pexprOuter->PcrsOutput();
 
 	SSubqueryDesc *psd = GPOS_NEW(mp) SSubqueryDesc();
-	psd->m_returns_set = (1 < CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->Maxcard().Ull());
+	psd->m_returns_set = (1 < pexprInner->Maxcard().Ull());
 	psd->m_fHasOuterRefs = pexprInner->HasOuterRefs();
 	psd->m_fHasVolatileFunctions = (IMDFunction::EfsVolatile == CDrvdPropScalar::GetDrvdScalarProps(pexprSubquery->PdpDerive())->Pfp()->Efs());
 	psd->m_fHasSkipLevelCorrelations = 0 < outer_refs->Size() && !pcrsOuterOutput->ContainsAll(outer_refs);

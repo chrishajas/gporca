@@ -571,6 +571,7 @@ CReqdPropPlan::FSatisfied
 {
 	GPOS_ASSERT(NULL != pdprel);
 	GPOS_ASSERT(NULL != pdpplan);
+	GPOS_ASSERT(pdprel->IsComplete());
 
 	// first, check satisfiability of relational properties
 	if (!pdprel->FSatisfies(this))

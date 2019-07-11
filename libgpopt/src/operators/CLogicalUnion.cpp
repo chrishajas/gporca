@@ -124,10 +124,10 @@ CLogicalUnion::Maxcard
 {
 	const ULONG arity = exprhdl.Arity();
 	
-	CMaxCard maxcard = exprhdl.GetRelationalProperties(0)->Maxcard();
+	CMaxCard maxcard = exprhdl.Maxcard(0);
 	for (ULONG ul = 1; ul < arity; ul++)
 	{
-		maxcard += exprhdl.GetRelationalProperties(ul)->Maxcard();
+		maxcard += exprhdl.Maxcard(ul);
 	}
 	
 	return maxcard;

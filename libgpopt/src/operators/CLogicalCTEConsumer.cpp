@@ -231,7 +231,7 @@ CLogicalCTEConsumer::Maxcard
 {
 	CExpression *pexpr = COptCtxt::PoctxtFromTLS()->Pcteinfo()->PexprCTEProducer(m_id);
 	GPOS_ASSERT(NULL != pexpr);
-	return CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->Maxcard();
+	return pexpr->Maxcard();
 }
 
 
