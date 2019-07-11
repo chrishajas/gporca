@@ -105,7 +105,7 @@ CXformSimplifyGbAgg::FDropGbAgg
 		return false;
 	}
 
-	CKeyCollection *pkc = CDrvdPropRelational::GetRelationalProperties(pexprRelational->PdpDerive())->Pkc();
+	CKeyCollection *pkc = pexprRelational->Pkc();
 	if (NULL == pkc)
 	{
 		// relational child does not have key

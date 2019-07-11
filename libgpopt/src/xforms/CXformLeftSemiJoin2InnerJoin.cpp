@@ -126,7 +126,7 @@ CXformLeftSemiJoin2InnerJoin::Transform
 	pcrsGb->Difference(pcrsOuterOutput);
 	GPOS_ASSERT(0 < pcrsGb->Size());
 
-	CKeyCollection *pkc = CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->Pkc();
+	CKeyCollection *pkc = pexprInner->Pkc();
 	if (NULL == pkc ||
 		(NULL != pkc && !pkc->FKey(pcrsGb, false /*fExactMatch*/)))
 	{

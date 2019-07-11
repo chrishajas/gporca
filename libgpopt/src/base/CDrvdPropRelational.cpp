@@ -259,7 +259,7 @@ CDrvdPropRelational::PdrgpfdLocal
 	CFunctionalDependencyArray *pdrgpfd = GPOS_NEW(mp) CFunctionalDependencyArray(mp);
 
 	// get local key
-	CKeyCollection *pkc = CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->Pkc();
+	CKeyCollection *pkc = exprhdl.Pkc();
 	
 	if (NULL == pkc)
 	{

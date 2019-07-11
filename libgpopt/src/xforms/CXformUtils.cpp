@@ -266,7 +266,7 @@ CXformUtils::PcrsFKey
 	)
 {
 	// get inner expression key
-	CKeyCollection *pkc =  CDrvdPropRelational::GetRelationalProperties(pexprInner->PdpDerive())->Pkc();
+	CKeyCollection *pkc =  pexprInner->Pkc();
 	if (NULL == pkc)
 	{
 		// inner expression has no key
@@ -1723,8 +1723,7 @@ CXformUtils::PexprAssertUpdateCardinality
 	pcrsKey->Include(pcrSegmentId);
 	pcrsKey->Include(pcrCtid);
 
-	CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(pexprDMLChild->PdpDerive());
-	CKeyCollection *pkc = pdprel->Pkc();
+	CKeyCollection *pkc = pexprDMLChild->Pkc();
 	if (NULL != pkc && pkc->FKey(pcrsKey))
 	{
 		// {segid, ctid} is a key: cardinality constraint is satisfied

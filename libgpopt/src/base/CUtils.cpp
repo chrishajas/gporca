@@ -2566,7 +2566,7 @@ CUtils::PdrgpcrGroupingKey
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(NULL != ppdrgpcrKey);
 
-	CKeyCollection *pkc = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->Pkc();
+	CKeyCollection *pkc = pexpr->Pkc();
 	GPOS_ASSERT(NULL != pkc);
 
 	CColRefSet *pcrsOutput = pexpr->PcrsOutput();

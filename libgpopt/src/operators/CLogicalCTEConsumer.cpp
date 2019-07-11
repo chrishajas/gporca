@@ -182,7 +182,7 @@ CLogicalCTEConsumer::PkcDeriveKeys
 {
 	CExpression *pexpr = COptCtxt::PoctxtFromTLS()->Pcteinfo()->PexprCTEProducer(m_id);
 	GPOS_ASSERT(NULL != pexpr);
-	CKeyCollection *pkc = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->Pkc();
+	CKeyCollection *pkc = pexpr->Pkc();
 	if (NULL != pkc)
 	{
 		pkc->AddRef();

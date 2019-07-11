@@ -200,7 +200,7 @@ CXformLeftSemiApplyWithExternalCorrs2InnerJoin::PexprDecorrelate
 	CExpressionHandle exprhdl(mp);
 	exprhdl.Attach(pexpr);
 
-	if (NULL == exprhdl.GetRelationalProperties(0 /*child_index*/)->Pkc() || !CUtils::FInnerUsesExternalCols(exprhdl))
+	if (NULL == exprhdl.Pkc(0 /*child_index*/) || !CUtils::FInnerUsesExternalCols(exprhdl))
 	{
 		// outer child must have a key and inner child must have external correlations
 		return NULL;

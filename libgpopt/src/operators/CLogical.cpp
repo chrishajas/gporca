@@ -363,7 +363,7 @@ CLogical::PkcCombineKeys
 	const ULONG arity = exprhdl.Arity();
 	for (ULONG ul = 0; ul < arity - 1; ul++)
 	{
-		CKeyCollection *pkc = exprhdl.GetRelationalProperties(ul)->Pkc();
+		CKeyCollection *pkc = exprhdl.Pkc(ul);
 		if (NULL == pkc)
 		{
 			// if a child has no key, the operator has no key

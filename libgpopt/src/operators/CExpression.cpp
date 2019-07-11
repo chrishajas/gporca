@@ -32,7 +32,6 @@
 #include "gpopt/operators/CExpressionHandle.h"
 #include "gpopt/search/CGroupExpression.h"
 #include "naucrates/traceflags/traceflags.h"
-#include "gpopt/base/CKeyCollection.h"
 
 
 
