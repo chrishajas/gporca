@@ -2015,9 +2015,6 @@ CTranslatorExprToDXLUtils::SetDirectDispatchInfo
 	GPOS_ASSERT(NULL != dxlnode);
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(NULL != pdrgpdsBaseTables);
-
-	CDrvdPropRelational *pdpRel = pexpr->GetDrvdPropRelational();
-	GPOS_ASSERT(NULL != pdpRel);
 	
 	Edxlopid edxlopid = dxlnode->GetOperator()->GetDXLOperator();
 	if (EdxlopPhysicalCTAS == edxlopid || EdxlopPhysicalDML == edxlopid || EdxlopPhysicalRowTrigger == edxlopid)
@@ -2027,7 +2024,7 @@ CTranslatorExprToDXLUtils::SetDirectDispatchInfo
 		return;
 	}
 	
-	if (1 != pdpRel->JoinDepth() || 1 != pdrgpdsBaseTables->Size())
+	if (1 != pexpr->JoinDepth() || 1 != pdrgpdsBaseTables->Size())
 	{
 		// direct dispatch not supported for join queries
 		return;

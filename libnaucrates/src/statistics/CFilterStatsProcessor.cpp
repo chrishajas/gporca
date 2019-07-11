@@ -41,7 +41,7 @@ CFilterStatsProcessor::MakeStatsFilterForScalarExpr
 
 	// TODO  June 13 2014, we currently only cap ndvs when we have a filter
 	// immediately on top of tables
-	BOOL do_cap_NDVs = (1 == exprhdl.GetRelationalProperties()->JoinDepth());
+	BOOL do_cap_NDVs = (1 == exprhdl.JoinDepth());
 
 	// extract local filter
 	CStatsPred *pred_stats = CStatsPredUtils::ExtractPredStats(mp, local_scalar_expr, outer_refs);

@@ -208,7 +208,7 @@ CPhysicalFilter::PppsRequired
 	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(0)->Ppartinfo();
 	
 	const ULONG ulPartIndexIds = pdrgpul->Size();
-	BOOL fUseConstraints = (1 == exprhdl.GetRelationalProperties()->JoinDepth());
+	BOOL fUseConstraints = (1 == exprhdl.JoinDepth());
 	
 	for (ULONG ul = 0; ul < ulPartIndexIds; ul++)
 	{

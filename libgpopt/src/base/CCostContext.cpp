@@ -379,6 +379,7 @@ CCostContext::BreakCostTiesForJoinPlans
 
 	// both plans have equal estimated rows for both children, break tie based on join depth
 	*pfTiesResolved = true;
+	// XXX: do something here?
 	ULONG ulOuterJoinDepthFst = CDrvdPropRelational::GetRelationalProperties((*pccFst->Pgexpr())[0]->Pdp())->JoinDepth();
 	ULONG ulInnerJoinDepthFst = CDrvdPropRelational::GetRelationalProperties((*pccFst->Pgexpr())[1]->Pdp())->JoinDepth();
 	if (ulInnerJoinDepthFst < ulOuterJoinDepthFst)

@@ -174,8 +174,8 @@ CXformJoinAssociativity::Exfp
 {
 	if 
 		(
-		GPOPT_MAX_JOIN_DEPTH_FOR_ASSOCIATIVITY < exprhdl.GetRelationalProperties()->JoinDepth() ||  // disallow xform beyond max join depth
-		GPOPT_MAX_JOIN_RIGHT_CHILD_DEPTH_FOR_ASSOCIATIVITY < exprhdl.GetRelationalProperties(1)->JoinDepth()  // disallow xform if input is not a left deep tree
+		GPOPT_MAX_JOIN_DEPTH_FOR_ASSOCIATIVITY < exprhdl.JoinDepth() ||  // disallow xform beyond max join depth
+		GPOPT_MAX_JOIN_RIGHT_CHILD_DEPTH_FOR_ASSOCIATIVITY < exprhdl.JoinDepth(1)  // disallow xform if input is not a left deep tree
 		)
 	{
 		// restrict associativity to left-deep trees by prohibiting the
