@@ -205,7 +205,7 @@ CDrvdPropRelational::PdrgpfdChild
 	GPOS_ASSERT(!exprhdl.FScalarChild(child_index));
 
 	// get FD's of the child
-	CFunctionalDependencyArray *pdrgpfdChild = exprhdl.GetRelationalProperties(child_index)->Pdrgpfd();
+	CFunctionalDependencyArray *pdrgpfdChild = exprhdl.Pdrgpfd(child_index);
 
 	// get output columns of the parent
 	CColRefSet *pcrsOutput = exprhdl.PcrsOutput();

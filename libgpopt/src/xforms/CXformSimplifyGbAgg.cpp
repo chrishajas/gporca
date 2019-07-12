@@ -182,7 +182,7 @@ CXformSimplifyGbAgg::Transform
 
 	CColRefSet *pcrsCovered = GPOS_NEW(mp) CColRefSet(mp);	// set of grouping columns covered by FD's
 	CColRefSet *pcrsMinimal = GPOS_NEW(mp) CColRefSet(mp); // a set of minimal grouping columns based on FD's
-	CFunctionalDependencyArray *pdrgpfd = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->Pdrgpfd();
+	CFunctionalDependencyArray *pdrgpfd = pexpr->Pdrgpfd();
 
 	// collect grouping columns FD's
 	const ULONG size = (pdrgpfd == NULL) ? 0 : pdrgpfd->Size();
