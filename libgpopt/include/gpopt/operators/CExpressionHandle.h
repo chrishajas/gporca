@@ -314,6 +314,9 @@ namespace gpopt
 			CPartInfo *Ppartinfo();
 			CPartInfo *Ppartinfo(ULONG i);
 
+			BOOL FHasPartialIndexes();
+			BOOL FHasPartialIndexes(ULONG i);
+
 		friend class CExpression;
 
 	}; // class CExpressionHandle

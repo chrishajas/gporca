@@ -652,8 +652,7 @@ CDrvdPropRelational::FHasPartialIndexes(CExpressionHandle &exprhdl)
 		}
 		else if (COperator::EopLogicalSelect == op_id)
 		{
-			m_fHasPartialIndexes =
-					exprhdl.GetRelationalProperties(0 /*child_index*/)->FHasPartialIndexes();
+			m_fHasPartialIndexes = exprhdl.FHasPartialIndexes(0);
 		}
 
 	}

@@ -2047,4 +2047,26 @@ CExpressionHandle::Ppartinfo()
 	return GetRelationalProperties()->Ppartinfo();
 }
 
+BOOL
+CExpressionHandle::FHasPartialIndexes(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Ppartinfo();
+	}
+
+	return GetRelationalProperties(i)->FHasPartialIndexes();
+}
+
+BOOL
+CExpressionHandle::FHasPartialIndexes()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Ppartinfo();
+	}
+
+	return GetRelationalProperties()->FHasPartialIndexes();
+}
+
 // EOF

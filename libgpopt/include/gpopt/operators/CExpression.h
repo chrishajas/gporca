@@ -341,6 +341,7 @@ namespace gpopt
 			CFunctionProp *Pfp();
 			CFunctionalDependencyArray *Pdrgpfd();
 			CPartInfo *Ppartinfo();
+			BOOL FHasPartialIndexes();
 
 	}; // class CExpression
 

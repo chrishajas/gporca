@@ -1709,4 +1709,16 @@ CExpression::Ppartinfo()
 	return m_pdprel->Ppartinfo(exprhdl);
 }
 
+BOOL
+CExpression::FHasPartialIndexes()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->FHasPartialIndexes(exprhdl);
+}
+
 // EOF
