@@ -32,6 +32,7 @@
 #include "gpopt/operators/CLogicalCTEConsumer.h"
 #include "gpopt/operators/CPhysicalCTEConsumer.h"
 #include "gpopt/base/COptCtxt.h"
+#include "gpopt/base/CKeyCollection.h"
 
 #include "gpopt/exception.h"
 
@@ -1095,7 +1096,6 @@ CExpressionHandle::GetRelationalProperties
 	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiUnsatisfiedRequiredProperties);
 }
 
-
 //---------------------------------------------------------------------------
 //	@function:
 //		CExpressionHandle::GetRelationalProperties
@@ -1805,4 +1805,248 @@ CExpressionHandle::Pstats()
 {
 	return m_pstats;
 }
+
+
+CColRefSet *
+CExpressionHandle::PcrsOuter(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->PcrsOuter();
+	}
+
+	return GetRelationalProperties(i)->PcrsOuter();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsOuter()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->PcrsOuter();
+	}
+
+	return GetRelationalProperties()->PcrsOuter();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsOutput(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->PcrsOutput();
+	}
+
+	return GetRelationalProperties(i)->PcrsOutput();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsOutput()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->PcrsOutput();
+	}
+
+	return GetRelationalProperties()->PcrsOutput();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsNotNull(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->PcrsNotNull();
+	}
+
+	return GetRelationalProperties(i)->PcrsNotNull();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsNotNull()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->PcrsNotNull();
+	}
+
+	return GetRelationalProperties()->PcrsNotNull();
+}
+
+CMaxCard
+CExpressionHandle::Maxcard(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Maxcard();
+	}
+
+	return GetRelationalProperties(i)->Maxcard();
+}
+
+CMaxCard
+CExpressionHandle::Maxcard()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Maxcard();
+	}
+
+	return GetRelationalProperties()->Maxcard();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsCorrelatedApply(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->PcrsCorrelatedApply();
+	}
+
+	return GetRelationalProperties(i)->PcrsCorrelatedApply();
+}
+
+CColRefSet *
+CExpressionHandle::PcrsCorrelatedApply()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->PcrsCorrelatedApply();
+	}
+
+	return GetRelationalProperties()->PcrsCorrelatedApply();
+}
+
+CKeyCollection *
+CExpressionHandle::Pkc(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Pkc();
+	}
+
+	return GetRelationalProperties(i)->Pkc();
+}
+
+CKeyCollection *
+CExpressionHandle::Pkc()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Pkc();
+	}
+
+	return GetRelationalProperties()->Pkc();
+}
+
+CPropConstraint *
+CExpressionHandle::Ppc(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Ppc();
+	}
+
+	return GetRelationalProperties(i)->Ppc();
+}
+
+CPropConstraint *
+CExpressionHandle::Ppc()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Ppc();
+	}
+
+	return GetRelationalProperties()->Ppc();
+}
+
+ULONG
+CExpressionHandle::JoinDepth(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->JoinDepth();
+	}
+
+	return GetRelationalProperties(i)->JoinDepth();
+}
+
+ULONG
+CExpressionHandle::JoinDepth()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->JoinDepth();
+	}
+
+	return GetRelationalProperties()->JoinDepth();
+}
+
+CFunctionProp *
+CExpressionHandle::Pfp(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Pfp();
+	}
+
+	return GetRelationalProperties(i)->Pfp();
+}
+
+CFunctionProp *
+CExpressionHandle::Pfp()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Pfp();
+	}
+
+	return GetRelationalProperties()->Pfp();
+}
+
+CFunctionalDependencyArray *
+CExpressionHandle::Pdrgpfd(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Pdrgpfd();
+	}
+
+	return GetRelationalProperties(i)->Pdrgpfd();
+}
+
+CFunctionalDependencyArray *
+CExpressionHandle::Pdrgpfd()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Pdrgpfd();
+	}
+
+	return GetRelationalProperties()->Pdrgpfd();
+}
+
+CPartInfo *
+CExpressionHandle::Ppartinfo(ULONG i)
+{
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[i]->Ppartinfo();
+	}
+
+	return GetRelationalProperties(i)->Ppartinfo();
+}
+
+CPartInfo *
+CExpressionHandle::Ppartinfo()
+{
+	if (NULL != Pexpr())
+	{
+		return Pexpr()->Ppartinfo();
+	}
+
+	return GetRelationalProperties()->Ppartinfo();
+}
+
 // EOF

@@ -495,11 +495,12 @@ CLogical::PcrsDeriveOuter
 		}
 		else
 		{
+			// add outer references from relational children
+			outer_refs->Union(exprhdl.PcrsOuter(i));
+
 			CDrvdPropRelational *pdprel = exprhdl.GetRelationalProperties(i);
 			pcrsOutput->Union(pdprel->PcrsOutput());
 
-			// add outer references from relational children
-			outer_refs->Union(pdprel->PcrsOuter());
 		}
 	}
 

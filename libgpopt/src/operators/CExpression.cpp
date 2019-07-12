@@ -32,6 +32,8 @@
 #include "gpopt/operators/CExpressionHandle.h"
 #include "gpopt/search/CGroupExpression.h"
 #include "naucrates/traceflags/traceflags.h"
+#include "gpopt/base/CKeyCollection.h"
+
 
 
 using namespace gpnaucrates;
@@ -41,6 +43,7 @@ static CHAR szExprLevelWS[] =		"   ";
 static CHAR szExprBarLevelWS[] =	"|  ";
 static CHAR szExprBarOpPrefix[] =	"|--";
 static CHAR szExprPlusOpPrefix[] =	"+--";
+
 
 
 //---------------------------------------------------------------------------
@@ -552,6 +555,9 @@ CExpression::PdpDerive
 	AssertValidPropDerivation(ept);
 #endif // GPOS_DEBUG
 
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+
 	// see if suitable prop is already cached
 	if (NULL == Pdp(ept))
 	{
@@ -565,18 +571,19 @@ CExpression::PdpDerive
 			CDrvdPropCtxt::AddDerivedProps(pdp, pdpctxt);
 		}
 
-		CExpressionHandle exprhdl(m_mp);
-		exprhdl.Attach(this);
 		exprhdl.CopyStats();
 
 		switch (ept)
 		{
 			case DrvdPropArray::EptRelational:
 				m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+				break;
 			case DrvdPropArray::EptPlan:
 				m_pdpplan = GPOS_NEW(m_mp) CDrvdPropPlan();
+				break;
 			case DrvdPropArray::EptScalar:
 				m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar();
+				break;
 			default:
 				break;
 		}
@@ -584,9 +591,13 @@ CExpression::PdpDerive
 		Pdp(ept)->Derive(m_mp, exprhdl, pdpctxt);
 	}
 
+	else if (!Pdp(ept)->IsComplete())
+	{
+		Pdp(ept)->Derive(m_mp, exprhdl, pdpctxt);
+	}
+
 	return Pdp(ept);
 }
-
 
 
 //---------------------------------------------------------------------------
@@ -1566,6 +1577,138 @@ CExpression::FValidPartEnforcers
 	}
 
 	return true;
+}
+
+CColRefSet *
+CExpression::PcrsOuter()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->PcrsOuter(exprhdl);
+}
+
+CColRefSet *
+CExpression::PcrsOutput()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->PcrsOutput(exprhdl);
+}
+
+CColRefSet *
+CExpression::PcrsNotNull()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->PcrsNotNull(exprhdl);
+}
+
+CColRefSet *
+CExpression::PcrsCorrelatedApply()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->PcrsCorrelatedApply(exprhdl);
+}
+
+CMaxCard
+CExpression::Maxcard()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->Maxcard(exprhdl);
+}
+
+CKeyCollection *
+CExpression::Pkc()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->Pkc(exprhdl);
+}
+
+CPropConstraint *
+CExpression::Ppc()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->Ppc(exprhdl);
+}
+
+ULONG
+CExpression::JoinDepth()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->JoinDepth(exprhdl);
+}
+
+CFunctionProp *
+CExpression::Pfp()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->Pfp(exprhdl);
+}
+
+CFunctionalDependencyArray *
+CExpression::Pdrgpfd()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->Pdrgpfd(exprhdl);
+}
+
+CPartInfo *
+CExpression::Ppartinfo()
+{
+	if (m_pdprel == NULL)
+	{
+		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	}
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdprel->Ppartinfo(exprhdl);
 }
 
 // EOF

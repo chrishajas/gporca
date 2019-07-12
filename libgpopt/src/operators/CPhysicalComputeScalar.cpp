@@ -509,7 +509,7 @@ CPhysicalComputeScalar::EpetRewindability
 	const
 {
 	CColRefSet *pcrsUsed = exprhdl.GetDrvdScalarProps(1 /*ulChidIndex*/)->PcrsUsed();
-	CColRefSet *pcrsCorrelatedApply = exprhdl.GetRelationalProperties()->PcrsCorrelatedApply();
+	CColRefSet *pcrsCorrelatedApply = exprhdl.PcrsCorrelatedApply();
 	if (!pcrsUsed->IsDisjoint(pcrsCorrelatedApply))
 	{
 		// columns are used from inner children of correlated-apply expressions,

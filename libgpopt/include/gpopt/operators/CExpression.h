@@ -25,7 +25,7 @@
 #include "gpopt/base/CReqdPropRelational.h"
 #include "gpopt/base/CPrintPrefix.h"
 #include "gpopt/operators/COperator.h"
-
+#include "gpopt/base/CKeyCollection.h"
 
 namespace gpopt
 {
@@ -40,6 +40,7 @@ namespace gpopt
 	class CDrvdPropPlan;
 	class CDrvdPropCtxt;
 	class CDrvdPropCtxtPlan;
+	class CPropConstraint;
 
 	using namespace gpos;
 	using namespace gpnaucrates;
@@ -327,6 +328,19 @@ namespace gpopt
 			// rehydrate expression from a given cost context and child expressions
 			static
 			CExpression *PexprRehydrate(CMemoryPool *mp, CCostContext *pcc, CExpressionArray *pdrgpexpr, CDrvdPropCtxtPlan *pdpctxtplan);
+
+			// Property accessors
+			CColRefSet *PcrsOuter();
+			CColRefSet *PcrsOutput();
+			CColRefSet *PcrsNotNull();
+			CColRefSet *PcrsCorrelatedApply();
+			CKeyCollection *Pkc();
+			CPropConstraint *Ppc();
+			CMaxCard Maxcard();
+			ULONG JoinDepth();
+			CFunctionProp *Pfp();
+			CFunctionalDependencyArray *Pdrgpfd();
+			CPartInfo *Ppartinfo();
 
 	}; // class CExpression
 

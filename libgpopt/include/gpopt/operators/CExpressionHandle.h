@@ -33,6 +33,7 @@ namespace gpopt
 	class CDrvdPropPlan;
 	class CDrvdPropScalar;
 	class CColRefSet;
+	class CPropConstraint;
 	class CCostContext;
 
 	using namespace gpos;
@@ -280,6 +281,39 @@ namespace gpopt
 			// return the columns used by a logical operator internally as well
 			// as columns used by all its scalar children
 			CColRefSet *PcrsUsedColumns(CMemoryPool *mp);
+
+			CColRefSet *PcrsOuter();
+			CColRefSet *PcrsOuter(ULONG i);
+
+			CColRefSet *PcrsOutput();
+			CColRefSet *PcrsOutput(ULONG i);
+
+			CColRefSet *PcrsNotNull();
+			CColRefSet *PcrsNotNull(ULONG i);
+
+			CColRefSet *PcrsCorrelatedApply();
+			CColRefSet *PcrsCorrelatedApply(ULONG i);
+
+			CMaxCard Maxcard();
+			CMaxCard Maxcard(ULONG i);
+
+			CKeyCollection *Pkc();
+			CKeyCollection *Pkc(ULONG i);
+
+			CPropConstraint *Ppc();
+			CPropConstraint *Ppc(ULONG i);
+
+			ULONG JoinDepth();
+			ULONG JoinDepth(ULONG i);
+
+			CFunctionProp *Pfp();
+			CFunctionProp *Pfp(ULONG i);
+
+			CFunctionalDependencyArray *Pdrgpfd();
+			CFunctionalDependencyArray *Pdrgpfd(ULONG i);
+
+			CPartInfo *Ppartinfo();
+			CPartInfo *Ppartinfo(ULONG i);
 
 		friend class CExpression;
 
