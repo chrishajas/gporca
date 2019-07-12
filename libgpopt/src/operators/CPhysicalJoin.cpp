@@ -1088,7 +1088,7 @@ CPhysicalJoin::PppsRequiredCompute
 	CPartFilterMap *ppfmResult = GPOS_NEW(mp) CPartFilterMap(mp);
 
 	// get outer partition consumers
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(0)->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
 
 	CColRefSet *pcrsOutputOuter = exprhdl.PcrsOutput(0);
 	CColRefSet *pcrsOutputInner = exprhdl.PcrsOutput(1);
@@ -1144,7 +1144,7 @@ CPhysicalJoin::PppsRequiredCompute
 			{
 				// always push through required partition propagation for consumers on the
 				// inner side of the hash join
-				CPartKeysArray *pdrgppartkeys = exprhdl.GetRelationalProperties(1 /*child_index*/)->Ppartinfo()->PdrgppartkeysByScanId(part_idx_id);
+				CPartKeysArray *pdrgppartkeys = exprhdl.Ppartinfo(1)->PdrgppartkeysByScanId(part_idx_id);
 				GPOS_ASSERT(NULL != pdrgppartkeys);
 				pdrgppartkeys->AddRef();
 

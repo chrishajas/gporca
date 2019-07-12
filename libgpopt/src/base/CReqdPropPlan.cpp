@@ -286,7 +286,7 @@ CReqdPropPlan::PpfmCombineDerived
 	)
 {
 	// get partitioning info below required child
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(child_index)->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo(child_index);
 	const ULONG ulConsumers = ppartinfo->UlConsumers();
 
 	CPartFilterMap *ppfmDerived = GPOS_NEW(mp) CPartFilterMap(mp);

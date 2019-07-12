@@ -102,7 +102,7 @@ CScalarSubqueryExistential::PpartinfoDerive
 	)
 	const
 {
-	CPartInfo *ppartinfoChild = exprhdl.GetRelationalProperties(0 /*child_index*/)->Ppartinfo();
+	CPartInfo *ppartinfoChild = exprhdl.Ppartinfo(0);
 	GPOS_ASSERT(NULL != ppartinfoChild);
 	ppartinfoChild->AddRef();
 	return ppartinfoChild;

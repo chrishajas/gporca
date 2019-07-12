@@ -174,7 +174,7 @@ CXformUtils::FInlinableCTE
 	GPOS_ASSERT(NULL != pexprProducer);
 	CFunctionProp *pfp = pexprProducer->Pfp();
 
-	CPartInfo *ppartinfoCTEProducer = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->Ppartinfo();
+	CPartInfo *ppartinfoCTEProducer = pexprProducer->Ppartinfo();
 	GPOS_ASSERT(NULL != ppartinfoCTEProducer);
 
 	return IMDFunction::EfsVolatile > pfp->Efs() &&

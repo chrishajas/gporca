@@ -822,7 +822,7 @@ CPhysical::PppsRequiredPushThruNAry
 		CBitSet *pbsPartConsumer = GPOS_NEW(mp) CBitSet(mp);
 		for (ULONG ulChildIdx = 0; ulChildIdx < arity; ulChildIdx++)
 		{
-			if (exprhdl.GetRelationalProperties(ulChildIdx)->Ppartinfo()->FContainsScanId(part_idx_id))
+			if (exprhdl.Ppartinfo(ulChildIdx)->FContainsScanId(part_idx_id))
 			{
 				(void) pbsPartConsumer->ExchangeSet(ulChildIdx);
 			}
@@ -851,7 +851,7 @@ CPhysical::PppsRequiredPushThruNAry
 		// clean up
 		pbsPartConsumer->Release();
 
-		CPartKeysArray *pdrgppartkeys = exprhdl.GetRelationalProperties(child_index)->Ppartinfo()->PdrgppartkeysByScanId(part_idx_id);
+		CPartKeysArray *pdrgppartkeys = exprhdl.Ppartinfo(child_index)->PdrgppartkeysByScanId(part_idx_id);
 		GPOS_ASSERT(NULL != pdrgppartkeys);
 		pdrgppartkeys->AddRef();
 
@@ -931,7 +931,7 @@ CPhysical::PppsRequiredPushThruUnresolvedUnary
 {
 	GPOS_ASSERT(NULL != pppsRequired);
 
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(0)->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
 		
 	CPartIndexMap *ppimReqd = pppsRequired->Ppim();
 	CPartFilterMap *ppfmReqd = pppsRequired->Ppfm();

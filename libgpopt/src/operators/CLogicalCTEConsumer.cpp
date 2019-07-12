@@ -207,7 +207,7 @@ CLogicalCTEConsumer::PpartinfoDerive
 	)
 	const
 {
-	CPartInfo *ppartInfo = CDrvdPropRelational::GetRelationalProperties(m_pexprInlined->PdpDerive())->Ppartinfo();
+	CPartInfo *ppartInfo = m_pexprInlined->Ppartinfo();
 	ppartInfo->AddRef();
 
 	return ppartInfo;

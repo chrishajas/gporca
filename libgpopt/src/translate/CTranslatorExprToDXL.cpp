@@ -4744,10 +4744,8 @@ CTranslatorExprToDXL::PdxlnPartitionSelectorFilter
 	CDXLNode *child_dxlnode = PdxlnPartitionSelectorChild(pexprChild, pexprScalarCond, dxl_properties, colref_array, pdrgpdsBaseTables, pulNonGatherMotions, pfDML);
 	CDXLNode *pdxlnPrLChild = (*child_dxlnode)[0];
 
-	CDrvdPropRelational *pdprel = pexprChild->GetDrvdPropRelational();
-
 	// we add a sequence if the scan id is found below the resolver
-	BOOL fNeedSequence = pdprel->Ppartinfo()->FContainsScanId(popSelector->ScanId());
+	BOOL fNeedSequence = pexprChild->Ppartinfo()->FContainsScanId(popSelector->ScanId());
 
 	// project list
 	IMDId *mdid = popSelector->MDId();

@@ -531,8 +531,7 @@ CPhysicalPartitionSelector::PdsRequired
 {
 	GPOS_ASSERT(0 == child_index);
 
-	CDrvdPropRelational *pdprelDrvd = exprhdl.GetRelationalProperties();
-	CPartInfo *ppartinfo = pdprelDrvd->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo();
 	BOOL fCovered = ppartinfo->FContainsScanId(m_scan_id);
 
 	if (fCovered)
@@ -605,7 +604,7 @@ CPhysicalPartitionSelector::PppsRequired
 	CPartIndexMap *ppim = GPOS_NEW(mp) CPartIndexMap(mp);
 	CPartFilterMap *ppfm = GPOS_NEW(mp) CPartFilterMap(mp);
 
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(0)->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
 
 	const ULONG ulScanIds = pdrgpulInputScanIds->Size();
 

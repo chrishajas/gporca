@@ -230,12 +230,12 @@ CLogicalSetOp::PpartinfoDerive
 	GPOS_ASSERT(0 < arity);
 
 	// start with the part info of the first child
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(0 /*child_index*/)->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
 	ppartinfo->AddRef();
 
 	for (ULONG ul = 1; ul < arity; ul++)
 	{
-		CPartInfo *ppartinfoChild = exprhdl.GetRelationalProperties(ul)->Ppartinfo();
+		CPartInfo *ppartinfoChild = exprhdl.Ppartinfo(ul);
 		GPOS_ASSERT(NULL != ppartinfoChild);
 
 		CColRefArray *pdrgpcrInput = (*m_pdrgpdrgpcrInput)[ul];

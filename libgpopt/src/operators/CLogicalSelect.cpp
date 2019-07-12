@@ -244,7 +244,7 @@ CLogicalSelect::PexprPartPred
 	GPOS_ASSERT(NULL != pexprScalar);
 
 	// get partition keys
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties()->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo();
 	GPOS_ASSERT(NULL != ppartinfo);
 
 	// we assume that the select is right on top of the dynamic get, so there

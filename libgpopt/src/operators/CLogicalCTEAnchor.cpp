@@ -108,12 +108,12 @@ CLogicalCTEAnchor::PpartinfoDerive
 	)
 	const
 {
-	CPartInfo *ppartinfoChild = exprhdl.GetRelationalProperties(0 /*child_index*/)->Ppartinfo();
+	CPartInfo *ppartinfoChild = exprhdl.Ppartinfo(0);
 	GPOS_ASSERT(NULL != ppartinfoChild);
 
 	CExpression *pexprProducer = COptCtxt::PoctxtFromTLS()->Pcteinfo()->PexprCTEProducer(m_id);
 	GPOS_ASSERT(NULL != pexprProducer);
-	CPartInfo *ppartinfoCTEProducer = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->Ppartinfo();
+	CPartInfo *ppartinfoCTEProducer = pexprProducer->Ppartinfo();
 
 	return CPartInfo::PpartinfoCombine(mp, ppartinfoChild, ppartinfoCTEProducer);
 }

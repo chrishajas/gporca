@@ -756,7 +756,7 @@ CExpressionHandle::InitReqdProps
 		CReqdPropPlan *prpp = CReqdPropPlan::Prpp(prpInput);
 		if (NULL == prpp->Pepp())
 		{
-			CPartInfo *ppartinfo = GetRelationalProperties()->Ppartinfo();
+			CPartInfo *ppartinfo = Ppartinfo();
 			prpp->InitReqdPartitionPropagation(m_mp, ppartinfo);
 		}
 	}

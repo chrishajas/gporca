@@ -337,7 +337,7 @@ CLogical::PpartinfoPassThruOuter
 	CExpressionHandle &exprhdl
 	)
 {
-	CPartInfo *ppartinfo = exprhdl.GetRelationalProperties(0 /*child_index*/)->Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
 	GPOS_ASSERT(NULL != ppartinfo);
 	ppartinfo->AddRef();
 	return ppartinfo;
@@ -451,7 +451,7 @@ CLogical::PpartinfoDeriveCombine
 		}
 		else
 		{
-			ppartinfoChild = exprhdl.GetRelationalProperties(ul)->Ppartinfo();
+			ppartinfoChild = exprhdl.Ppartinfo(ul);
 		}
 		GPOS_ASSERT(NULL != ppartinfoChild);
 		CPartInfo *ppartinfoCombined = CPartInfo::PpartinfoCombine(mp, ppartinfo, ppartinfoChild);
