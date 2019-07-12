@@ -1338,7 +1338,7 @@ CLogical::PdpCreate
 	)
 	const
 {
-	return GPOS_NEW(mp) CDrvdPropRelational();
+	return GPOS_NEW(mp) CDrvdPropRelational(mp);
 }
 
 

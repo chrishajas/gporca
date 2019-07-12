@@ -50,7 +50,29 @@ namespace gpopt
 	class CDrvdPropRelational : public DrvdPropArray
 	{
 
+		enum EDrvdPropType
+		{
+			// TODO: Rename this enum and internal variables at least!
+			EdptPcrsOutput = 0,
+			EdptPcrsOuter,
+			EdptPcrsNotNull,
+			EdptPcrsCorrelatedApply,
+			EdptPkc,
+			EdptPdrgpfd,
+			EdptMaxCard,
+			EdptPpartinfo,
+			EdptPpc,
+			EdptPfp,
+			EdptJoinDepth,
+			EdptFHasPartialIndexes,
+			EdptSentinel
+		};
+
 		private:
+
+			CMemoryPool *m_mp;
+
+			CBitSet *m_is_prop_derived;
 
 			// output columns
 			CColRefSet *m_pcrsOutput;
@@ -104,10 +126,12 @@ namespace gpopt
 			static
 			CFunctionalDependencyArray *Pdrgpfd(CMemoryPool *mp, CExpressionHandle &exprhdl);
 
+			BOOL m_is_complete;
+
 		public:
 
 			// ctor
-			CDrvdPropRelational();
+			CDrvdPropRelational(CMemoryPool *mp);
 
 			// dtor
 			virtual 
@@ -120,47 +144,63 @@ namespace gpopt
 				return EptRelational;
 			}
 
+			virtual
+			BOOL IsComplete() const { return m_is_complete; }
+
 			// derivation function
 			void Derive(CMemoryPool *mp, CExpressionHandle &exprhdl, CDrvdPropCtxt *pdpctxt);
 
 			// output columns
 			CColRefSet *PcrsOutput() const;
+			CColRefSet *PcrsOutput(CExpressionHandle &);
 
 			// outer references
 			CColRefSet *PcrsOuter() const;
+			CColRefSet *PcrsOuter(CExpressionHandle &);
 			
 			// nullable columns
 			CColRefSet *PcrsNotNull() const;
+			CColRefSet *PcrsNotNull(CExpressionHandle &);
 
 			// columns from the inner child of a correlated-apply expression that can be used above the apply expression
 			CColRefSet *PcrsCorrelatedApply() const;
+			CColRefSet *PcrsCorrelatedApply(CExpressionHandle &);
 
 			// key collection
 			CKeyCollection *Pkc() const;
+			CKeyCollection *Pkc(CExpressionHandle &);
 		
 			// functional dependencies
 			CFunctionalDependencyArray *Pdrgpfd() const;
+			CFunctionalDependencyArray *Pdrgpfd(CExpressionHandle &);
 
 			// check if relation has a key
 			BOOL FHasKey() const;
+			BOOL FHasKey(CExpressionHandle &);
 
 			// max cardinality
 			CMaxCard Maxcard() const;
+			CMaxCard Maxcard(CExpressionHandle &);
 
 			// join depth
 			ULONG JoinDepth() const;
+			ULONG JoinDepth(CExpressionHandle &);
 
 			// partition consumers
 			CPartInfo *Ppartinfo() const;
+			CPartInfo *Ppartinfo(CExpressionHandle &);
 
 			// constraint property
 			CPropConstraint *Ppc() const;
+			CPropConstraint *Ppc(CExpressionHandle &);
 
 			// function properties
 			CFunctionProp *Pfp() const;
+			CFunctionProp *Pfp(CExpressionHandle &);
 
 			// has partial indexes
 			BOOL FHasPartialIndexes() const;
+			BOOL FHasPartialIndexes(CExpressionHandle &exprhdl);
 
 			// shorthand for conversion
 			static
