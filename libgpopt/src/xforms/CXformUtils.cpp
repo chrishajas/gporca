@@ -172,7 +172,7 @@ CXformUtils::FInlinableCTE
 	CCTEInfo *pcteinfo = COptCtxt::PoctxtFromTLS()->Pcteinfo();
 	CExpression *pexprProducer = pcteinfo->PexprCTEProducer(ulCTEId);
 	GPOS_ASSERT(NULL != pexprProducer);
-	CFunctionProp *pfp = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->Pfp();
+	CFunctionProp *pfp = pexprProducer->Pfp();
 
 	CPartInfo *ppartinfoCTEProducer = CDrvdPropRelational::GetRelationalProperties(pexprProducer->PdpDerive())->Ppartinfo();
 	GPOS_ASSERT(NULL != ppartinfoCTEProducer);

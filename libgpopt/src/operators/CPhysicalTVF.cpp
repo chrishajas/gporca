@@ -322,7 +322,7 @@ CPhysicalTVF::PrsDerive
 	// TODO: shardikar; If the executor materializes the function results, aren't
 	// volatile functions rewindable? Or should they be rescannable and
 	// re-executed every time?
-	if (IMDFunction::EfsVolatile == exprhdl.GetRelationalProperties()->Pfp()->Efs())
+	if (IMDFunction::EfsVolatile == exprhdl.Pfp()->Efs())
 	{
 		return GPOS_NEW(mp) CRewindabilitySpec(CRewindabilitySpec::ErtRescannable, CRewindabilitySpec::EmhtNoMotion);
 	}

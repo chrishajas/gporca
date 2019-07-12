@@ -230,9 +230,9 @@ namespace gpopt
 			}
 
 			// check if attached expression must execute on a single host
-			BOOL NeedsSingletonExecution() const
+			BOOL NeedsSingletonExecution()
 			{
-				return GetRelationalProperties()->Pfp()->NeedsSingletonExecution();
+				return this->Pfp()->NeedsSingletonExecution();
 			}
 
 			// check for outer references in the given child
@@ -264,10 +264,10 @@ namespace gpopt
 			ULONG UlPreviousOptimizedChildIndex(ULONG child_index) const;
 
 			// get the function properties of a child
-			CFunctionProp *PfpChild(ULONG child_index) const;
+			CFunctionProp *PfpChild(ULONG child_index);
 
 			// check whether an expression's children have a volatile function
-			BOOL FChildrenHaveVolatileFuncScan() const;
+			BOOL FChildrenHaveVolatileFuncScan();
 
 			// return the scalar child at given index
 			CExpression *PexprScalarChild(ULONG child_index) const;

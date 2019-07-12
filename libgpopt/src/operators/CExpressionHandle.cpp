@@ -1541,14 +1541,13 @@ CExpressionHandle::PfpChild
 	(
 	ULONG child_index
 	)
-	const
 {
 	if (FScalarChild(child_index))
 	{
 		return GetDrvdScalarProps(child_index)->Pfp();
 	}
 
-	return GetRelationalProperties(child_index)->Pfp();
+	return this->Pfp(child_index);
 }
 
 //---------------------------------------------------------------------------
@@ -1560,7 +1559,7 @@ CExpressionHandle::PfpChild
 //
 //---------------------------------------------------------------------------
 BOOL
-CExpressionHandle::FChildrenHaveVolatileFuncScan() const
+CExpressionHandle::FChildrenHaveVolatileFuncScan()
 {
 	const ULONG arity = Arity();
 	for (ULONG ul = 0; ul < arity; ul++)
