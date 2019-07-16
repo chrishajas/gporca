@@ -189,6 +189,75 @@ CDrvdPropScalar::FSatisfies
 	return fSatisfies;
 }
 
+// defined columns
+CColRefSet *
+CDrvdPropScalar::PcrsDefined() const
+{
+	return m_pcrsDefined;
+}
+
+// used columns
+CColRefSet *
+CDrvdPropScalar::PcrsUsed() const
+{
+	return m_pcrsUsed;
+}
+
+// columns containing set-returning function
+CColRefSet *
+CDrvdPropScalar::PcrsSetReturningFunction() const
+{
+	return m_pcrsSetReturningFunction;
+}
+
+// do subqueries appear in the operator's tree?
+BOOL
+CDrvdPropScalar::FHasSubquery() const
+{
+	return m_fHasSubquery;
+}
+
+// derived partition consumers
+CPartInfo *
+CDrvdPropScalar::Ppartinfo() const
+{
+	return m_ppartinfo;
+}
+
+// function properties
+CFunctionProp *
+CDrvdPropScalar::Pfp() const
+{
+	return m_pfp;
+}
+
+// scalar expression contains non-scalar function?
+BOOL
+CDrvdPropScalar::FHasNonScalarFunction() const
+{
+	return m_fHasNonScalarFunction;
+}
+
+// return total number of Distinct Aggs, only applicable to project list
+ULONG
+CDrvdPropScalar::UlDistinctAggs() const
+{
+	return m_ulDistinctAggs;
+}
+
+// does operator define Distinct Aggs on different arguments, only applicable to project lists
+BOOL
+CDrvdPropScalar::FHasMultipleDistinctAggs() const
+{
+	return m_fHasMultipleDistinctAggs;
+}
+
+BOOL
+CDrvdPropScalar::FHasScalarArrayCmp() const
+{
+	return m_fHasScalarArrayCmp;
+}
+
 
 //---------------------------------------------------------------------------
 //	@function:

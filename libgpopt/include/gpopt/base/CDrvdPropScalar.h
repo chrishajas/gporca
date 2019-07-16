@@ -103,64 +103,34 @@ namespace gpopt
 
 
 			// defined columns
-			CColRefSet *PcrsDefined() const
-			{
-				return m_pcrsDefined;
-			}
+			CColRefSet *PcrsDefined() const;
 
 			// used columns
-			CColRefSet *PcrsUsed() const
-			{
-				return m_pcrsUsed;
-			}
+			CColRefSet *PcrsUsed() const;
 
 			// columns containing set-returning function
-			CColRefSet *PcrsSetReturningFunction() const
-			{
-				return m_pcrsSetReturningFunction;
-			}
+			CColRefSet *PcrsSetReturningFunction() const;
 
 			// do subqueries appear in the operator's tree?
-			BOOL FHasSubquery() const
-			{
-				return m_fHasSubquery;
-			}
+			BOOL FHasSubquery() const;
 
 			// derived partition consumers
-			CPartInfo *Ppartinfo() const
-			{
-				return m_ppartinfo;
-			}
+			CPartInfo *Ppartinfo() const;
 			
 			// function properties
-			CFunctionProp *Pfp() const
-			{
-				return m_pfp;
-			}
+			CFunctionProp *Pfp() const;
 
 			// scalar expression contains non-scalar function?
 			virtual
-			BOOL FHasNonScalarFunction() const
-			{
-				return m_fHasNonScalarFunction;
-			}
+			BOOL FHasNonScalarFunction() const;
 
 			// return total number of Distinct Aggs, only applicable to project list
-			ULONG UlDistinctAggs() const
-			{
-				return m_ulDistinctAggs;
-			}
+			ULONG UlDistinctAggs() const;
 
 			// does operator define Distinct Aggs on different arguments, only applicable to project lists
-			BOOL FHasMultipleDistinctAggs() const
-			{
-				return m_fHasMultipleDistinctAggs;
-			}
+			BOOL FHasMultipleDistinctAggs() const;
 
-			BOOL FHasScalarArrayCmp() const
-			{
-				return m_fHasScalarArrayCmp;
-			}
+			BOOL FHasScalarArrayCmp() const;
 
 			// short hand for conversion
 			static
