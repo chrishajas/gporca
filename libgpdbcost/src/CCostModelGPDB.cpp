@@ -243,6 +243,11 @@ CCostModelGPDB::CostUnary
 	CCost costLocal = CCost(num_rebinds * CostTupleProcessing(rows, width, pcp).Get());
 	CCost costChild = CostChildren(mp, exprhdl, pci, pcp);
 
+	if (exprhdl.Pop()->Eopid() == COperator::EopPhysicalSpool && NULL != exprhdl.Pop(0) && COperator::EopPhysicalCorrelatedInnerNLJoin == exprhdl.Pop(0)->Eopid())
+	{
+		costLocal = CCost(num_rebinds * CostTupleProcessing(rows, width, pcp).Get() * .01);
+	}
+
 	return costLocal + costChild;
 }
 
