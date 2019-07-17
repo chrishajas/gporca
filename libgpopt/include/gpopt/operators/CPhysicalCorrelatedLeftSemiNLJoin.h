@@ -59,6 +59,7 @@ namespace gpopt
 				GPOS_ASSERT(NULL != pdrgpcrInner);
 
 				SetDistrRequests(UlDistrRequestsForCorrelatedJoin());
+				SetRewindRequests(2);
 				GPOS_ASSERT(0 < UlDistrRequests());
 			}
 

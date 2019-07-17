@@ -440,6 +440,12 @@ CPhysicalJoin::EpetRewindability
 	// get rewindability delivered by the join node
 	CRewindabilitySpec *prs = CDrvdPropPlan::Pdpplan(exprhdl.Pdp())->Prs();
 
+	// if (CUtils::FCorrelatedNLJoin(exprhdl.Pop()) && !exprhdl.HasOuterRefs())
+	if (CUtils::FCorrelatedNLJoin(exprhdl.Pop()) && per->PrsRequired()->IsRewindable())
+	{
+		return CEnfdProp::EpetRequired;
+	}
+
 	if (per->FCompatible(prs))
 	{
 		// required rewindability will be established by the join operator
@@ -866,7 +872,7 @@ CPhysicalJoin::PrsRequiredCorrelatedJoin
 	CRewindabilitySpec *prsRequired,
 	ULONG child_index,
 	CDrvdProp2dArray *pdrgpdpCtxt,
-	ULONG // ulOptReq
+	ULONG ulOptReq
 	)
 	const
 {
@@ -883,8 +889,10 @@ CPhysicalJoin::PrsRequiredCorrelatedJoin
 															   CRewindabilitySpec::EmhtMotion :
 															   CRewindabilitySpec::EmhtNoMotion;
 
-
-		return GPOS_NEW(mp) CRewindabilitySpec(CRewindabilitySpec::ErtRescannable, motion_hazard);
+		if (ulOptReq == 0)
+			return GPOS_NEW(mp) CRewindabilitySpec(CRewindabilitySpec::ErtRescannable, motion_hazard);
+		else
+			return GPOS_NEW(mp) CRewindabilitySpec(CRewindabilitySpec::ErtRewindable, motion_hazard);
 	}
 
 	GPOS_ASSERT(0 == child_index);
