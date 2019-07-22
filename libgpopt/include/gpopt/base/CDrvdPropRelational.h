@@ -122,10 +122,6 @@ namespace gpopt
 			static
 			CFunctionalDependencyArray *PdrgpfdLocal(CMemoryPool *mp, CExpressionHandle &exprhdl);
 
-			// helper for deriving FD's
-			static
-			CFunctionalDependencyArray *Pdrgpfd(CMemoryPool *mp, CExpressionHandle &exprhdl);
-
 			BOOL m_is_complete;
 
 		public:
@@ -173,10 +169,6 @@ namespace gpopt
 			// functional dependencies
 			CFunctionalDependencyArray *Pdrgpfd() const;
 			CFunctionalDependencyArray *Pdrgpfd(CExpressionHandle &);
-
-			// check if relation has a key
-			BOOL FHasKey() const;
-			BOOL FHasKey(CExpressionHandle &);
 
 			// max cardinality
 			CMaxCard Maxcard() const;

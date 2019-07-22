@@ -512,7 +512,7 @@ CExpressionPreprocessor::PexprRemoveSuperfluousOuterRefs
 		}
 		else if (COperator::EopLogicalGbAgg == op_id)
 		{
-			CColRefSet *outer_refs = CDrvdPropRelational::GetRelationalProperties(pexpr->PdpDerive())->PcrsOuter();
+			CColRefSet *outer_refs = pexpr->PcrsOuter();
 
 			CLogicalGbAgg *popAgg = CLogicalGbAgg::PopConvert(pop);
 			CColRefArray *colref_array = CUtils::PdrgpcrExcludeColumns(mp, popAgg->Pdrgpcr(), outer_refs);

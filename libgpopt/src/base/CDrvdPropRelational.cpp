@@ -299,45 +299,6 @@ CDrvdPropRelational::PdrgpfdLocal
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CDrvdPropRelational::Pdrgpfd
-//
-//	@doc:
-//		Helper for deriving functional dependencies
-//
-//---------------------------------------------------------------------------
-CFunctionalDependencyArray *
-CDrvdPropRelational::Pdrgpfd
-	(
-	CMemoryPool *mp,
-	CExpressionHandle &exprhdl
-	)
-{
-	GPOS_ASSERT(exprhdl.Pop()->FLogical());
-
-	CFunctionalDependencyArray *pdrgpfd = GPOS_NEW(mp) CFunctionalDependencyArray(mp);
-	const ULONG arity = exprhdl.Arity();
-
-	// collect applicable FD's from logical children
-	for (ULONG ul = 0; ul < arity; ul++)
-	{
-		if (!exprhdl.FScalarChild(ul))
-		{
-			CFunctionalDependencyArray *pdrgpfdChild = PdrgpfdChild(mp, ul, exprhdl);
-			CUtils::AddRefAppend<CFunctionalDependency, CleanupRelease>(pdrgpfd, pdrgpfdChild);
-			pdrgpfdChild->Release();
-		}
-	}
-	// add local FD's
-	CFunctionalDependencyArray *pdrgpfdLocal = PdrgpfdLocal(mp, exprhdl);
-	CUtils::AddRefAppend<CFunctionalDependency, CleanupRelease>(pdrgpfd, pdrgpfdLocal);
-	pdrgpfdLocal->Release();
-
-	return pdrgpfd;
-}
-
-
-//---------------------------------------------------------------------------
-//	@function:
 //		CDrvdPropRelational::OsPrint
 //
 //	@doc:
@@ -352,40 +313,40 @@ CDrvdPropRelational::OsPrint
 	const
 {
 	os	<<	"Output Cols: [" << *PcrsOutput() << "]"
-		<<	", Outer Refs: [" << *m_pcrsOuter << "]"
-		<<	", Not Null Cols: [" << *m_pcrsNotNull << "]"
-		<< ", Corr. Apply Cols: [" << *m_pcrsCorrelatedApply <<"]";
+		<<	", Outer Refs: [" << *PcrsOuter() << "]"
+		<<	", Not Null Cols: [" << *PcrsNotNull() << "]"
+		<< ", Corr. Apply Cols: [" << *PcrsCorrelatedApply() <<"]";
 
-	if (NULL == m_pkc)
+	if (NULL == Pkc())
 	{
 		os << ", Keys: []";
 	}
 	else
 	{
-		os << ", " << *m_pkc;
+		os << ", " << *Pkc();
 	}
 	
-	os << ", Max Card: " << m_maxcard;
+	os << ", Max Card: " << Maxcard();
 
-	os << ", Join Depth: " << m_ulJoinDepth;
+	os << ", Join Depth: " << JoinDepth();
 
-	os << ", Constraint Property: [" << *m_ppc << "]";
+	os << ", Constraint Property: [" << *Ppc() << "]";
 
-	const ULONG ulFDs = m_pdrgpfd->Size();
+	const ULONG ulFDs = Pdrgpfd()->Size();
 	
 	os << ", FDs: [";
 	for (ULONG ul = 0; ul < ulFDs; ul++)
 	{
-		CFunctionalDependency *pfd = (*m_pdrgpfd)[ul];
+		CFunctionalDependency *pfd = (*Pdrgpfd())[ul];
 		os << *pfd;
 	}
 	os << "]";
 	
-	os << ", Function Properties: [" << *m_pfp << "]";
+	os << ", Function Properties: [" << *Pfp() << "]";
 
-	os << ", Part Info: [" << *m_ppartinfo << "]";
+	os << ", Part Info: [" << *Ppartinfo() << "]";
 
-	if (m_fHasPartialIndexes)
+	if (FHasPartialIndexes())
 	{
 		os <<", Has Partial Indexes";
 	}
@@ -511,24 +472,28 @@ CDrvdPropRelational::Pdrgpfd(CExpressionHandle &exprhdl)
 {
 	if (!m_is_prop_derived->ExchangeSet(EdptPdrgpfd))
 	{
-		// XXX: Am I really needed?
-		m_pdrgpfd = Pdrgpfd(m_mp, exprhdl);
+		CFunctionalDependencyArray *pdrgpfd = GPOS_NEW(m_mp) CFunctionalDependencyArray(m_mp);
+		const ULONG arity = exprhdl.Arity();
+
+		// collect applicable FD's from logical children
+		for (ULONG ul = 0; ul < arity; ul++)
+		{
+			if (!exprhdl.FScalarChild(ul))
+			{
+				CFunctionalDependencyArray *pdrgpfdChild = PdrgpfdChild(m_mp, ul, exprhdl);
+				CUtils::AddRefAppend<CFunctionalDependency, CleanupRelease>(pdrgpfd, pdrgpfdChild);
+				pdrgpfdChild->Release();
+			}
+		}
+		// add local FD's
+		CFunctionalDependencyArray *pdrgpfdLocal = PdrgpfdLocal(m_mp, exprhdl);
+		CUtils::AddRefAppend<CFunctionalDependency, CleanupRelease>(pdrgpfd, pdrgpfdLocal);
+		pdrgpfdLocal->Release();
+
+		m_pdrgpfd = pdrgpfd;
 	}
 
 	return m_pdrgpfd;
-}
-
-// check if relation has a key
-BOOL
-CDrvdPropRelational::FHasKey() const
-{
-	return NULL != m_pkc;
-}
-
-BOOL
-CDrvdPropRelational::FHasKey(CExpressionHandle &exprhdl)
-{
-	return NULL != Pkc(exprhdl);
 }
 
 // max cardinality
