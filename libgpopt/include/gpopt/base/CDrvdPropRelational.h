@@ -52,7 +52,6 @@ namespace gpopt
 
 		enum EDrvdPropType
 		{
-			// TODO: Rename this enum and internal variables at least!
 			EdptPcrsOutput = 0,
 			EdptPcrsOuter,
 			EdptPcrsNotNull,

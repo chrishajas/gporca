@@ -52,6 +52,8 @@ namespace gpopt
 	//---------------------------------------------------------------------------
 	class CExpressionHandle 
 	{
+		friend class CExpression;
+
 		private:
 					
 			// memory pool
@@ -282,42 +284,40 @@ namespace gpopt
 			CColRefSet *PcrsUsedColumns(CMemoryPool *mp);
 
 			CColRefSet *PcrsOuter();
-			CColRefSet *PcrsOuter(ULONG i);
+			CColRefSet *PcrsOuter(ULONG child_index);
 
 			CColRefSet *PcrsOutput();
-			CColRefSet *PcrsOutput(ULONG i);
+			CColRefSet *PcrsOutput(ULONG child_index);
 
 			CColRefSet *PcrsNotNull();
-			CColRefSet *PcrsNotNull(ULONG i);
+			CColRefSet *PcrsNotNull(ULONG child_index);
 
 			CColRefSet *PcrsCorrelatedApply();
-			CColRefSet *PcrsCorrelatedApply(ULONG i);
+			CColRefSet *PcrsCorrelatedApply(ULONG child_index);
 
 			CMaxCard Maxcard();
-			CMaxCard Maxcard(ULONG i);
+			CMaxCard Maxcard(ULONG child_index);
 
 			CKeyCollection *Pkc();
-			CKeyCollection *Pkc(ULONG i);
+			CKeyCollection *Pkc(ULONG child_index);
 
 			CPropConstraint *Ppc();
-			CPropConstraint *Ppc(ULONG i);
+			CPropConstraint *Ppc(ULONG child_index);
 
 			ULONG JoinDepth();
-			ULONG JoinDepth(ULONG i);
+			ULONG JoinDepth(ULONG child_index);
 
 			CFunctionProp *Pfp();
-			CFunctionProp *Pfp(ULONG i);
+			CFunctionProp *Pfp(ULONG child_index);
 
 			CFunctionalDependencyArray *Pdrgpfd();
-			CFunctionalDependencyArray *Pdrgpfd(ULONG i);
+			CFunctionalDependencyArray *Pdrgpfd(ULONG child_index);
 
 			CPartInfo *Ppartinfo();
-			CPartInfo *Ppartinfo(ULONG i);
+			CPartInfo *Ppartinfo(ULONG child_index);
 
 			BOOL FHasPartialIndexes();
-			BOOL FHasPartialIndexes(ULONG i);
-
-		friend class CExpression;
+			BOOL FHasPartialIndexes(ULONG child_index);
 
 	}; // class CExpressionHandle
 	

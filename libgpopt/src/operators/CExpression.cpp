@@ -34,7 +34,6 @@
 #include "naucrates/traceflags/traceflags.h"
 
 
-
 using namespace gpnaucrates;
 using namespace gpopt;
 
@@ -42,7 +41,6 @@ static CHAR szExprLevelWS[] =		"   ";
 static CHAR szExprBarLevelWS[] =	"|  ";
 static CHAR szExprBarOpPrefix[] =	"|--";
 static CHAR szExprPlusOpPrefix[] =	"+--";
-
 
 
 //---------------------------------------------------------------------------
