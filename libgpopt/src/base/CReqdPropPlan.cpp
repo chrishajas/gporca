@@ -523,8 +523,7 @@ CReqdPropPlan::Equals
 	       Peo()->Matches(prpp->Peo()) &&
 	       Ped()->Matches(prpp->Ped()) &&
 	       Per()->Matches(prpp->Per()) &&
-	       (!GPOS_FTRACE(EopttraceEnableCostRebinds) ||
-	        m_num_rebinds == prpp->m_num_rebinds);
+	       m_num_rebinds == prpp->m_num_rebinds;
 
 	if (result)
 	{

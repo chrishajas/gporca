@@ -242,11 +242,11 @@ CPhysicalSpool::ComputeNumRebindsForChild
 {
 	CColRefSet *childOuterRefs = exprhdl.GetRelationalProperties(0)->PcrsOuter();
 
-	if (!GPOS_FTRACE(EopttraceEnableCostRebinds))
-	{
-		return parentNumRebinds;
-	}
-
+//	if (!GPOS_FTRACE(EopttraceEnableCostRebinds))
+//	{
+//		return parentNumRebinds;
+//	}
+//
 	if (0 == childOuterRefs->Size())
 	{
 		// If the child has no outer references, then there is no reason to re-execute it
@@ -258,6 +258,7 @@ CPhysicalSpool::ComputeNumRebindsForChild
 	// The child does have outer references, try to estimate the number of times
 	// we have to recompute the child, that happens each time the values of the
 	// outer references change between rebinds of this spool operator
+	return fmax(parentNumRebinds/10, 1.0);
 
 	CGroupExpression *groupExpr = exprhdl.Pgexpr();
 	if (NULL != groupExpr)
@@ -286,7 +287,7 @@ CPhysicalSpool::ComputeNumRebindsForChild
 			// If the outer rows are not sorted by the outer references, then we
 			// can see more rebinds than the number of NDVs. Ideally we would have
 			// information on the ordering here.
-			return fmax(parentNumRebinds * combinedColsNDV.Get(), 1.0);
+			return fmin(parentNumRebinds, fmax(combinedColsNDV.Get(), 1.0));
 		}
 	}
 
