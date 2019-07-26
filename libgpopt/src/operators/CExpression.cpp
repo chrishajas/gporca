@@ -74,6 +74,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != mp);
 	GPOS_ASSERT(NULL != pop);
 
+	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 	if (NULL != pgexpr)
 	{
 		CopyGroupPropsAndStats(NULL /*input_stats*/);
@@ -113,6 +114,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pop);
 	GPOS_ASSERT(NULL != pexpr);
 
+	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 	m_pdrgpexpr = GPOS_NEW(mp) CExpressionArray(mp, 1);
 	m_pdrgpexpr->Append(pexpr);
 
@@ -155,6 +157,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pexprChildFirst);
 	GPOS_ASSERT(NULL != pexprChildSecond);
 
+	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 	m_pdrgpexpr = GPOS_NEW(mp) CExpressionArray(mp, 2);
 	m_pdrgpexpr->Append(pexprChildFirst);
 	m_pdrgpexpr->Append(pexprChildSecond);
@@ -200,6 +203,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pexprChildSecond);
 	GPOS_ASSERT(NULL != pexprChildThird);
 
+	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 	m_pdrgpexpr = GPOS_NEW(mp) CExpressionArray(mp, 3);
 	m_pdrgpexpr->Append(pexprChildFirst);
 	m_pdrgpexpr->Append(pexprChildSecond);
@@ -240,6 +244,8 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != mp);
 	GPOS_ASSERT(NULL != pop);
 	GPOS_ASSERT(NULL != pdrgpexpr);
+
+	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 }
 
 
@@ -279,6 +285,7 @@ CExpression::CExpression
 	GPOS_ASSERT(pgexpr->Arity() == (pdrgpexpr == NULL ? 0 : pdrgpexpr->Size()));
 	GPOS_ASSERT(NULL != pgexpr->Pgroup());
 
+	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 	CopyGroupPropsAndStats(input_stats);
 }
 
@@ -337,8 +344,7 @@ CExpression::CopyGroupPropsAndStats
 	}
 	else
 	{
-		GPOS_ASSERT(NULL == m_pdprel);
-
+		m_pdprel->Release();
 		m_pdprel = CDrvdPropRelational::GetRelationalProperties(pdp);
 	}
 
@@ -723,7 +729,7 @@ CExpression::ResetDerivedProperty
 	{
 		case DrvdPropArray::EptRelational:
 			CRefCount::SafeRelease(m_pdprel);
-			m_pdprel = NULL;
+			m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
 			break;
 		case DrvdPropArray::EptPlan:
 			CRefCount::SafeRelease(m_pdpplan);
@@ -1581,10 +1587,6 @@ CExpression::FValidPartEnforcers
 CColRefSet *
 CExpression::PcrsOuter()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->PcrsOuter(exprhdl);
@@ -1593,10 +1595,6 @@ CExpression::PcrsOuter()
 CColRefSet *
 CExpression::PcrsOutput()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->PcrsOutput(exprhdl);
@@ -1605,10 +1603,6 @@ CExpression::PcrsOutput()
 CColRefSet *
 CExpression::PcrsNotNull()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->PcrsNotNull(exprhdl);
@@ -1617,10 +1611,6 @@ CExpression::PcrsNotNull()
 CColRefSet *
 CExpression::PcrsCorrelatedApply()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->PcrsCorrelatedApply(exprhdl);
@@ -1629,10 +1619,6 @@ CExpression::PcrsCorrelatedApply()
 CMaxCard
 CExpression::Maxcard()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->Maxcard(exprhdl);
@@ -1641,10 +1627,6 @@ CExpression::Maxcard()
 CKeyCollection *
 CExpression::Pkc()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->Pkc(exprhdl);
@@ -1653,10 +1635,6 @@ CExpression::Pkc()
 CPropConstraint *
 CExpression::Ppc()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->Ppc(exprhdl);
@@ -1665,10 +1643,6 @@ CExpression::Ppc()
 ULONG
 CExpression::JoinDepth()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->JoinDepth(exprhdl);
@@ -1677,10 +1651,6 @@ CExpression::JoinDepth()
 CFunctionProp *
 CExpression::Pfp()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->Pfp(exprhdl);
@@ -1689,10 +1659,6 @@ CExpression::Pfp()
 CFunctionalDependencyArray *
 CExpression::Pdrgpfd()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->Pdrgpfd(exprhdl);
@@ -1701,10 +1667,6 @@ CExpression::Pdrgpfd()
 CPartInfo *
 CExpression::Ppartinfo()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->Ppartinfo(exprhdl);
@@ -1713,10 +1675,6 @@ CExpression::Ppartinfo()
 BOOL
 CExpression::FHasPartialIndexes()
 {
-	if (m_pdprel == NULL)
-	{
-		m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-	}
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 	return m_pdprel->FHasPartialIndexes(exprhdl);
