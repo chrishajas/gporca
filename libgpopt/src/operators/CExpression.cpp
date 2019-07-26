@@ -402,6 +402,7 @@ CDrvdPropRelational *
 CExpression::GetDrvdPropRelational()
 	const
 {
+	GPOS_ASSERT(m_pdprel->IsComplete());
 	return m_pdprel;
 }
 
@@ -587,12 +588,14 @@ CExpression::PdpDerive
 
 		Pdp(ept)->Derive(m_mp, exprhdl, pdpctxt);
 	}
-
+	// If we havn't derived all properties, do that now. If we've derived some
+	// of the properties, this will only derive properties that have not yet been derived.
 	else if (!Pdp(ept)->IsComplete())
 	{
 		Pdp(ept)->Derive(m_mp, exprhdl, pdpctxt);
 	}
-
+	GPOS_ASSERT(Pdp(ept)->IsComplete());
+	// Otherwise, we've already derived all properties and can simply return them
 	return Pdp(ept);
 }
 

@@ -269,7 +269,7 @@ CLogicalGet::PcrsDeriveNotNull
 	pcrs->Include(exprhdl.PcrsOutput());
 
 	// filters out nullable columns
-	CColRefSetIter crsi(*CDrvdPropRelational::GetRelationalProperties(exprhdl.Pdp())->PcrsOutput());
+	CColRefSetIter crsi(*exprhdl.PcrsOutput());
 	while (crsi.Advance())
 	{
 		CColRefTable *pcrtable = CColRefTable::PcrConvert(const_cast<CColRef*>(crsi.Pcr()));
