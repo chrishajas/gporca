@@ -88,7 +88,7 @@ CDrvdPropRelational::~CDrvdPropRelational()
 //		CDrvdPropRelational::Derive
 //
 //	@doc:
-//		Derive relational props
+//		Derive relational props. This derives ALL properties
 //
 //---------------------------------------------------------------------------
 void
@@ -360,6 +360,7 @@ CDrvdPropRelational::PcrsOutput() const
 	return m_pcrsOutput;
 }
 
+// output columns
 CColRefSet *
 CDrvdPropRelational::PcrsOutput(CExpressionHandle &exprhdl)
 {

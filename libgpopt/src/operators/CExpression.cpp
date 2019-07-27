@@ -416,6 +416,7 @@ CDrvdPropPlan *
 CExpression::GetDrvdPropPlan()
 	const
 {
+	GPOS_ASSERT(m_pdpplan->IsComplete());
 	return m_pdpplan;
 }
 
@@ -423,42 +424,8 @@ CDrvdPropScalar *
 CExpression::GetDrvdPropScalar()
 	const
 {
+	GPOS_ASSERT(m_pdpscalar->IsComplete());
 	return m_pdpscalar;
-}
-
-//---------------------------------------------------------------------------
-//	@function:
-//		CExpression::SetPdp
-//
-//	@doc:
-//		Set property value based on operator type;
-//		only used internally during property derivation
-//
-//---------------------------------------------------------------------------
-void
-CExpression::SetPdp
-	(
-	DrvdPropArray *pdp,
-	const DrvdPropArray::EPropType ept
-	)
-{
-	GPOS_ASSERT(NULL != pdp);
-
-	switch (ept)
-	{
-		case DrvdPropArray::EptRelational:
-			m_pdprel = CDrvdPropRelational::GetRelationalProperties(pdp);
-			break;
-		case DrvdPropArray::EptPlan:
-			m_pdpplan = CDrvdPropPlan::Pdpplan(pdp);
-			break;
-		case DrvdPropArray::EptScalar:
-			m_pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pdp);
-			break;
-		default:
-			GPOS_ASSERT(!"Invalid property type");
-			break;
-	}
 }
 
 #ifdef GPOS_DEBUG
@@ -541,7 +508,7 @@ CExpression::Ept() const
 //		CExpression::PdpDerive
 //
 //	@doc:
-//		Derive properties;
+//		Derive properties. This will derive all properties for the type, not on-demand
 //		Determine the suitable derived property type internally
 //
 //---------------------------------------------------------------------------
@@ -562,9 +529,12 @@ CExpression::PdpDerive
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
 
-	// see if suitable prop is already cached
+	// see if suitable prop is already cached. This only applies to scalar and plan properties.
+	// relational properties are never null and are handled in the next case
 	if (NULL == Pdp(ept))
 	{
+		GPOS_ASSERT(DrvdPropArray::EptRelational != ept);
+
 		const ULONG arity = Arity();
 		for (ULONG ul = 0; ul < arity; ul++)
 		{
@@ -579,9 +549,6 @@ CExpression::PdpDerive
 
 		switch (ept)
 		{
-			case DrvdPropArray::EptRelational:
-				m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
-				break;
 			case DrvdPropArray::EptPlan:
 				m_pdpplan = GPOS_NEW(m_mp) CDrvdPropPlan();
 				break;
@@ -600,8 +567,8 @@ CExpression::PdpDerive
 	{
 		Pdp(ept)->Derive(m_mp, exprhdl, pdpctxt);
 	}
-	GPOS_ASSERT(Pdp(ept)->IsComplete());
 	// Otherwise, we've already derived all properties and can simply return them
+	GPOS_ASSERT(Pdp(ept)->IsComplete());
 	return Pdp(ept);
 }
 

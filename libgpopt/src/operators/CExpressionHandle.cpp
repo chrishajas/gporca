@@ -1072,7 +1072,7 @@ CExpressionHandle::GetRelationalProperties
 			return (*Pexpr())[child_index]->GetDrvdPropRelational();
 		}
 
-		// return props after calling derivation function
+		// return props after calling derivation function. This calls the on-demand function of the expression
 		return CDrvdPropRelational::GetRelationalProperties((*Pexpr())[child_index]->PdpDerive());
 	}
 
@@ -1110,7 +1110,9 @@ CExpressionHandle::GetRelationalProperties() const
 		if (Pexpr()->Pop()->FPhysical())
 		{
 			// relational props were copied from memo, return props directly
-			return Pexpr()->GetDrvdPropRelational();
+			CDrvdPropRelational* drvdProps = Pexpr()->GetDrvdPropRelational();
+			GPOS_ASSERT(drvdProps->IsComplete());
+			return drvdProps;
 		}
 		// return props after calling derivation function
 		return CDrvdPropRelational::GetRelationalProperties(Pexpr()->PdpDerive());
@@ -1773,10 +1775,10 @@ CExpressionHandle::PcrsUsedColumns
 	return pcrs;
 }
 
-
 DrvdPropArray *
 CExpressionHandle::Pdp() const
 {
+
 	if (NULL != m_pcc)
 	{
 		return m_pdpplan;

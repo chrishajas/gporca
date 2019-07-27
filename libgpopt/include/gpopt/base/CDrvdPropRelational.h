@@ -72,6 +72,7 @@ namespace gpopt
 
 			CMemoryPool *m_mp;
 
+			// bitset representing whether property has been derived
 			CBitSet *m_is_prop_derived;
 
 			// output columns

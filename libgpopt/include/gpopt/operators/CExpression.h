@@ -95,9 +95,6 @@ namespace gpopt
 			// id of origin group expression, used for debugging expressions extracted from memo
 			ULONG m_ulOriginGrpExprId;
 
-			// set expression's derivable property
-			void SetPdp(DrvdPropArray *pdp, const DrvdPropArray::EPropType ept);
-
 			// get expression's derived property given its type
 			DrvdPropArray *Pdp(const DrvdPropArray::EPropType ept) const;
 
