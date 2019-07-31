@@ -3902,12 +3902,11 @@ CTranslatorExprToDXL::PdxlnMergeJoin
 		CExpression *pexprPredInner = (*pexprPred)[1];
 
 		// align extracted columns with outer and inner children of the join
-		CColRefSet *pcrsOuterChild =
-			CDrvdPropRelational::GetRelationalProperties(pexprOuterChild->Pdp(DrvdPropArray::EptRelational))->PcrsOutput();
+		CColRefSet *pcrsOuterChild = pexprOuterChild->PcrsOutput();
 		CColRefSet *pcrsPredInner = CDrvdPropScalar::GetDrvdScalarProps(pexprPredInner->PdpDerive())->PcrsUsed();
 #ifdef GPOS_DEBUG
 		CColRefSet *pcrsInnerChild =
-			CDrvdPropRelational::GetRelationalProperties(pexprInnerChild->Pdp(DrvdPropArray::EptRelational))->PcrsOutput();
+			pexprInnerChild->PcrsOutput();
 		CColRefSet *pcrsPredOuter = CDrvdPropScalar::GetDrvdScalarProps(pexprPredOuter->PdpDerive())->PcrsUsed();
 #endif
 

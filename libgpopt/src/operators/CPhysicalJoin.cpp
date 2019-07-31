@@ -658,7 +658,7 @@ CPhysicalJoin::AlignJoinKeyOuterInner
 	CColRefSet *pcrsPredOuter = CDrvdPropScalar::GetDrvdScalarProps(pexprPredOuter->PdpDerive())->PcrsUsed();
 
 #ifdef GPOS_DEBUG
-	CColRefSet *pcrsInner = CDrvdPropRelational::GetRelationalProperties(pexprInner->Pdp(DrvdPropArray::EptRelational))->PcrsOutput();
+	CColRefSet *pcrsInner = pexprInner->PcrsOutput();
 	CColRefSet *pcrsPredInner = CDrvdPropScalar::GetDrvdScalarProps(pexprPredInner->PdpDerive())->PcrsUsed();
 #endif // GPOS_DEBUG
 
