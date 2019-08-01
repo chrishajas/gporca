@@ -165,7 +165,7 @@ CEngine::Init
 	GPOS_ASSERT(NULL != pqc);
 	GPOS_ASSERT_IMP
 		(
-		0 == pqc->Pexpr()->PcrsOutput()->Size(),
+		0 == pqc->Pexpr()->DeriveOutputColumns()->Size(),
 		0 == pqc->Prpp()->PcrsRequired()->Size() &&
 		"requiring columns from a zero column expression"
 		);
@@ -427,7 +427,7 @@ CEngine::FPossibleDuplicateGroups
 
 	// right now we only check the output columns, but we may possibly need to
 	// check other properties as well
-	return pdprelFst->PcrsOutput()->Equals(pdprelSnd->PcrsOutput());
+	return pdprelFst->GetOutputColumns()->Equals(pdprelSnd->GetOutputColumns());
 }
 
 //---------------------------------------------------------------------------
@@ -611,7 +611,7 @@ CEngine::FSafeToPruneWithDPEStats
 		// group expression has not been optimized yet
 
 		CDrvdPropRelational *pdprel = CDrvdPropRelational::GetRelationalProperties(pgexpr->Pgroup()->Pdp());
-		if (0 < pdprel->Ppartinfo()->UlConsumers())
+		if (0 < pdprel->GetPartitionInfo()->UlConsumers())
 		{
 			// we cannot bound cost here because of possible DPE that can happen below the operator
 			return false;
@@ -625,7 +625,7 @@ CEngine::FSafeToPruneWithDPEStats
 	exprhdl.Attach(pgexpr);
 	ULONG ulNextChild = exprhdl.UlNextOptimizedChildIndex(child_index);
 	CDrvdPropRelational *pdprelChild = CDrvdPropRelational::GetRelationalProperties((*pgexpr)[ulNextChild]->Pdp());
-	if (0 < pdprelChild->Ppartinfo()->UlConsumers())
+	if (0 < pdprelChild->GetPartitionInfo()->UlConsumers())
 	{
 		// we cannot bound cost here because of possible DPE that can happen for the unoptimized child
 		return false;

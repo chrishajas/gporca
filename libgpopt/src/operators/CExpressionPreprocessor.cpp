@@ -187,7 +187,7 @@ CExpressionPreprocessor::PexprSimplifyQuantifiedSubqueries
 
 	COperator *pop = pexpr->Pop();
 	if (CUtils::FQuantifiedSubquery(pop) &&
-		1 == (*pexpr)[0]->Maxcard().Ull())
+		1 == (*pexpr)[0]->DeriveMaxCard().Ull())
 	{
 		CExpression *pexprInner = (*pexpr)[0];
 
@@ -291,8 +291,8 @@ CExpressionPreprocessor::PexprUnnestScalarSubqueries
 
 			// make sure that inner subquery has no outer references to Const Table
 			// since Const Table will be eliminated in output expression
-			CColRefSet *pcrsConstTableOutput = pexprConstTable->PcrsOutput();
-			CColRefSet *outer_refs = (*pexprInnerSubq)[0]->PcrsOuter();
+			CColRefSet *pcrsConstTableOutput = pexprConstTable->DeriveOutputColumns();
+			CColRefSet *outer_refs = (*pexprInnerSubq)[0]->DeriveOuterReferences();
 			if (0 == outer_refs->Size() || outer_refs->IsDisjoint(pcrsConstTableOutput))
 			{
 				// recursively process inner subquery
@@ -315,7 +315,7 @@ CExpressionPreprocessor::PexprUnnestScalarSubqueries
 	else if (CUtils::FScalarSubqWithConstTblGet(pexpr))
 	{
 		const CColRef *pcrSubq = CScalarSubquery::PopConvert(pexpr->Pop())->Pcr();
-		CColRefSet *pcrsConstTableOutput = (*pexpr)[0]->PcrsOutput();
+		CColRefSet *pcrsConstTableOutput = (*pexpr)[0]->DeriveOutputColumns();
 
 		// if the subquery has outer ref, we do not make use of the output columns of constant table get.
 		// In this scenairo, we replace the entire scalar subquery with a CScalarIdent with the outer reference.
@@ -494,7 +494,7 @@ CExpressionPreprocessor::PexprRemoveSuperfluousOuterRefs
 		// special handling for three operator types: Limit, GrbyAgg, Sequence
 		if (COperator::EopLogicalLimit == op_id)
 		{
-			CColRefSet *outer_refs = pexpr->PcrsOuter();
+			CColRefSet *outer_refs = pexpr->DeriveOuterReferences();
 
 			CLogicalLimit *popLimit = CLogicalLimit::PopConvert(pop);
 			COrderSpec *pos = popLimit->Pos();
@@ -512,7 +512,7 @@ CExpressionPreprocessor::PexprRemoveSuperfluousOuterRefs
 		}
 		else if (COperator::EopLogicalGbAgg == op_id)
 		{
-			CColRefSet *outer_refs = pexpr->PcrsOuter();
+			CColRefSet *outer_refs = pexpr->DeriveOuterReferences();
 
 			CLogicalGbAgg *popAgg = CLogicalGbAgg::PopConvert(pop);
 			CColRefArray *colref_array = CUtils::PdrgpcrExcludeColumns(mp, popAgg->Pdrgpcr(), outer_refs);
@@ -994,7 +994,7 @@ CExpressionPreprocessor::PexprProjBelowSubquery
 		CExpression *pexprRel = (*pexpr)[0];
 		CExpression *pexprRelNew = PexprProjBelowSubquery(mp, pexprRel, false /* fUnderPrList */);
 
-		const CColRefSet *prcsOutput = pexprRelNew->PcrsOutput();
+		const CColRefSet *prcsOutput = pexprRelNew->DeriveOutputColumns();
 		const CColRef *pcrSubquery = CScalarSubquery::PopConvert(pop)->Pcr();
 		if (NULL != prcsOutput && !prcsOutput->FMember(pcrSubquery))
 		{
@@ -1154,7 +1154,7 @@ CExpressionPreprocessor::PexprOuterJoinToInnerJoin
 			BOOL fNewChild = false;
 			if (COperator::EopLogicalLeftOuterJoin == pexprChild->Pop()->Eopid())
 			{
-				CColRefSet *pcrsLOJInnerOutput = (*pexprChild)[1]->PcrsOutput();
+				CColRefSet *pcrsLOJInnerOutput = (*pexprChild)[1]->DeriveOutputColumns();
 				if (!GPOS_FTRACE(EopttraceDisableOuterJoin2InnerJoinRewrite) &&
 					CPredicateUtils::FNullRejecting(mp, pexprScalar, pcrsLOJInnerOutput))
 				{
@@ -1253,7 +1253,7 @@ CExpressionPreprocessor::FEquivClassFromChild
 		{
 			continue;
 		}
-		CColRefSetArray *pdrgpcrs = pexprChild->Ppc()->PdrgpcrsEquivClasses();
+		CColRefSetArray *pdrgpcrs = pexprChild->DerivePropertyConstraint()->PdrgpcrsEquivClasses();
 		if (pcrs->FContained(pdrgpcrs))
 		{
 			return true;
@@ -1278,7 +1278,7 @@ CExpressionPreprocessor::PexprAddEqualityPreds
 	GPOS_ASSERT(pexpr->Pop()->FLogical());
 
 	const ULONG ulChildren = pexpr->Arity();
-	CPropConstraint *ppc = pexpr->Ppc();
+	CPropConstraint *ppc = pexpr->DerivePropertyConstraint();
 
 	CExpression *pexprPred = NULL;
 	COperator *pop = pexpr->Pop();
@@ -1459,8 +1459,8 @@ CExpressionPreprocessor::PexprWithImpliedPredsOnLOJInnerChild
 	CPropConstraint *ppc = CLogical::PpcDeriveConstraintFromPredicates(mp, exprhdl);
 
 	// use the computed constraint to derive a scalar predicate on the inner child
-	CColRefSet *pcrsInnerOutput = pexprInner->PcrsOutput();
-	CColRefSet *pcrsInnerNotNull = pexprInner->PcrsNotNull();
+	CColRefSet *pcrsInnerOutput = pexprInner->DeriveOutputColumns();
+	CColRefSet *pcrsInnerNotNull = pexprInner->DeriveNotNullColumns();
 
 	// generate a scalar predicate from the computed constraint, restricted to LOJ inner child
 	CColRefSet *pcrsProcessed = GPOS_NEW(mp) CColRefSet(mp);
@@ -1577,8 +1577,8 @@ CExpressionPreprocessor::PexprFromConstraints
 	GPOS_ASSERT(pexpr->Pop()->FLogical());
 
 	const ULONG ulChildren = pexpr->Arity();
-	CPropConstraint *ppc = pexpr->Ppc();
-	CColRefSet *pcrsNotNull = pexpr->PcrsNotNull();
+	CPropConstraint *ppc = pexpr->DerivePropertyConstraint();
+	CColRefSet *pcrsNotNull = pexpr->DeriveNotNullColumns();
 
 	CExpressionArray *pdrgpexprChildren = GPOS_NEW(mp) CExpressionArray(mp);
 
@@ -1597,7 +1597,7 @@ CExpressionPreprocessor::PexprFromConstraints
 
 		CColRefSet *pcrsOutChild = GPOS_NEW(mp) CColRefSet(mp);
 		// output columns on which predicates must be inferred
-		pcrsOutChild->Include(pexprChild->PcrsOutput());
+		pcrsOutChild->Include(pexprChild->DeriveOutputColumns());
 
 		// exclude column references on which predicates had been already inferred,
 		// this avoids generating duplicate predicates on the parent node if a
@@ -1639,10 +1639,10 @@ CExpressionPreprocessor::PexprPruneEmptySubtrees
 	if (pop->FLogical() && !CUtils::FLogicalDML(pop))
 	{
 		// if maxcard = 0: return a const table get with same output columns and zero tuples
-		if (0 == pexpr->Maxcard())
+		if (0 == pexpr->DeriveMaxCard())
 		{
 			// output columns
-			CColRefArray *colref_array = pexpr->PcrsOutput()->Pdrgpcr(mp);
+			CColRefArray *colref_array = pexpr->DeriveOutputColumns()->Pdrgpcr(mp);
 
 			// empty output data
 			IDatum2dArray *pdrgpdrgpdatum = GPOS_NEW(mp) IDatum2dArray(mp);
@@ -1716,7 +1716,7 @@ CExpressionPreprocessor::CollectCTEPredicates
 	if (
 			COperator::EopLogicalSelect == pexpr->Pop()->Eopid() &&
 			COperator::EopLogicalCTEConsumer == (*pexpr)[0]->Pop()->Eopid() &&
-			0 == pexpr->PcrsOuter()->Size() // no outer references in selection predicate
+			0 == pexpr->DeriveOuterReferences()->Size() // no outer references in selection predicate
 		)
 	{
 		CExpression *pexprScalar = (*pexpr)[1];
@@ -2288,7 +2288,7 @@ CExpressionPreprocessor::PexprExistWithPredFromINSubq
 		{
 			// perform conversion if subquery does not output any of the columns from relational child
 			const CColRef *pcrSubquery = CScalarSubqueryAny::PopConvert(pop)->Pcr();
-			CColRefSet *pcrsRelationalChild = (*pexpr)[0]->PcrsOutput();
+			CColRefSet *pcrsRelationalChild = (*pexpr)[0]->DeriveOutputColumns();
 			if (pcrsRelationalChild->FMember(pcrSubquery))
 			{
 				return pexprNew;

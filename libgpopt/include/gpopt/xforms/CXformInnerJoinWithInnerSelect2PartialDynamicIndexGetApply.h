@@ -68,7 +68,7 @@ namespace gpopt
 					return CXform::ExfpNone;
 				}
 
-				if (exprhdl.FHasPartialIndexes(1))
+				if (exprhdl.DeriveHasPartialIndexes(1))
 				{
 					return CXform::ExfpHigh;
 				}

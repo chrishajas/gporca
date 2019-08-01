@@ -61,7 +61,7 @@ CXformSplitLimit::Exfp
 	)
 	const
 {
-	if (0 < exprhdl.PcrsOuter()->Size())
+	if (0 < exprhdl.DeriveOuterReferences()->Size())
 	{
 		return CXform::ExfpNone;
 	}
@@ -107,7 +107,7 @@ CXformSplitLimit::Transform
 	COrderSpec *pos = popLimit->Pos();
 
 	// TODO: , Feb 20, 2012, we currently only split limit with offset 0.
-	if (!CUtils::FHasZeroOffset(pexpr) || 0 < pexprRelational->PcrsOuter()->Size())
+	if (!CUtils::FHasZeroOffset(pexpr) || 0 < pexprRelational->DeriveOuterReferences()->Size())
 	{
 		return;
 	}

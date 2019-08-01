@@ -291,9 +291,9 @@ CXformTest::PexprStarJoinTree
 	
 	for (ULONG ul = 1; ul < ulTabs; ul++)
 	{
-		CColRef *pcrLeft = pexprLeft->PcrsOutput()->PcrAny();
+		CColRef *pcrLeft = pexprLeft->DeriveOutputColumns()->PcrAny();
 		CExpression *pexprRight = CTestUtils::PexprLogicalGet(mp);
-		CColRef *pcrRight = pexprRight->PcrsOutput()->PcrAny();
+		CColRef *pcrRight = pexprRight->DeriveOutputColumns()->PcrAny();
 		
 		CExpression *pexprPred = CUtils::PexprScalarEqCmp(mp, pcrLeft, pcrRight);
 		

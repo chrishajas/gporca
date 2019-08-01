@@ -479,7 +479,7 @@ CPhysicalPartitionSelector::PcrsRequired
 
 	CColRefSet *pcrs = GPOS_NEW(mp) CColRefSet(mp, *pcrsInput);
 	pcrs->Union(CDrvdPropScalar::GetDrvdScalarProps(m_pexprCombinedPredicate->PdpDerive())->PcrsUsed());
-	pcrs->Intersection(exprhdl.PcrsOutput(child_index));
+	pcrs->Intersection(exprhdl.DeriveOutputColumns(child_index));
 
 	return pcrs;
 }
@@ -531,7 +531,7 @@ CPhysicalPartitionSelector::PdsRequired
 {
 	GPOS_ASSERT(0 == child_index);
 
-	CPartInfo *ppartinfo = exprhdl.Ppartinfo();
+	CPartInfo *ppartinfo = exprhdl.DerivePartitionInfo();
 	BOOL fCovered = ppartinfo->FContainsScanId(m_scan_id);
 
 	if (fCovered)
@@ -604,7 +604,7 @@ CPhysicalPartitionSelector::PppsRequired
 	CPartIndexMap *ppim = GPOS_NEW(mp) CPartIndexMap(mp);
 	CPartFilterMap *ppfm = GPOS_NEW(mp) CPartFilterMap(mp);
 
-	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
+	CPartInfo *ppartinfo = exprhdl.DerivePartitionInfo(0);
 
 	const ULONG ulScanIds = pdrgpulInputScanIds->Size();
 

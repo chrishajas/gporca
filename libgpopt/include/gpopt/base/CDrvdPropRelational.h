@@ -117,50 +117,50 @@ namespace gpopt
 
 			// helper for getting applicable FDs from child
 			static
-			CFunctionalDependencyArray *PdrgpfdChild(CMemoryPool *mp, ULONG child_index, CExpressionHandle &exprhdl);
+			CFunctionalDependencyArray *DeriveChildFunctionalDependencies(CMemoryPool *mp, ULONG child_index, CExpressionHandle &exprhdl);
 
 			// helper for creating local FDs
 			static
-			CFunctionalDependencyArray *PdrgpfdLocal(CMemoryPool *mp, CExpressionHandle &exprhdl);
+			CFunctionalDependencyArray *DeriveLocalFunctionalDependencies(CMemoryPool *mp, CExpressionHandle &exprhdl);
 
 			BOOL m_is_complete;
 
 		protected:
 			// output columns
-			CColRefSet *PcrsOutput(CExpressionHandle &);
+			CColRefSet *DeriveOutputColumns(CExpressionHandle &);
 
 			// outer references
-			CColRefSet *PcrsOuter(CExpressionHandle &);
+			CColRefSet *DeriveOuterReferences(CExpressionHandle &);
 
 			// nullable columns
-			CColRefSet *PcrsNotNull(CExpressionHandle &);
+			CColRefSet *DeriveNotNullColumns(CExpressionHandle &);
 
 			// columns from the inner child of a correlated-apply expression that can be used above the apply expression
-			CColRefSet *PcrsCorrelatedApply(CExpressionHandle &);
+			CColRefSet *DeriveCorrelatedApplyColumns(CExpressionHandle &);
 
 			// key collection
-			CKeyCollection *Pkc(CExpressionHandle &);
+			CKeyCollection *DeriveKeyCollection(CExpressionHandle &);
 
 			// functional dependencies
-			CFunctionalDependencyArray *Pdrgpfd(CExpressionHandle &);
+			CFunctionalDependencyArray *DeriveFunctionalDependencies(CExpressionHandle &);
 
 			// max cardinality
-			CMaxCard Maxcard(CExpressionHandle &);
+			CMaxCard DeriveMaxCard(CExpressionHandle &);
 
 			// join depth
-			ULONG JoinDepth(CExpressionHandle &);
+			ULONG DeriveJoinDepth(CExpressionHandle &);
 
 			// partition consumers
-			CPartInfo *Ppartinfo(CExpressionHandle &);
+			CPartInfo *DerivePartitionInfo(CExpressionHandle &);
 
 			// constraint property
-			CPropConstraint *Ppc(CExpressionHandle &);
+			CPropConstraint *DerivePropertyConstraint(CExpressionHandle &);
 
 			// function properties
-			CFunctionProp *Pfp(CExpressionHandle &);
+			CFunctionProp *DeriveFunctionProperties(CExpressionHandle &);
 
 			// has partial indexes
-			BOOL FHasPartialIndexes(CExpressionHandle &exprhdl);
+			BOOL DeriveHasPartialIndexes(CExpressionHandle &exprhdl);
 
 		public:
 
@@ -185,40 +185,40 @@ namespace gpopt
 			void Derive(CMemoryPool *mp, CExpressionHandle &exprhdl, CDrvdPropCtxt *pdpctxt);
 
 			// output columns
-			CColRefSet *PcrsOutput() const;
+			CColRefSet *GetOutputColumns() const;
 
 			// outer references
-			CColRefSet *PcrsOuter() const;
+			CColRefSet *GetOuterReferences() const;
 
 			// nullable columns
-			CColRefSet *PcrsNotNull() const;
+			CColRefSet *GetNotNullColumns() const;
 
 			// columns from the inner child of a correlated-apply expression that can be used above the apply expression
-			CColRefSet *PcrsCorrelatedApply() const;
+			CColRefSet *GetCorrelatedApplyColumns() const;
 
 			// key collection
-			CKeyCollection *Pkc() const;
+			CKeyCollection *GetKeyCollection() const;
 		
 			// functional dependencies
-			CFunctionalDependencyArray *Pdrgpfd() const;
+			CFunctionalDependencyArray *GetFunctionalDependencies() const;
 
 			// max cardinality
-			CMaxCard Maxcard() const;
+			CMaxCard GetMaxCard() const;
 
 			// join depth
-			ULONG JoinDepth() const;
+			ULONG GetJoinDepth() const;
 
 			// partition consumers
-			CPartInfo *Ppartinfo() const;
+			CPartInfo *GetPartitionInfo() const;
 
 			// constraint property
-			CPropConstraint *Ppc() const;
+			CPropConstraint *GetPropertyConstraint() const;
 
 			// function properties
-			CFunctionProp *Pfp() const;
+			CFunctionProp *GetFunctionProperties() const;
 
 			// has partial indexes
-			BOOL FHasPartialIndexes() const;
+			BOOL GetHasPartialIndexes() const;
 
 			// shorthand for conversion
 			static

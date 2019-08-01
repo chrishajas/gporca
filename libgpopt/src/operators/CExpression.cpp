@@ -787,7 +787,7 @@ CExpression::ResetStats()
 BOOL
 CExpression::HasOuterRefs()
 {
-	return (0 < PcrsOuter()->Size());
+	return (0 < DeriveOuterReferences()->Size());
 }
 
 //---------------------------------------------------------------------------
@@ -1530,7 +1530,7 @@ CExpression::FValidPartEnforcers
 {
 	GPOS_ASSERT(Pop()->FPhysical());
 
-	CPartInfo *ppartinfo = Ppartinfo();
+	CPartInfo *ppartinfo = DerivePartitionInfo();
 	GPOS_ASSERT(NULL != ppartinfo);
 
 	if (0 == ppartinfo->UlConsumers())
@@ -1552,99 +1552,99 @@ CExpression::FValidPartEnforcers
 }
 
 CColRefSet *
-CExpression::PcrsOuter()
+CExpression::DeriveOuterReferences()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->PcrsOuter(exprhdl);
+	return m_pdprel->DeriveOuterReferences(exprhdl);
 }
 
 CColRefSet *
-CExpression::PcrsOutput()
+CExpression::DeriveOutputColumns()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->PcrsOutput(exprhdl);
+	return m_pdprel->DeriveOutputColumns(exprhdl);
 }
 
 CColRefSet *
-CExpression::PcrsNotNull()
+CExpression::DeriveNotNullColumns()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->PcrsNotNull(exprhdl);
+	return m_pdprel->DeriveNotNullColumns(exprhdl);
 }
 
 CColRefSet *
-CExpression::PcrsCorrelatedApply()
+CExpression::DeriveCorrelatedApplyColumns()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->PcrsCorrelatedApply(exprhdl);
+	return m_pdprel->DeriveCorrelatedApplyColumns(exprhdl);
 }
 
 CMaxCard
-CExpression::Maxcard()
+CExpression::DeriveMaxCard()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->Maxcard(exprhdl);
+	return m_pdprel->DeriveMaxCard(exprhdl);
 }
 
 CKeyCollection *
-CExpression::Pkc()
+CExpression::DeriveKeyCollection()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->Pkc(exprhdl);
+	return m_pdprel->DeriveKeyCollection(exprhdl);
 }
 
 CPropConstraint *
-CExpression::Ppc()
+CExpression::DerivePropertyConstraint()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->Ppc(exprhdl);
+	return m_pdprel->DerivePropertyConstraint(exprhdl);
 }
 
 ULONG
-CExpression::JoinDepth()
+CExpression::DeriveJoinDepth()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->JoinDepth(exprhdl);
+	return m_pdprel->DeriveJoinDepth(exprhdl);
 }
 
 CFunctionProp *
-CExpression::Pfp()
+CExpression::DeriveFunctionProperties()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->Pfp(exprhdl);
+	return m_pdprel->DeriveFunctionProperties(exprhdl);
 }
 
 CFunctionalDependencyArray *
-CExpression::Pdrgpfd()
+CExpression::DeriveFunctionalDependencies()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->Pdrgpfd(exprhdl);
+	return m_pdprel->DeriveFunctionalDependencies(exprhdl);
 }
 
 CPartInfo *
-CExpression::Ppartinfo()
+CExpression::DerivePartitionInfo()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->Ppartinfo(exprhdl);
+	return m_pdprel->DerivePartitionInfo(exprhdl);
 }
 
 BOOL
-CExpression::FHasPartialIndexes()
+CExpression::DeriveHasPartialIndexes()
 {
 	CExpressionHandle exprhdl(m_mp);
 	exprhdl.Attach(this);
-	return m_pdprel->FHasPartialIndexes(exprhdl);
+	return m_pdprel->DeriveHasPartialIndexes(exprhdl);
 }
 
 // EOF

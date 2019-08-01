@@ -62,11 +62,11 @@ CXformLeftSemiJoin2InnerJoinUnderGb::Exfp
 	)
 	const
 {
-	CColRefSet *pcrsInnerOutput = exprhdl.PcrsOutput(1);
+	CColRefSet *pcrsInnerOutput = exprhdl.DeriveOutputColumns(1);
 	CExpression *pexprScalar = exprhdl.PexprScalarChild(2);
 	CAutoMemoryPool amp;
 	if (exprhdl.HasOuterRefs() ||
-		NULL == exprhdl.Pkc(0) ||
+		NULL == exprhdl.DeriveKeyCollection(0) ||
 		exprhdl.GetDrvdScalarProps(2)->FHasSubquery() ||
 		CPredicateUtils::FSimpleEqualityUsingCols(amp.Pmp(), pexprScalar, pcrsInnerOutput))
 	{

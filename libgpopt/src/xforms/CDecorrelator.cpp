@@ -149,7 +149,7 @@ CDecorrelator::FDelayable
  	{
  		// for semi-joins, we disallow predicates referring to inner child to be pulled above the join
  		CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed();
- 		CColRefSet *pcrsInner = (*pexprLogical)[1]->PcrsOutput();
+ 		CColRefSet *pcrsInner = (*pexprLogical)[1]->DeriveOutputColumns();
  		if (!pcrsUsed->IsDisjoint(pcrsInner))
  		{
  			// predicate uses a column produced by semi-join inner child
@@ -200,7 +200,7 @@ CDecorrelator::FProcess
 			"Apply expression is encountered by decorrelator");
 
 	// no outer references?
-	if (0 == pexpr->PcrsOuter()->Size())
+	if (0 == pexpr->DeriveOuterReferences()->Size())
 	{
 		pexpr->AddRef();
 		*ppexprDecorrelated = pexpr;
@@ -213,7 +213,7 @@ CDecorrelator::FProcess
 	GPOS_ASSERT_IMP
 		(
 		fSuccess,
-		0 == (*ppexprDecorrelated)->PcrsOuter()->Size()
+		0 == (*ppexprDecorrelated)->DeriveOuterReferences()->Size()
 		);
 
 	return fSuccess;
@@ -371,7 +371,7 @@ CDecorrelator::FProcessSelect
 
 	// process predicate
 	CExpression *pexprPredicate = NULL;
-	CColRefSet *pcrsOutput = pexpr->PcrsOutput();
+	CColRefSet *pcrsOutput = pexpr->DeriveOutputColumns();
 	BOOL fSuccess  = FProcessPredicate(mp, pexpr, (*pexpr)[1], fEqualityOnly, pcrsOutput, &pexprPredicate, pdrgpexprCorrelations);
 	
 	// build substitute
@@ -436,7 +436,7 @@ CDecorrelator::FProcessGbAgg
 	}
 	
 	// get the output columns of decorrelated child
-	CColRefSet *pcrsOutput = pexprRelational->PcrsOutput();
+	CColRefSet *pcrsOutput = pexprRelational->DeriveOutputColumns();
 
 	// create temp expression of correlations to determine inner columns
 	pdrgpexprCorrelations->AddRef();
@@ -496,7 +496,7 @@ CDecorrelator::FProcessJoin
 		if (FProcess(mp, (*pexpr)[ul], fEqualityOnly, &pexprInput, pdrgpexprCorrelations))
 		{
 			pdrgpexpr->Append(pexprInput);
-			pcrsOutput->Union(pexprInput->PcrsOutput());
+			pcrsOutput->Union(pexprInput->DeriveOutputColumns());
 		}
 		else
 		{
@@ -571,7 +571,7 @@ CDecorrelator::FProcessAssert
 	CExpression *pexprScalar = (*pexpr)[1];
 
 	// fail if assert expression has outer references
-	CColRefSet *pcrsOutput = (*pexpr)[0]->PcrsOutput();
+	CColRefSet *pcrsOutput = (*pexpr)[0]->DeriveOutputColumns();
 	CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed();
 	if (!pcrsOutput->ContainsAll(pcrsUsed))
 	{
@@ -687,7 +687,7 @@ CDecorrelator::FProcessProject
 	CExpression *pexprPrjList = (*pexpr)[1];
 
 	// fail if project elements have outer references
-	CColRefSet *pcrsOutput = (*pexpr)[0]->PcrsOutput();
+	CColRefSet *pcrsOutput = (*pexpr)[0]->DeriveOutputColumns();
 	CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed();
 	if (!pcrsOutput->ContainsAll(pcrsUsed))
 	{

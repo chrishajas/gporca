@@ -221,7 +221,7 @@ CExpressionTest::EresUnittest_SimpleOps()
 		pexpr->DbgPrint();
 
 		// copy expression
-		CColRef *pcrOld = pexpr->PcrsOutput()->PcrAny();
+		CColRef *pcrOld = pexpr->DeriveOutputColumns()->PcrAny();
 		CColRef *new_colref = COptCtxt::PoctxtFromTLS()->Pcf()->PcrCreate(pcrOld);
 		UlongToColRefMap *colref_mapping = GPOS_NEW(mp) UlongToColRefMap(mp);
 
@@ -642,7 +642,7 @@ void CExpressionTest::SetupPlanForFValidPlanTest
 	*ppexprGby = PexprCreateGbyWithColumnFormat(mp, GPOS_WSZ_LIT("Test Column%d"));
 
 	// Create a column requirement using the first output column of the group by.
-	CColRefSet *pcrsGby = (*ppexprGby)->PcrsOutput();
+	CColRefSet *pcrsGby = (*ppexprGby)->DeriveOutputColumns();
 	*ppcrs = GPOS_NEW(mp) CColRefSet(mp);
 	(*ppcrs)->Include(pcrsGby->PcrFirst());
 
@@ -787,7 +787,7 @@ CExpressionTest::EresUnittest_FValidPlan_InvalidOrder()
 	// Create similar requirements, but
 	// add an order requirement using a couple of output columns of a Get
 	CExpression *pexprGet = CTestUtils::PexprLogicalGet(mp);
-	CColRefSet *pcrsGet = pexprGet->PcrsOutput();
+	CColRefSet *pcrsGet = pexprGet->DeriveOutputColumns();
 	CColRefSet *pcrsGetCopy = GPOS_NEW(mp) CColRefSet(mp, *pcrsGet);
 
 	CColRefArray *pdrgpcrGet = pcrsGetCopy->Pdrgpcr(mp);
@@ -1308,7 +1308,7 @@ CExpressionTest::EresUnittest_InvalidSetOp()
 		CTableDescriptor *ptabdesc1 = CTestUtils::PtabdescCreate(mp, 3, pmdid1, CName(&strName1));
 		CWStringConst strAlias1(GPOS_WSZ_LIT("T1Alias"));
 		CExpression *pexprGet1 = CTestUtils::PexprLogicalGet(mp, ptabdesc1, &strAlias1);
-		CColRefSet *pcrsOutput1 = pexprGet1->PcrsOutput();
+		CColRefSet *pcrsOutput1 = pexprGet1->DeriveOutputColumns();
 
 		CWStringConst strName2(GPOS_WSZ_LIT("T2"));
 		CMDIdGPDB *pmdid2 = GPOS_NEW(mp) CMDIdGPDB(GPOPT_TEST_REL_OID2, 1, 1);

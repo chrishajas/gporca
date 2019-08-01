@@ -2024,7 +2024,7 @@ CTranslatorExprToDXLUtils::SetDirectDispatchInfo
 		return;
 	}
 	
-	if (1 != pexpr->JoinDepth() || 1 != pdrgpdsBaseTables->Size())
+	if (1 != pexpr->DeriveJoinDepth() || 1 != pdrgpdsBaseTables->Size())
 	{
 		// direct dispatch not supported for join queries
 		return;
@@ -2038,7 +2038,7 @@ CTranslatorExprToDXLUtils::SetDirectDispatchInfo
 		return;
 	}
 	
-	CPropConstraint *ppc = pexpr->Ppc();
+	CPropConstraint *ppc = pexpr->DerivePropertyConstraint();
 	if (NULL == ppc->Pcnstr())
 	{
 		return;

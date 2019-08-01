@@ -60,8 +60,8 @@ CPhysicalLeftAntiSemiHashJoinNotIn::PdsRequired
 	GPOS_ASSERT(ulOptReq < UlDistrRequests());
 
 	if (0 == ulOptReq && 1 == child_index &&
-			(FNullableHashKeys(exprhdl.PcrsNotNull(0), false /*fInner*/) ||
-			FNullableHashKeys(exprhdl.PcrsNotNull(1), true /*fInner*/)) )
+			(FNullableHashKeys(exprhdl.DeriveNotNullColumns(0), false /*fInner*/) ||
+			FNullableHashKeys(exprhdl.DeriveNotNullColumns(1), true /*fInner*/)) )
 	{
 		// we need to replicate the inner if any of the following is true:
 		// a. if the outer hash keys are nullable, because the executor needs to detect

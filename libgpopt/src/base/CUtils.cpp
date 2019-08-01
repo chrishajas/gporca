@@ -856,10 +856,10 @@ CUtils::FUsesNullableCol
 	GPOS_ASSERT(pexprScalar->Pop()->FScalar());
 	GPOS_ASSERT(pexprLogical->Pop()->FLogical());
 
-	CColRefSet *pcrsNotNull = pexprLogical->PcrsNotNull();
+	CColRefSet *pcrsNotNull = pexprLogical->DeriveNotNullColumns();
 	CColRefSet *pcrsUsed = GPOS_NEW(mp) CColRefSet(mp);
 	pcrsUsed->Include(CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed());
-	pcrsUsed->Intersection(pexprLogical->PcrsOutput());
+	pcrsUsed->Intersection(pexprLogical->DeriveOutputColumns());
 
 	BOOL fUsesNullableCol = !pcrsNotNull->ContainsAll(pcrsUsed);
 	pcrsUsed->Release();
@@ -988,7 +988,7 @@ CUtils::HasOuterRefs
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(pexpr->Pop()->FLogical());
 
-	return 0 < pexpr->PcrsOuter()->Size();
+	return 0 < pexpr->DeriveOuterReferences()->Size();
 }
 
 // check if a given operator is a logical join
@@ -1904,7 +1904,7 @@ CUtils::PexprCountStarAndSum
 	CExpression *pexprLogical
 	)
 {
-	GPOS_ASSERT(pexprLogical->PcrsOutput()->FMember(colref));
+	GPOS_ASSERT(pexprLogical->DeriveOutputColumns()->FMember(colref));
 
 	CColumnFactory *col_factory = COptCtxt::PoctxtFromTLS()->Pcf();
 	CMDAccessor *md_accessor = COptCtxt::PoctxtFromTLS()->Pmda();
@@ -2566,10 +2566,10 @@ CUtils::PdrgpcrGroupingKey
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(NULL != ppdrgpcrKey);
 
-	CKeyCollection *pkc = pexpr->Pkc();
+	CKeyCollection *pkc = pexpr->DeriveKeyCollection();
 	GPOS_ASSERT(NULL != pkc);
 
-	CColRefSet *pcrsOutput = pexpr->PcrsOutput();
+	CColRefSet *pcrsOutput = pexpr->DeriveOutputColumns();
 	CColRefSet *pcrsUsedOuter = GPOS_NEW(mp) CColRefSet(mp);
 
 	// remove any columns that are not referenced in the query from pcrsOuterOutput
@@ -2765,7 +2765,7 @@ CUtils::PdrgpcrsCopyChildEquivClasses
 	{
 		if (!exprhdl.FScalarChild(ul))
 		{
-			CColRefSetArray *pdrgpcrsChild = exprhdl.Ppc(ul)->PdrgpcrsEquivClasses();
+			CColRefSetArray *pdrgpcrsChild = exprhdl.DerivePropertyConstraint(ul)->PdrgpcrsEquivClasses();
 
 			CColRefSetArray *pdrgpcrsChildCopy = GPOS_NEW(mp) CColRefSetArray(mp);
 			const ULONG size = pdrgpcrsChild->Size();
@@ -3272,8 +3272,8 @@ CUtils::FUsesChildColsOnly
 	CMemoryPool *mp = amp.Pmp();
 	CColRefSet *pcrsUsed =  exprhdl.GetDrvdScalarProps(2 /*child_index*/)->PcrsUsed();
 	CColRefSet *pcrs = GPOS_NEW(mp) CColRefSet(mp);
-	pcrs->Include(exprhdl.PcrsOutput(0 /*child_index*/));
-	pcrs->Include(exprhdl.PcrsOutput(1 /*child_index*/));
+	pcrs->Include(exprhdl.DeriveOutputColumns(0 /*child_index*/));
+	pcrs->Include(exprhdl.DeriveOutputColumns(1 /*child_index*/));
 	BOOL fUsesChildCols = pcrs->ContainsAll(pcrsUsed);
 	pcrs->Release();
 
@@ -3289,12 +3289,12 @@ CUtils::FInnerUsesExternalCols
 {
 	GPOS_ASSERT(3 == exprhdl.Arity());
 
-	CColRefSet *outer_refs = exprhdl.PcrsOuter(1 /*child_index*/);
+	CColRefSet *outer_refs = exprhdl.DeriveOuterReferences(1 /*child_index*/);
 	if (0 == outer_refs->Size())
 	{
 		return false;
 	}
-	CColRefSet *pcrsOutput = exprhdl.PcrsOutput(0 /*child_index*/);
+	CColRefSet *pcrsOutput = exprhdl.DeriveOutputColumns(0 /*child_index*/);
 
 	return !pcrsOutput->ContainsAll(outer_refs);
 }
@@ -3307,7 +3307,7 @@ CUtils::FInnerUsesExternalColsOnly
 	)
 {
 	return FInnerUsesExternalCols(exprhdl) &&
-			exprhdl.PcrsOuter(1)->IsDisjoint(exprhdl.PcrsOutput(0));
+			exprhdl.DeriveOuterReferences(1)->IsDisjoint(exprhdl.DeriveOutputColumns(0));
 }
 
 // check if given columns have available comparison operators
@@ -4867,7 +4867,7 @@ CUtils::FInnerRefInProjectList
 	GPOS_ASSERT(COperator::EopLogicalProject == pexpr->Pop()->Eopid());
 
 	// extract output columns of the relational child
-	CColRefSet *pcrsOuterOutput = (*pexpr)[0]->PcrsOutput();
+	CColRefSet *pcrsOuterOutput = (*pexpr)[0]->DeriveOutputColumns();
 
 	// Project List with one project element
 	CExpression *pexprInner = (*pexpr)[1];

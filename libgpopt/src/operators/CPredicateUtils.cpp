@@ -2400,8 +2400,8 @@ CPredicateUtils::FValidSemiJoinCorrelations
 	GPOS_ASSERT(NULL != pexprOuter);
 	GPOS_ASSERT(NULL != pexprInner);
 
-	CColRefSet *pcrsOuterOuput = pexprOuter->PcrsOutput();
-	CColRefSet *pcrsInnerOuput = pexprInner->PcrsOutput();
+	CColRefSet *pcrsOuterOuput = pexprOuter->DeriveOutputColumns();
+	CColRefSet *pcrsInnerOuput = pexprInner->DeriveOutputColumns();
 
 	// collect output columns of both children
 	CColRefSet *pcrsChildren = GPOS_NEW(mp) CColRefSet(mp, *pcrsOuterOuput);

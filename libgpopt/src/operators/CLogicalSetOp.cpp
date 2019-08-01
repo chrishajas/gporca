@@ -154,14 +154,14 @@ CLogicalSetOp::BuildColumnSets
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CLogicalSetOp::PcrsDeriveOutput
+//		CLogicalSetOp::DeriveOutputColumns
 //
 //	@doc:
 //		Derive output columns
 //
 //---------------------------------------------------------------------------
 CColRefSet *
-CLogicalSetOp::PcrsDeriveOutput
+CLogicalSetOp::DeriveOutputColumns
 	(
 	CMemoryPool *, // mp
 	CExpressionHandle &
@@ -174,7 +174,7 @@ CLogicalSetOp::PcrsDeriveOutput
 	const ULONG arity = exprhdl.Arity();
 	for (ULONG ul = 0; ul < arity; ul++)
 	{
-		CColRefSet *pcrsChildOutput = exprhdl.PcrsOutput(ul);
+		CColRefSet *pcrsChildOutput = exprhdl.DeriveOutputColumns(ul);
 		CColRefSet *pcrsInput = (*m_pdrgpcrsInput)[ul];
 		GPOS_ASSERT(pcrsChildOutput->ContainsAll(pcrsInput) &&
 				"Unexpected outer references in SetOp input");
@@ -195,7 +195,7 @@ CLogicalSetOp::PcrsDeriveOutput
 //
 //---------------------------------------------------------------------------
 CKeyCollection *
-CLogicalSetOp::PkcDeriveKeys
+CLogicalSetOp::DeriveKeyCollection
 	(
 	CMemoryPool *mp,
 	CExpressionHandle & // exprhdl
@@ -212,14 +212,14 @@ CLogicalSetOp::PkcDeriveKeys
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CLogicalSetOp::PpartinfoDerive
+//		CLogicalSetOp::DerivePartitionInfo
 //
 //	@doc:
 //		Derive partition consumer info
 //
 //---------------------------------------------------------------------------
 CPartInfo *
-CLogicalSetOp::PpartinfoDerive
+CLogicalSetOp::DerivePartitionInfo
 	(
 	CMemoryPool *mp,
 	CExpressionHandle &exprhdl
@@ -230,12 +230,12 @@ CLogicalSetOp::PpartinfoDerive
 	GPOS_ASSERT(0 < arity);
 
 	// start with the part info of the first child
-	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
+	CPartInfo *ppartinfo = exprhdl.DerivePartitionInfo(0);
 	ppartinfo->AddRef();
 
 	for (ULONG ul = 1; ul < arity; ul++)
 	{
-		CPartInfo *ppartinfoChild = exprhdl.Ppartinfo(ul);
+		CPartInfo *ppartinfoChild = exprhdl.DerivePartitionInfo(ul);
 		GPOS_ASSERT(NULL != ppartinfoChild);
 
 		CColRefArray *pdrgpcrInput = (*m_pdrgpdrgpcrInput)[ul];
@@ -355,7 +355,7 @@ CLogicalSetOp::PdrgpcrsInputMapped
 	)
 	const
 {
-	CColRefSetArray *pdrgpcrsInput = exprhdl.Ppc(ulChild)->PdrgpcrsEquivClasses();
+	CColRefSetArray *pdrgpcrsInput = exprhdl.DerivePropertyConstraint(ulChild)->PdrgpcrsEquivClasses();
 	const ULONG length = pdrgpcrsInput->Size();
 
 	CColRefSet* pcrsChildInput = (*m_pdrgpcrsInput)[ulChild];
@@ -443,7 +443,7 @@ CLogicalSetOp::PcnstrColumn
 	GPOS_ASSERT(ulChild < exprhdl.Arity());
 
 	// constraint from child
-	CConstraint *pcnstrChild = exprhdl.Ppc(ulChild)->Pcnstr();
+	CConstraint *pcnstrChild = exprhdl.DerivePropertyConstraint(ulChild)->Pcnstr();
 	if (NULL == pcnstrChild)
 	{
 		return NULL;

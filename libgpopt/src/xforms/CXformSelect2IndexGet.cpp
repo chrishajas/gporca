@@ -111,7 +111,7 @@ CXformSelect2IndexGet::Transform
 	GPOS_ASSERT(pdrgpexpr->Size() > 0);
 
 	// derive the scalar and relational properties to build set of required columns
-	CColRefSet *pcrsOutput = pexpr->PcrsOutput();
+	CColRefSet *pcrsOutput = pexpr->DeriveOutputColumns();
 	CColRefSet *pcrsScalarExpr = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed();
 
 	CColRefSet *pcrsReqd = GPOS_NEW(mp) CColRefSet(mp);

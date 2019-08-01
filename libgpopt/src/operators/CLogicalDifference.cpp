@@ -73,14 +73,14 @@ CLogicalDifference::~CLogicalDifference()
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CLogicalDifference::Maxcard
+//		CLogicalDifference::DeriveMaxCard
 //
 //	@doc:
 //		Derive max card
 //
 //---------------------------------------------------------------------------
 CMaxCard
-CLogicalDifference::Maxcard
+CLogicalDifference::DeriveMaxCard
 	(
 	CMemoryPool *, // mp
 	CExpressionHandle &exprhdl
@@ -88,12 +88,12 @@ CLogicalDifference::Maxcard
 	const
 {
 	// contradictions produce no rows
-	if (exprhdl.Ppc()->FContradiction())
+	if (exprhdl.DerivePropertyConstraint()->FContradiction())
 	{
 		return CMaxCard(0 /*ull*/);
 	}
 
-	return exprhdl.Maxcard(0);
+	return exprhdl.DeriveMaxCard(0);
 }
 
 //---------------------------------------------------------------------------
@@ -175,7 +175,7 @@ CLogicalDifference::PstatsDerive
 	CExpression *pexprScCond = CUtils::PexprConjINDFCond(mp, m_pdrgpdrgpcrInput);
 
 	// compute the statistics for LASJ
-	CColRefSet *outer_refs = exprhdl.PcrsOuter();
+	CColRefSet *outer_refs = exprhdl.DeriveOuterReferences();
 	CStatsPredJoinArray *join_preds_stats = CStatsPredUtils::ExtractJoinStatsFromExpr
 														(
 														mp, 

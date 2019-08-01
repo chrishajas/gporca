@@ -822,7 +822,7 @@ CTranslatorDXLToExpr::BuildSetOpChild
 
 	const ULongPtrArray *pdrgpulInput = dxl_op->GetInputColIdArrayAt(child_index);
 	const ULONG ulInputCols = pdrgpulInput->Size();
-	CColRefSet *pcrsChildOutput = (*ppexprChild)->PcrsOutput();
+	CColRefSet *pcrsChildOutput = (*ppexprChild)->DeriveOutputColumns();
 	for (ULONG ulColPos = 0; ulColPos < ulInputCols; ulColPos++)
 	{
 		// column identifier of the input column
@@ -1220,7 +1220,7 @@ CTranslatorDXLToExpr::PexprLogicalCTEAnchor
 	GPOS_ASSERT(NULL != pexprProducer);
 	m_ulCTEId = ulCTEPrevious;
 	
-	CColRefSet *pcrsProducerOuter = pexprProducer->PcrsOuter();
+	CColRefSet *pcrsProducerOuter = pexprProducer->DeriveOuterReferences();
 	if (0 < pcrsProducerOuter->Size())
 	{
 		GPOS_RAISE

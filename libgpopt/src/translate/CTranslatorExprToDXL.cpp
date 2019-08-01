@@ -1667,7 +1667,7 @@ CTranslatorExprToDXL::PdxlnResultFromFilter
 	CDXLNode *child_dxlnode = CreateDXLNode(pexprRelational, NULL /* colref_array */, pdrgpdsBaseTables, pulNonGatherMotions, pfDML, false /*fRemap*/, false /*fRoot*/);
 
 	// translate scalar expression in to filter and one time filter dxl nodes
-	CColRefSet *relational_child_colrefset = pexprRelational->PcrsOutput();
+	CColRefSet *relational_child_colrefset = pexprRelational->DeriveOutputColumns();
 	// get all the scalar conditions in an array
 	CExpressionArray *scalar_exprs = CPredicateUtils::PdrgpexprConjuncts(m_mp, pexprScalar);
 	// array to hold scalar conditions which will qualify for filter condition
@@ -2130,7 +2130,7 @@ CTranslatorExprToDXL::PdxlnTVF
 
 	CPhysicalTVF *popTVF = CPhysicalTVF::PopConvert(pexprTVF->Pop());
 
-	CColRefSet *pcrsOutput = popTVF->PcrsOutput();
+	CColRefSet *pcrsOutput = popTVF->DeriveOutputColumns();
 
 	IMDId *mdid_func = popTVF->FuncMdId();
 	mdid_func->AddRef();
@@ -2212,7 +2212,7 @@ CTranslatorExprToDXL::PdxlnResultFromConstTableGet
 	{
 		GPOS_ASSERT(NULL != pdrgpcrCTGOutput);
 
-		CColRefSet *pcrsOutput = pexprCTG->PcrsOutput();
+		CColRefSet *pcrsOutput = pexprCTG->DeriveOutputColumns();
 		pdxlnPrL = PdxlnProjList(pcrsOutput, pdrgpcrCTGOutput);
 
 		CDXLNode *pdxlnValuesScan = CTranslatorExprToDXLUtils::PdxlnValuesScan
@@ -2970,7 +2970,7 @@ CTranslatorExprToDXL::PdxlnQuantifiedSubplan
 	{
 		// overwrite required inner column based on scalar expression
 
-		CColRefSet *pcrsInner = pexprInner->PcrsOutput();
+		CColRefSet *pcrsInner = pexprInner->DeriveOutputColumns();
 		CColRefSet *pcrsUsed = GPOS_NEW(m_mp) CColRefSet (m_mp, *pexprScalar->GetDrvdPropScalar()->PcrsUsed());
 		pcrsUsed->Intersection(pcrsInner);
 		if (0 < pcrsUsed->Size())
@@ -3284,7 +3284,7 @@ CTranslatorExprToDXL::PcrsOuterRefsForCorrelatedNLJoin
 
 	CExpression *pexprInnerChild = (*pexpr)[1];
 
-	return pexprInnerChild->PcrsOuter();
+	return pexprInnerChild->DeriveOuterReferences();
 }
 
 
@@ -3746,7 +3746,7 @@ CTranslatorExprToDXL::PdxlnNLJoin
 #ifdef GPOS_DEBUG
 	GPOS_ASSERT_IMP(COperator::EopPhysicalInnerIndexNLJoin != pop->Eopid() &&
 					COperator::EopPhysicalLeftOuterIndexNLJoin != pop->Eopid()
-			, pexprInnerChild->PcrsOuter()->IsDisjoint(pexprOuterChild->PcrsOutput()) &&
+			, pexprInnerChild->DeriveOuterReferences()->IsDisjoint(pexprOuterChild->DeriveOutputColumns()) &&
 			"detected outer references in NL inner child");
 #endif // GPOS_DEBUG
 
@@ -3902,11 +3902,11 @@ CTranslatorExprToDXL::PdxlnMergeJoin
 		CExpression *pexprPredInner = (*pexprPred)[1];
 
 		// align extracted columns with outer and inner children of the join
-		CColRefSet *pcrsOuterChild = pexprOuterChild->PcrsOutput();
+		CColRefSet *pcrsOuterChild = pexprOuterChild->DeriveOutputColumns();
 		CColRefSet *pcrsPredInner = CDrvdPropScalar::GetDrvdScalarProps(pexprPredInner->PdpDerive())->PcrsUsed();
 #ifdef GPOS_DEBUG
 		CColRefSet *pcrsInnerChild =
-			pexprInnerChild->PcrsOutput();
+			pexprInnerChild->DeriveOutputColumns();
 		CColRefSet *pcrsPredOuter = CDrvdPropScalar::GetDrvdScalarProps(pexprPredOuter->PdpDerive())->PcrsUsed();
 #endif
 
@@ -4744,7 +4744,7 @@ CTranslatorExprToDXL::PdxlnPartitionSelectorFilter
 	CDXLNode *pdxlnPrLChild = (*child_dxlnode)[0];
 
 	// we add a sequence if the scan id is found below the resolver
-	BOOL fNeedSequence = pexprChild->Ppartinfo()->FContainsScanId(popSelector->ScanId());
+	BOOL fNeedSequence = pexprChild->DerivePartitionInfo()->FContainsScanId(popSelector->ScanId());
 
 	// project list
 	IMDId *mdid = popSelector->MDId();
@@ -5710,7 +5710,7 @@ CTranslatorExprToDXL::GetDXLDirectDispatchInfo
 	GPOS_ASSERT(ulPos < ptabdesc->Pdrgpcoldesc()->Size() && "Column not found");
 
 	CColRef *pcrDistrCol = (*popDML->PdrgpcrSource())[ulPos];
-	CPropConstraint *ppc = (*pexprDML)[0]->Ppc();
+	CPropConstraint *ppc = (*pexprDML)[0]->DerivePropertyConstraint();
 
 	if (NULL == ppc->Pcnstr())
 	{

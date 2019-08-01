@@ -94,7 +94,7 @@ CPhysicalJoin::PosPropagateToOuter
 	// propagate the order requirement to the outer child only if all the columns
 	// specified by the order requirement come from the outer child
 	CColRefSet *pcrs = posRequired->PcrsUsed(mp);
-	BOOL fOuterSortCols = exprhdl.PcrsOutput(0)->ContainsAll(pcrs);
+	BOOL fOuterSortCols = exprhdl.DeriveOutputColumns(0)->ContainsAll(pcrs);
 	pcrs->Release();
 	if (fOuterSortCols)
 	{
@@ -204,7 +204,7 @@ CPhysicalJoin::FProvidesReqdCols
 	ULONG arity = exprhdl.Arity();
 	for (ULONG i = 0; i < arity - 1; i++)
 	{
-		CColRefSet *pcrsChild = exprhdl.PcrsOutput(i);
+		CColRefSet *pcrsChild = exprhdl.DeriveOutputColumns(i);
 		pcrs->Union(pcrsChild);
 	}
 
@@ -234,7 +234,7 @@ CPhysicalJoin::FSortColsInOuterChild
 	GPOS_ASSERT(NULL != pos);
 
 	CColRefSet *pcrsSort = pos->PcrsUsed(mp);
-	CColRefSet *pcrsOuterChild = exprhdl.PcrsOutput(0 /*child_index*/);
+	CColRefSet *pcrsOuterChild = exprhdl.DeriveOutputColumns(0 /*child_index*/);
 	BOOL fSortColsInOuter = pcrsOuterChild->ContainsAll(pcrsSort);
 	pcrsSort->Release();
 
@@ -261,7 +261,7 @@ CPhysicalJoin::FOuterProvidesReqdCols
 	GPOS_ASSERT(NULL != pcrsRequired);
 	GPOS_ASSERT(3 == exprhdl.Arity() && "expected binary join");
 
-	CColRefSet *pcrsOutput = exprhdl.PcrsOutput(0 /*child_index*/);
+	CColRefSet *pcrsOutput = exprhdl.DeriveOutputColumns(0 /*child_index*/);
 
 	return pcrsOutput->ContainsAll(pcrsRequired);
 }
@@ -492,8 +492,8 @@ CPhysicalJoin::FPredKeysSeparated
 	CColRefSet *pcrsUsedPredOuter = CDrvdPropScalar::GetDrvdScalarProps(pexprPredOuter->PdpDerive())->PcrsUsed();
 	CColRefSet *pcrsUsedPredInner = CDrvdPropScalar::GetDrvdScalarProps(pexprPredInner->PdpDerive())->PcrsUsed();
 
-	CColRefSet *outer_refs = pexprOuter->PcrsOutput();
-	CColRefSet *pcrsInner = pexprInner->PcrsOutput();
+	CColRefSet *outer_refs = pexprOuter->DeriveOutputColumns();
+	CColRefSet *pcrsInner = pexprInner->DeriveOutputColumns();
 
 	// make sure that each predicate child uses columns from a different join child
 	// in order to reject predicates of the form 'X Join Y on f(X.a, Y.b) = 5'
@@ -654,11 +654,11 @@ CPhysicalJoin::AlignJoinKeyOuterInner
 	GPOS_ASSERT(NULL != pexprPredOuter);
 	GPOS_ASSERT(NULL != pexprPredInner);
 
-	CColRefSet *pcrsOuter = pexprOuter->PcrsOutput();
+	CColRefSet *pcrsOuter = pexprOuter->DeriveOutputColumns();
 	CColRefSet *pcrsPredOuter = CDrvdPropScalar::GetDrvdScalarProps(pexprPredOuter->PdpDerive())->PcrsUsed();
 
 #ifdef GPOS_DEBUG
-	CColRefSet *pcrsInner = pexprInner->PcrsOutput();
+	CColRefSet *pcrsInner = pexprInner->DeriveOutputColumns();
 	CColRefSet *pcrsPredInner = CDrvdPropScalar::GetDrvdScalarProps(pexprPredInner->PdpDerive())->PcrsUsed();
 #endif // GPOS_DEBUG
 
@@ -1088,10 +1088,10 @@ CPhysicalJoin::PppsRequiredCompute
 	CPartFilterMap *ppfmResult = GPOS_NEW(mp) CPartFilterMap(mp);
 
 	// get outer partition consumers
-	CPartInfo *ppartinfo = exprhdl.Ppartinfo(0);
+	CPartInfo *ppartinfo = exprhdl.DerivePartitionInfo(0);
 
-	CColRefSet *pcrsOutputOuter = exprhdl.PcrsOutput(0);
-	CColRefSet *pcrsOutputInner = exprhdl.PcrsOutput(1);
+	CColRefSet *pcrsOutputOuter = exprhdl.DeriveOutputColumns(0);
+	CColRefSet *pcrsOutputInner = exprhdl.DeriveOutputColumns(1);
 
 	const ULONG ulPartIndexIds = pdrgpul->Size();
 
@@ -1144,7 +1144,7 @@ CPhysicalJoin::PppsRequiredCompute
 			{
 				// always push through required partition propagation for consumers on the
 				// inner side of the hash join
-				CPartKeysArray *pdrgppartkeys = exprhdl.Ppartinfo(1)->PdrgppartkeysByScanId(part_idx_id);
+				CPartKeysArray *pdrgppartkeys = exprhdl.DerivePartitionInfo(1)->PdrgppartkeysByScanId(part_idx_id);
 				GPOS_ASSERT(NULL != pdrgppartkeys);
 				pdrgppartkeys->AddRef();
 

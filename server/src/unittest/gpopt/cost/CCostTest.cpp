@@ -345,9 +345,9 @@ CCostTest::EresUnittest_SetParams()
 
 	// generate in-equality join expression
 	CExpression *pexprOuter = CTestUtils::PexprLogicalGet(mp);
-	const CColRef *pcrOuter = pexprOuter->PcrsOutput()->PcrAny();
+	const CColRef *pcrOuter = pexprOuter->DeriveOutputColumns()->PcrAny();
 	CExpression *pexprInner = CTestUtils::PexprLogicalGet(mp);
-	const CColRef *pcrInner = pexprInner->PcrsOutput()->PcrAny();
+	const CColRef *pcrInner = pexprInner->DeriveOutputColumns()->PcrAny();
 	CExpression *pexprPred = CUtils::PexprScalarCmp(mp, pcrOuter, pcrInner, IMDType::EcmptNEq);
 	CExpression *pexpr = CUtils::PexprLogicalJoin<CLogicalInnerJoin>(mp, pexprOuter, pexprInner, pexprPred);
 

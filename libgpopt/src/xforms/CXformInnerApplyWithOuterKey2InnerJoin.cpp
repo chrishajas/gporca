@@ -70,8 +70,8 @@ CXformInnerApplyWithOuterKey2InnerJoin::Exfp
 	const
 {
 	// check if outer child has key and inner child has outer references
-	if (NULL == exprhdl.Pkc(0) ||
-		0 == exprhdl.PcrsOuter(1)->Size())
+	if (NULL == exprhdl.DeriveKeyCollection(0) ||
+		0 == exprhdl.DeriveOuterReferences(1)->Size())
 	{
 		return ExfpNone;
 	}

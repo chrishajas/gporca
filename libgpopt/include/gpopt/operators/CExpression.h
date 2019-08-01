@@ -327,18 +327,18 @@ namespace gpopt
 			CExpression *PexprRehydrate(CMemoryPool *mp, CCostContext *pcc, CExpressionArray *pdrgpexpr, CDrvdPropCtxtPlan *pdpctxtplan);
 
 			// Property accessors
-			CColRefSet *PcrsOuter();
-			CColRefSet *PcrsOutput();
-			CColRefSet *PcrsNotNull();
-			CColRefSet *PcrsCorrelatedApply();
-			CKeyCollection *Pkc();
-			CPropConstraint *Ppc();
-			CMaxCard Maxcard();
-			ULONG JoinDepth();
-			CFunctionProp *Pfp();
-			CFunctionalDependencyArray *Pdrgpfd();
-			CPartInfo *Ppartinfo();
-			BOOL FHasPartialIndexes();
+			CColRefSet *DeriveOuterReferences();
+			CColRefSet *DeriveOutputColumns();
+			CColRefSet *DeriveNotNullColumns();
+			CColRefSet *DeriveCorrelatedApplyColumns();
+			CKeyCollection *DeriveKeyCollection();
+			CPropConstraint *DerivePropertyConstraint();
+			CMaxCard DeriveMaxCard();
+			ULONG DeriveJoinDepth();
+			CFunctionProp *DeriveFunctionProperties();
+			CFunctionalDependencyArray *DeriveFunctionalDependencies();
+			CPartInfo *DerivePartitionInfo();
+			BOOL DeriveHasPartialIndexes();
 
 	}; // class CExpression
 

@@ -71,14 +71,14 @@ CLogicalIntersect::~CLogicalIntersect()
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CLogicalIntersect::Maxcard
+//		CLogicalIntersect::DeriveMaxCard
 //
 //	@doc:
 //		Derive max card
 //
 //---------------------------------------------------------------------------
 CMaxCard
-CLogicalIntersect::Maxcard
+CLogicalIntersect::DeriveMaxCard
 	(
 	CMemoryPool *, // mp
 	CExpressionHandle &exprhdl
@@ -86,13 +86,13 @@ CLogicalIntersect::Maxcard
 	const
 {
 	// contradictions produce no rows
-	if (exprhdl.Ppc()->FContradiction())
+	if (exprhdl.DerivePropertyConstraint()->FContradiction())
 	{
 		return CMaxCard(0 /*ull*/);
 	}
 
-	CMaxCard maxcardL = exprhdl.Maxcard(0);
-	CMaxCard maxcardR = exprhdl.Maxcard(1);
+	CMaxCard maxcardL = exprhdl.DeriveMaxCard(0);
+	CMaxCard maxcardR = exprhdl.DeriveMaxCard(1);
 
 	if (maxcardL <= maxcardR)
 	{

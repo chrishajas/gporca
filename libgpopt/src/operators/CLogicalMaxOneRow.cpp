@@ -71,7 +71,7 @@ CLogicalMaxOneRow::PcrsStat
 	pcrs->Union(pcrsInput);
 
 	// intersect with the output columns of relational child
-	pcrs->Intersection(exprhdl.PcrsOutput(child_index));
+	pcrs->Intersection(exprhdl.DeriveOutputColumns(child_index));
 
 	return pcrs;
 }

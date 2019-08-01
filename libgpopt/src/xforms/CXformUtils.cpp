@@ -89,7 +89,7 @@ CXformUtils::ExfpSemiJoin2CrossProduct
 			COperator::EopLogicalLeftAntiSemiJoinNotIn == op_id);
 
 	CColRefSet *pcrsUsed = exprhdl.GetDrvdScalarProps(2 /*child_index*/)->PcrsUsed();
-	CColRefSet *pcrsOuterOutput = exprhdl.PcrsOutput(0 /*child_index*/);
+	CColRefSet *pcrsOuterOutput = exprhdl.DeriveOutputColumns(0 /*child_index*/);
 	if (0 == pcrsUsed->Size() || !pcrsOuterOutput->ContainsAll(pcrsUsed))
 	{
 		// xform is inapplicable of join predicate uses columns from join's inner child
@@ -172,9 +172,9 @@ CXformUtils::FInlinableCTE
 	CCTEInfo *pcteinfo = COptCtxt::PoctxtFromTLS()->Pcteinfo();
 	CExpression *pexprProducer = pcteinfo->PexprCTEProducer(ulCTEId);
 	GPOS_ASSERT(NULL != pexprProducer);
-	CFunctionProp *pfp = pexprProducer->Pfp();
+	CFunctionProp *pfp = pexprProducer->DeriveFunctionProperties();
 
-	CPartInfo *ppartinfoCTEProducer = pexprProducer->Ppartinfo();
+	CPartInfo *ppartinfoCTEProducer = pexprProducer->DerivePartitionInfo();
 	GPOS_ASSERT(NULL != ppartinfoCTEProducer);
 
 	return IMDFunction::EfsVolatile > pfp->Efs() &&
@@ -266,14 +266,14 @@ CXformUtils::PcrsFKey
 	)
 {
 	// get inner expression key
-	CKeyCollection *pkc =  pexprInner->Pkc();
+	CKeyCollection *pkc =  pexprInner->DeriveKeyCollection();
 	if (NULL == pkc)
 	{
 		// inner expression has no key
 		return NULL;
 	}
 	// get outer expression output columns
-	CColRefSet *prcsOutput = pexprOuter->PcrsOutput();
+	CColRefSet *prcsOutput = pexprOuter->DeriveOutputColumns();
 
 	CExpressionArray *pdrgpexpr = CPredicateUtils::PdrgpexprConjuncts(mp, pexprScalar);
 	CColRefSet *pcrsFKey = NULL;
@@ -419,8 +419,8 @@ CXformUtils::PexprSwapJoins
 	CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps((*pexprTopJoin)[2]->PdpDerive())->PcrsUsed();
 
 	// get output columns of bottom join's children
-	const CColRefSet *pcrsBottomOuter = (*pexprBottomJoin)[0]->PcrsOutput();
-	const CColRefSet *pcrsBottomInner = (*pexprBottomJoin)[1]->PcrsOutput();
+	const CColRefSet *pcrsBottomOuter = (*pexprBottomJoin)[0]->DeriveOutputColumns();
+	const CColRefSet *pcrsBottomInner = (*pexprBottomJoin)[1]->DeriveOutputColumns();
 
 	BOOL fDisjointWithBottomOuter = pcrsUsed->IsDisjoint(pcrsBottomOuter);
 	BOOL fDisjointWithBottomInner = pcrsUsed->IsDisjoint(pcrsBottomInner);
@@ -510,8 +510,8 @@ CXformUtils::PexprPushGbBelowJoin
 	CExpression *pexprScalar = (*pexprJoin)[2];
 	CLogicalGbAgg *popGbAgg = CLogicalGbAgg::PopConvert(pexprGb->Pop());
 
-	CColRefSet *pcrsOuterOutput = pexprOuter->PcrsOutput();
-	CColRefSet *pcrsAggOutput = pexprGb->PcrsOutput();
+	CColRefSet *pcrsOuterOutput = pexprOuter->DeriveOutputColumns();
+	CColRefSet *pcrsAggOutput = pexprGb->DeriveOutputColumns();
 	CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->PcrsUsed();
 	CColRefSet *pcrsFKey = PcrsFKey(mp, pexprOuter, pexprInner, pexprScalar);
 
@@ -1444,7 +1444,7 @@ CXformUtils::PexprAssertNotNull
 	CColumnDescriptorArray *pdrgpcoldesc = ptabdesc->Pdrgpcoldesc();
 
 	const ULONG num_cols = pdrgpcoldesc->Size();
-	CColRefSet *pcrsNotNull = pexprChild->PcrsNotNull();
+	CColRefSet *pcrsNotNull = pexprChild->DeriveNotNullColumns();
 
 	CExpressionArray *pdrgpexprAssertConstraints = GPOS_NEW(mp) CExpressionArray(mp);
 
@@ -1723,7 +1723,7 @@ CXformUtils::PexprAssertUpdateCardinality
 	pcrsKey->Include(pcrSegmentId);
 	pcrsKey->Include(pcrCtid);
 
-	CKeyCollection *pkc = pexprDMLChild->Pkc();
+	CKeyCollection *pkc = pexprDMLChild->DeriveKeyCollection();
 	if (NULL != pkc && pkc->FKey(pcrsKey))
 	{
 		// {segid, ctid} is a key: cardinality constraint is satisfied
@@ -2553,8 +2553,8 @@ CXformUtils::LookupJoinKeys
 		return;
 	}
 
-	CColRefSet *pcrsOuterOutput = (*pexpr)[0]->PcrsOutput();
-	CColRefSet *pcrsInnerOutput = (*pexpr)[1]->PcrsOutput();
+	CColRefSet *pcrsOuterOutput = (*pexpr)[0]->DeriveOutputColumns();
+	CColRefSet *pcrsInnerOutput = (*pexpr)[1]->DeriveOutputColumns();
 
 	CGroup *pgroupScalar = pgexprScalarOrigin->Pgroup();
 	if (NULL == pgroupScalar->PdrgpexprJoinKeysOuter())
@@ -3915,7 +3915,7 @@ CXformUtils::PexprSelect2BitmapBoolOp
 	}
 
 	// derive the scalar and relational properties to build set of required columns
-	CColRefSet *pcrsOutput = pexpr->PcrsOutput();
+	CColRefSet *pcrsOutput = pexpr->DeriveOutputColumns();
 	CColRefSet *pcrsScalarExpr = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed();
 
 	CColRefSet *pcrsReqd = GPOS_NEW(mp) CColRefSet(mp);
@@ -4465,7 +4465,7 @@ CXformUtils::FJoinPredOnSingleChild
 	CColRefSetArray *pdrgpcrs = GPOS_NEW(mp) CColRefSetArray(mp);
 	for (ULONG ul = 0; ul < arity - 1; ul++)
 	{
-		CColRefSet *pcrsOutput = exprhdl.PcrsOutput(ul);
+		CColRefSet *pcrsOutput = exprhdl.DeriveOutputColumns(ul);
 		pcrsOutput->AddRef();
 		pdrgpcrs->Append(pcrsOutput);
 	}

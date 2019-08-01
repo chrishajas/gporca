@@ -321,7 +321,7 @@ CPhysicalSplit::FProvidesReqdCols
 	pcrs->Include(m_pcrAction);
 
 	// include output columns of the relational child
-	pcrs->Union(exprhdl.PcrsOutput(0 /*child_index*/));
+	pcrs->Union(exprhdl.DeriveOutputColumns(0 /*child_index*/));
 
 	BOOL fProvidesCols = pcrs->ContainsAll(pcrsRequired);
 	pcrs->Release();

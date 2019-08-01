@@ -889,7 +889,7 @@ namespace gpopt
 	{
 		// create an outer Get expression and extract a random column from it
 		CExpression *pexprGet = PexprLogicalGet(mp);
-		CColRef *colref =  pexprGet->PcrsOutput()->PcrAny();
+		CColRef *colref =  pexprGet->DeriveOutputColumns()->PcrAny();
 
 		// create an inner partitioned Get expression
 		CExpression *pexprGetPartitioned = PexprLogicalGetPartitioned(mp);
@@ -941,8 +941,8 @@ namespace gpopt
 		GPOS_ASSERT(NULL != pexprRight);
 
 		// get any two columns; one from each side
-		CColRef *pcrLeft = pexprLeft->PcrsOutput()->PcrAny();
-		CColRef *pcrRight = pexprRight->PcrsOutput()->PcrAny();
+		CColRef *pcrLeft = pexprLeft->DeriveOutputColumns()->PcrAny();
+		CColRef *pcrRight = pexprRight->DeriveOutputColumns()->PcrAny();
 		CExpression *pexprEquality = CUtils::PexprScalarEqCmp(mp, pcrLeft, pcrRight);
 
 		return CUtils::PexprLogicalJoin<T>(mp, pexprLeft, pexprRight, pexprEquality);
@@ -987,7 +987,7 @@ namespace gpopt
 	 )
 	{
 		CExpression *pexprOuter = PexprLogicalGet(mp);
-		CColRefSet *outer_refs = pexprOuter->PcrsOutput();
+		CColRefSet *outer_refs = pexprOuter->DeriveOutputColumns();
 
 		CExpression *pexprInner = PexprLogicalSelectCorrelated(mp, outer_refs, 3);
 		CExpression *pexprPredicate = CUtils::PexprScalarConstBool(mp, true /*value*/);
@@ -1012,12 +1012,12 @@ namespace gpopt
 	 )
 	{
 		CExpression *pexprOuter = PexprLogicalGet(mp);
-		CColRefSet *outer_refs = pexprOuter->PcrsOutput();
+		CColRefSet *outer_refs = pexprOuter->DeriveOutputColumns();
 
 		CExpression *pexprInner = PexprLogicalSelectCorrelated(mp, outer_refs, 3);
 		CExpression *pexprPredicate = CUtils::PexprScalarConstBool(mp, true /*value*/);
 
-		CColRefSet *pcrsOuterRef = pexprInner->PcrsOuter();
+		CColRefSet *pcrsOuterRef = pexprInner->DeriveOuterReferences();
 		GPOS_ASSERT(1 == pcrsOuterRef->Size());
 		CColRef *colref = pcrsOuterRef->PcrFirst();
 

@@ -347,7 +347,7 @@ CExpressionHandle::PdrgpstatOuterRefs
 	}
 
 	IStatisticsArray *pdrgpstatResult = GPOS_NEW(m_mp) IStatisticsArray(m_mp);
-	CColRefSet *outer_refs = PcrsOuter(child_index);
+	CColRefSet *outer_refs = DeriveOuterReferences(child_index);
 	GPOS_ASSERT(0 < outer_refs->Size());
 
 	const ULONG size = statistics_array->Size();
@@ -755,7 +755,7 @@ CExpressionHandle::InitReqdProps
 		CReqdPropPlan *prpp = CReqdPropPlan::Prpp(prpInput);
 		if (NULL == prpp->Pepp())
 		{
-			CPartInfo *ppartinfo = Ppartinfo();
+			CPartInfo *ppartinfo = DerivePartitionInfo();
 			prpp->InitReqdPartitionPropagation(m_mp, ppartinfo);
 		}
 	}
@@ -1546,7 +1546,7 @@ CExpressionHandle::PfpChild
 		return GetDrvdScalarProps(child_index)->Pfp();
 	}
 
-	return this->Pfp(child_index);
+	return this->DeriveFunctionProperties(child_index);
 }
 
 //---------------------------------------------------------------------------
@@ -1805,201 +1805,201 @@ CExpressionHandle::Pstats()
 
 
 CColRefSet *
-CExpressionHandle::PcrsOuter(ULONG child_index)
+CExpressionHandle::DeriveOuterReferences(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->PcrsOuter();
+		return (*Pexpr())[child_index]->DeriveOuterReferences();
 	}
 
-	return GetRelationalProperties(child_index)->PcrsOuter();
+	return GetRelationalProperties(child_index)->GetOuterReferences();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsOuter()
+CExpressionHandle::DeriveOuterReferences()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->PcrsOuter();
+		return Pexpr()->DeriveOuterReferences();
 	}
 
-	return GetRelationalProperties()->PcrsOuter();
+	return GetRelationalProperties()->GetOuterReferences();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsOutput(ULONG child_index)
+CExpressionHandle::DeriveOutputColumns(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->PcrsOutput();
+		return (*Pexpr())[child_index]->DeriveOutputColumns();
 	}
 
-	return GetRelationalProperties(child_index)->PcrsOutput();
+	return GetRelationalProperties(child_index)->GetOutputColumns();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsOutput()
+CExpressionHandle::DeriveOutputColumns()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->PcrsOutput();
+		return Pexpr()->DeriveOutputColumns();
 	}
 
-	return GetRelationalProperties()->PcrsOutput();
+	return GetRelationalProperties()->GetOutputColumns();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsNotNull(ULONG child_index)
+CExpressionHandle::DeriveNotNullColumns(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->PcrsNotNull();
+		return (*Pexpr())[child_index]->DeriveNotNullColumns();
 	}
 
-	return GetRelationalProperties(child_index)->PcrsNotNull();
+	return GetRelationalProperties(child_index)->GetNotNullColumns();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsNotNull()
+CExpressionHandle::DeriveNotNullColumns()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->PcrsNotNull();
+		return Pexpr()->DeriveNotNullColumns();
 	}
 
-	return GetRelationalProperties()->PcrsNotNull();
+	return GetRelationalProperties()->GetNotNullColumns();
 }
 
 CMaxCard
-CExpressionHandle::Maxcard(ULONG child_index)
+CExpressionHandle::DeriveMaxCard(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Maxcard();
+		return (*Pexpr())[child_index]->DeriveMaxCard();
 	}
 
-	return GetRelationalProperties(child_index)->Maxcard();
+	return GetRelationalProperties(child_index)->GetMaxCard();
 }
 
 CMaxCard
-CExpressionHandle::Maxcard()
+CExpressionHandle::DeriveMaxCard()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Maxcard();
+		return Pexpr()->DeriveMaxCard();
 	}
 
-	return GetRelationalProperties()->Maxcard();
+	return GetRelationalProperties()->GetMaxCard();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsCorrelatedApply(ULONG child_index)
+CExpressionHandle::DeriveCorrelatedApplyColumns(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->PcrsCorrelatedApply();
+		return (*Pexpr())[child_index]->DeriveCorrelatedApplyColumns();
 	}
 
-	return GetRelationalProperties(child_index)->PcrsCorrelatedApply();
+	return GetRelationalProperties(child_index)->GetCorrelatedApplyColumns();
 }
 
 CColRefSet *
-CExpressionHandle::PcrsCorrelatedApply()
+CExpressionHandle::DeriveCorrelatedApplyColumns()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->PcrsCorrelatedApply();
+		return Pexpr()->DeriveCorrelatedApplyColumns();
 	}
 
-	return GetRelationalProperties()->PcrsCorrelatedApply();
+	return GetRelationalProperties()->GetCorrelatedApplyColumns();
 }
 
 CKeyCollection *
-CExpressionHandle::Pkc(ULONG child_index)
+CExpressionHandle::DeriveKeyCollection(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Pkc();
+		return (*Pexpr())[child_index]->DeriveKeyCollection();
 	}
 
-	return GetRelationalProperties(child_index)->Pkc();
+	return GetRelationalProperties(child_index)->GetKeyCollection();
 }
 
 CKeyCollection *
-CExpressionHandle::Pkc()
+CExpressionHandle::DeriveKeyCollection()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Pkc();
+		return Pexpr()->DeriveKeyCollection();
 	}
 
-	return GetRelationalProperties()->Pkc();
+	return GetRelationalProperties()->GetKeyCollection();
 }
 
 CPropConstraint *
-CExpressionHandle::Ppc(ULONG child_index)
+CExpressionHandle::DerivePropertyConstraint(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Ppc();
+		return (*Pexpr())[child_index]->DerivePropertyConstraint();
 	}
 
-	return GetRelationalProperties(child_index)->Ppc();
+	return GetRelationalProperties(child_index)->GetPropertyConstraint();
 }
 
 CPropConstraint *
-CExpressionHandle::Ppc()
+CExpressionHandle::DerivePropertyConstraint()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Ppc();
+		return Pexpr()->DerivePropertyConstraint();
 	}
 
-	return GetRelationalProperties()->Ppc();
+	return GetRelationalProperties()->GetPropertyConstraint();
 }
 
 ULONG
-CExpressionHandle::JoinDepth(ULONG child_index)
+CExpressionHandle::DeriveJoinDepth(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->JoinDepth();
+		return (*Pexpr())[child_index]->DeriveJoinDepth();
 	}
 
-	return GetRelationalProperties(child_index)->JoinDepth();
+	return GetRelationalProperties(child_index)->GetJoinDepth();
 }
 
 ULONG
-CExpressionHandle::JoinDepth()
+CExpressionHandle::DeriveJoinDepth()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->JoinDepth();
+		return Pexpr()->DeriveJoinDepth();
 	}
 
-	return GetRelationalProperties()->JoinDepth();
+	return GetRelationalProperties()->GetJoinDepth();
 }
 
 CFunctionProp *
-CExpressionHandle::Pfp(ULONG child_index)
+CExpressionHandle::DeriveFunctionProperties(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Pfp();
+		return (*Pexpr())[child_index]->DeriveFunctionProperties();
 	}
 
-	return GetRelationalProperties(child_index)->Pfp();
+	return GetRelationalProperties(child_index)->GetFunctionProperties();
 }
 
 CFunctionProp *
-CExpressionHandle::Pfp()
+CExpressionHandle::DeriveFunctionProperties()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Pfp();
+		return Pexpr()->DeriveFunctionProperties();
 	}
 
-	return GetRelationalProperties()->Pfp();
+	return GetRelationalProperties()->GetFunctionProperties();
 }
 
 CFunctionalDependencyArray *
@@ -2007,10 +2007,10 @@ CExpressionHandle::Pdrgpfd(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Pdrgpfd();
+		return (*Pexpr())[child_index]->DeriveFunctionalDependencies();
 	}
 
-	return GetRelationalProperties(child_index)->Pdrgpfd();
+	return GetRelationalProperties(child_index)->GetFunctionalDependencies();
 }
 
 CFunctionalDependencyArray *
@@ -2018,54 +2018,54 @@ CExpressionHandle::Pdrgpfd()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Pdrgpfd();
+		return Pexpr()->DeriveFunctionalDependencies();
 	}
 
-	return GetRelationalProperties()->Pdrgpfd();
+	return GetRelationalProperties()->GetFunctionalDependencies();
 }
 
 CPartInfo *
-CExpressionHandle::Ppartinfo(ULONG child_index)
+CExpressionHandle::DerivePartitionInfo(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Ppartinfo();
+		return (*Pexpr())[child_index]->DerivePartitionInfo();
 	}
 
-	return GetRelationalProperties(child_index)->Ppartinfo();
+	return GetRelationalProperties(child_index)->GetPartitionInfo();
 }
 
 CPartInfo *
-CExpressionHandle::Ppartinfo()
+CExpressionHandle::DerivePartitionInfo()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Ppartinfo();
+		return Pexpr()->DerivePartitionInfo();
 	}
 
-	return GetRelationalProperties()->Ppartinfo();
+	return GetRelationalProperties()->GetPartitionInfo();
 }
 
 BOOL
-CExpressionHandle::FHasPartialIndexes(ULONG child_index)
+CExpressionHandle::DeriveHasPartialIndexes(ULONG child_index)
 {
 	if (NULL != Pexpr())
 	{
-		return (*Pexpr())[child_index]->Ppartinfo();
+		return (*Pexpr())[child_index]->DeriveHasPartialIndexes();
 	}
 
-	return GetRelationalProperties(child_index)->FHasPartialIndexes();
+	return GetRelationalProperties(child_index)->GetHasPartialIndexes();
 }
 
 BOOL
-CExpressionHandle::FHasPartialIndexes()
+CExpressionHandle::DeriveHasPartialIndexes()
 {
 	if (NULL != Pexpr())
 	{
-		return Pexpr()->Ppartinfo();
+		return Pexpr()->DeriveHasPartialIndexes();
 	}
 
-	return GetRelationalProperties()->FHasPartialIndexes();
+	return GetRelationalProperties()->GetHasPartialIndexes();
 }
 
 // EOF
