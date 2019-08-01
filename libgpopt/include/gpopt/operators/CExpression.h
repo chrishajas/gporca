@@ -96,12 +96,12 @@ namespace gpopt
 			ULONG m_ulOriginGrpExprId;
 
 			// get expression's derived property given its type
-			DrvdPropArray *Pdp(const DrvdPropArray::EPropType ept) const;
+			CDrvdProp *Pdp(const CDrvdProp::EPropType ept) const;
 
 #ifdef GPOS_DEBUG
 
 			// assert valid property derivation
-			void AssertValidPropDerivation(const DrvdPropArray::EPropType ept);
+			void AssertValidPropDerivation(const CDrvdProp::EPropType ept);
 
 			// print expression properties
 			void PrintProperties(IOstream &os, CPrintPrefix &pfx) const;
@@ -185,7 +185,7 @@ namespace gpopt
 			CExpression
 				(
 				CMemoryPool *mp,
-				DrvdPropArray *pdprop
+				CDrvdProp *pdprop
 				);
 			
 			// dtor
@@ -252,16 +252,16 @@ namespace gpopt
 			}
 
 			// get the suitable derived property type based on operator
-			DrvdPropArray::EPropType Ept() const;
+			CDrvdProp::EPropType Ept() const;
 
 			// derive properties, determine the suitable derived property type internally
-			DrvdPropArray *PdpDerive(CDrvdPropCtxt *pdpctxt = NULL);
+			CDrvdProp *PdpDerive(CDrvdPropCtxt *pdpctxt = NULL);
 
 			// derive statistics
 			IStatistics *PstatsDerive(CReqdPropRelational *prprel, IStatisticsArray *stats_ctxt);
 
 			// reset a derived property
-			void ResetDerivedProperty(DrvdPropArray::EPropType ept);
+			void ResetDerivedProperty(CDrvdProp::EPropType ept);
 
 			// reset all derived properties
 			void ResetDerivedProperties();

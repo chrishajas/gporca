@@ -788,7 +788,7 @@ void
 CExpressionHandle::ComputeChildReqdProps
 	(
 	ULONG child_index,
-	CDrvdProp2dArray *pdrgpdpCtxt,
+	CDrvdPropArray *pdrgpdpCtxt,
 	ULONG ulOptReq
 	)
 {
@@ -854,7 +854,7 @@ void
 CExpressionHandle::ComputeChildReqdCols
 	(
 	ULONG child_index,
-	CDrvdProp2dArray *pdrgpdpCtxt
+	CDrvdPropArray *pdrgpdpCtxt
 	)
 {
 	GPOS_ASSERT(NULL != m_prp);
@@ -1167,7 +1167,7 @@ CExpressionHandle::Pdpplan
 {
 	if (NULL != m_pexpr)
 	{
-		return CDrvdPropPlan::Pdpplan((*m_pexpr)[child_index]->Pdp(DrvdPropArray::EptPlan));
+		return CDrvdPropPlan::Pdpplan((*m_pexpr)[child_index]->Pdp(CDrvdProp::EptPlan));
 	}
 
 	if (NULL != m_pcc)
@@ -1201,7 +1201,7 @@ CExpressionHandle::GetDrvdScalarProps
 	if (NULL != Pexpr())
 	{
 		// handle is used for required property computation
-		DrvdPropArray *pdp = (*Pexpr())[child_index]->PdpDerive();
+		CDrvdProp *pdp = (*Pexpr())[child_index]->PdpDerive();
 		return CDrvdPropScalar::GetDrvdScalarProps(pdp);
 	}
 
@@ -1775,7 +1775,7 @@ CExpressionHandle::PcrsUsedColumns
 	return pcrs;
 }
 
-DrvdPropArray *
+CDrvdProp *
 CExpressionHandle::Pdp() const
 {
 
