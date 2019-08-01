@@ -356,7 +356,7 @@ CDrvdPropRelational::OsPrint
 CColRefSet *
 CDrvdPropRelational::PcrsOutput() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsOutput;
 }
 
@@ -377,7 +377,7 @@ CDrvdPropRelational::PcrsOutput(CExpressionHandle &exprhdl)
 CColRefSet *
 CDrvdPropRelational::PcrsOuter() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsOuter;
 }
 
@@ -398,7 +398,7 @@ CDrvdPropRelational::PcrsOuter(CExpressionHandle &exprhdl)
 CColRefSet *
 CDrvdPropRelational::PcrsNotNull() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsNotNull;
 }
 
@@ -418,7 +418,7 @@ CDrvdPropRelational::PcrsNotNull(CExpressionHandle &exprhdl)
 CColRefSet *
 CDrvdPropRelational::PcrsCorrelatedApply() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsCorrelatedApply;
 }
 
@@ -438,7 +438,7 @@ CDrvdPropRelational::PcrsCorrelatedApply(CExpressionHandle &exprhdl)
 CKeyCollection *
 CDrvdPropRelational::Pkc() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pkc;
 }
 
@@ -469,7 +469,7 @@ CDrvdPropRelational::Pkc(CExpressionHandle &exprhdl)
 CFunctionalDependencyArray *
 CDrvdPropRelational::Pdrgpfd() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pdrgpfd;
 }
 
@@ -506,7 +506,7 @@ CDrvdPropRelational::Pdrgpfd(CExpressionHandle &exprhdl)
 CMaxCard
 CDrvdPropRelational::Maxcard() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_maxcard;
 }
 
@@ -526,7 +526,7 @@ CDrvdPropRelational::Maxcard(CExpressionHandle &exprhdl)
 ULONG
 CDrvdPropRelational::JoinDepth() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_ulJoinDepth;
 }
 
@@ -546,7 +546,7 @@ CDrvdPropRelational::JoinDepth(CExpressionHandle &exprhdl)
 CPartInfo *
 CDrvdPropRelational::Ppartinfo() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_ppartinfo;
 }
 
@@ -568,7 +568,7 @@ CDrvdPropRelational::Ppartinfo(CExpressionHandle &exprhdl)
 CPropConstraint *
 CDrvdPropRelational::Ppc() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_ppc;
 }
 
@@ -588,7 +588,7 @@ CDrvdPropRelational::Ppc(CExpressionHandle &exprhdl)
 CFunctionProp *
 CDrvdPropRelational::Pfp() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pfp;
 }
 
@@ -608,7 +608,7 @@ CDrvdPropRelational::Pfp(CExpressionHandle &exprhdl)
 BOOL
 CDrvdPropRelational::FHasPartialIndexes() const
 {
-	GPOS_ASSERT(IsComplete());
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_fHasPartialIndexes;
 }
 
