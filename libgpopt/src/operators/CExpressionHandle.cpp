@@ -1124,7 +1124,7 @@ CExpressionHandle::GetRelationalProperties() const
 		return CDrvdPropRelational::GetRelationalProperties(Pgexpr()->Pgroup()->Pdp());
 	}
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompletePropSpec);
+	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
 }
 
 
@@ -1178,7 +1178,7 @@ CExpressionHandle::Pdpplan
 		return pdpplan;
 	}
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompletePropSpec);
+	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
 }
 
 
@@ -1225,7 +1225,7 @@ CExpressionHandle::GetDrvdScalarProps
 		return CDrvdPropScalar::GetDrvdScalarProps((*m_pgexpr)[child_index]->Pdp());
 	}
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompletePropSpec);
+	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
 }
 
 
@@ -1794,7 +1794,7 @@ CExpressionHandle::Pdp() const
 		return Pgexpr()->Pgroup()->Pdp();
 	}
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompletePropSpec);
+	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
 }
 
 IStatistics *

@@ -95,7 +95,7 @@ gpopt::EresExceptionInit
 					 1,
 					 GPOS_WSZ_WSZLEN("CTE Producer-Consumer execution locality mismatch")),
 
-			CMessage(CException(gpopt::ExmaGPOPT, gpopt::ExmiIncompletePropSpec),
+			CMessage(CException(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties),
 					 CException::ExsevError,
 					 GPOS_WSZ_WSZLEN("No valid context to derive properties from"),
 					 0,
