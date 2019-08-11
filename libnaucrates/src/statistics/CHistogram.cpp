@@ -1030,7 +1030,7 @@ CHistogram::CopyHistogram
 	)
 	const
 {
-	CBucketArray *buckets = GPOS_NEW(mp) CBucketArray(mp);
+	CBucketArray *buckets = GPOS_NEW(mp) CBucketArray(mp, m_histogram_buckets->Size()+1);
 	for (ULONG ul = 0; ul < m_histogram_buckets->Size(); ul++)
 	{
 		CBucket *bucket = (*m_histogram_buckets)[ul];
