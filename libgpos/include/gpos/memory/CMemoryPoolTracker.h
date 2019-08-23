@@ -83,19 +83,26 @@ namespace gpos
 			CList<SAllocHeader> m_allocations_list;
 
 			// Members for aggregating memory pools
+			// See dlmalloc.cpp for detailed description
 
 			// should we aggregate allocations to reduce memory/bookkeeping overhead?
 			BOOL m_aggregate;
 
 			struct malloc_state m_malloc_state;
 
-			void* dlmalloc(size_t bytes);
-			void* dlmalloc_array(size_t bytes, int32_t num_elems);
+			void* dlmalloc(SIZE_T bytes);
+
+			void* dlmalloc_array(SIZE_T bytes, int32_t num_elems);
+
 			int init_mstate();
+
 			void dlmalloc_delete_segments(bool check_free);
+
 			void* sys_alloc(malloc_state *m, size_t nb);
-			size_t dlmalloc_footprint();
-			size_t dlmalloc_max_footprint();
+
+			SIZE_T dlmalloc_footprint();
+
+			SIZE_T dlmalloc_max_footprint();
 
 			// attempt to reserve memory for allocation
 			BOOL Reserve(ULONG ulAlloc);

@@ -93,7 +93,7 @@ namespace gpos
 				// be mapped to m_zero_marker, which we always set
 				// to 0. This allows us to distinguish which allocation
 				// method was used for the memory (0 means CMemoryPool::NewImpl(),
-				// non-zero means CMemoryPoolTracker::dlmalloc()
+				// non-zero means CMemoryPoolTracker::dlmalloc().
 				ULONG m_zero_marker;
 
 				// allocation request size
@@ -202,6 +202,8 @@ namespace gpos
 				 );
 
 			// implementation of placement new with memory pool
+			// allocates memory using legacy method and if too large
+			// for dlmalloc
 			void *NewImpl
 				(
 				SIZE_T size,
@@ -212,6 +214,7 @@ namespace gpos
 				EAllocationType type
 				);
 
+			// allocate memory using dlmalloc
 			virtual
 			void *AggregatedNew
 				(
@@ -223,6 +226,7 @@ namespace gpos
 #endif
 				 );
 
+			// allocate memory for arrays using dlmalloc
 			virtual
 			void *AggregatedArrayNew
 				(
@@ -234,6 +238,10 @@ namespace gpos
 				 ULONG num_elements
 				);
 
+			// allocation function to get memory from lower layer.
+			// this is called if dlmalloc isn't able to allocate
+			// for some reason (see dlmalloc code for details)
+			// We just use the legacy allocator in this case
 			static
 			void *AllocFuncForAggregator
 				(
@@ -241,6 +249,7 @@ namespace gpos
 				 SIZE_T size
 				 );
 
+			// deallocation function for memory in lower layer
 			static
 			void DeallocFuncForAggregator
 				(
@@ -248,6 +257,7 @@ namespace gpos
 				 void *mem
 				);
 
+			// Deletes all dlmalloc segments. Used in debug build
 			virtual
 			void ReleaseUnusedAggregatedMemory();
 

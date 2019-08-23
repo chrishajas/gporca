@@ -67,6 +67,7 @@ CMemoryPoolTracker::CMemoryPoolTracker
 		m_aggregate = GPOS_FTRACE(EtraceAggregateMemoryAllocations);
 	}
 
+	// TODO: REMOVE ME!!
 	m_aggregate = true; // for now
 
 	m_allocations_list.Init(GPOS_OFFSET(SAllocHeader, m_link));
