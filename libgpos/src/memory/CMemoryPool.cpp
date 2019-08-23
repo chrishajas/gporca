@@ -17,6 +17,7 @@
 #endif // GPOS_DEBUG
 #include "gpos/memory/CMemoryPool.h"
 #include "gpos/memory/CMemoryPoolManager.h"
+#include "gpos/memory/CMemoryPoolTracker.h"
 #include "gpos/memory/CMemoryVisitorPrint.h"
 #include "gpos/task/ITask.h"
 
@@ -95,6 +96,7 @@ CMemoryPool::FinalizeAlloc
 	AllocHeader *header = static_cast<AllocHeader*>(ptr);
 	header->m_mp = this;
 	header->m_alloc = alloc;
+	header->m_zero_marker = 0;
 
 	BYTE *alloc_type = reinterpret_cast<BYTE*>(header + 1) + alloc;
 	*alloc_type = eat;
@@ -116,6 +118,31 @@ CMemoryPool::SizeOfAlloc
 }
 
 
+// return allocation to owning memory pool
+void
+CMemoryPool::FreeAlloc
+(
+ void *ptr,
+ EAllocationType eat
+ )
+{
+	GPOS_ASSERT(ptr != NULL);
+
+	AllocHeader *header = static_cast<AllocHeader*>(ptr) - 1;
+	if (0 != header->m_zero_marker)
+	{
+		// if it's non-zero, we have an aggregated allocation
+		CMemoryPoolTracker::dlfree(ptr);
+	}
+	else
+	{
+		BYTE *alloc_type = static_cast<BYTE*>(ptr) + header->m_alloc;
+		GPOS_RTL_ASSERT(*alloc_type == eat);
+		header->m_mp->Free(header);
+
+	}
+}
+
 //---------------------------------------------------------------------------
 //	@function:
 //		CMemoryPool::NewImpl
@@ -128,8 +155,10 @@ void*
 CMemoryPool::NewImpl
 	(
 	SIZE_T size,
+#ifdef GPOS_DEBUG
 	const CHAR *filename,
 	ULONG line,
+#endif
 	CMemoryPool::EAllocationType eat
 	)
 {
@@ -142,12 +171,63 @@ CMemoryPool::NewImpl
 	);
 
 	ULONG alloc_size = CMemoryPool::GetAllocSize((ULONG) size);
-	void *ptr = Allocate(alloc_size, filename, line);
+	void *ptr = Allocate(alloc_size
+#ifdef GPOS_DEBUG
+						 , filename, line
+#endif
+						);
 
 	GPOS_OOM_CHECK(ptr);
 	
 	return this->FinalizeAlloc(ptr, (ULONG) size, eat);
 }
+
+void*
+CMemoryPool::AggregatedNew
+	(
+	 SIZE_T size,
+#ifdef GPOS_DEBUG
+	 const CHAR * filename,
+	 ULONG line,
+#endif
+	 EAllocationType type
+	 )
+{
+	return NewImpl(size,
+#ifdef GPOS_DEBUG
+				   filename,
+				   line,
+#endif
+				   type);
+}
+
+void *CMemoryPool::AllocFuncForAggregator
+	(
+	 CMemoryPool *mp,
+	 SIZE_T size
+	 )
+{
+	return mp->NewImpl(size,
+#ifdef GPOS_DEBUG
+					   __FILE__,
+					   __LINE__,
+#endif
+					   EatSingleton);
+}
+
+void CMemoryPool::DeallocFuncForAggregator
+	(
+	 CMemoryPool *mp,
+	 void *mem
+	 )
+{
+	mp->FreeAlloc(mem, EatSingleton);
+}
+
+void CMemoryPool::ReleaseUnusedAggregatedMemory()
+{
+}
+
 
 //---------------------------------------------------------------------------
 //	@function:
@@ -174,8 +254,6 @@ CMemoryPool::DeleteImpl
 	FreeAlloc(ptr, eat);
 
 }  // namespace gpos
-
-// EOF
 
 #ifdef GPOS_DEBUG
 

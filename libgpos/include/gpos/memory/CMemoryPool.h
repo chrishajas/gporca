@@ -42,6 +42,7 @@ GPOS_CPL_ASSERT(GPOS_MEM_ALIGNED_STRUCT_SIZE(gpos::ULONG) == GPOS_MEM_ARCH);
 
 // static pattern to init memory
 #define GPOS_MEM_INIT_PATTERN_CHAR	(0xCC)
+#define GPOS_MEM_FREED_PATTERN_CHAR	(0xCD)
 
 // max allocation per request: 1GB
 #define GPOS_MEM_ALLOC_MAX			(0x40000000)
@@ -71,10 +72,29 @@ namespace gpos
 		private:
 
 			// common header for each allocation
+			// The order of the struct members matters, be
+			// very cautious when modifying
 			struct AllocHeader
 			{
 				// pointer to pool
 				CMemoryPool *m_mp;
+
+				// Marker, used to distinguish aggregating allocations
+				// (non-zero marker value) from regular memory pool allocations
+				// with a zero marker.
+				// When we deallocate memory, we'll have to find out whether it
+				// was allocated using CMemoryPoolTracker::dlmalloc() or
+				// using CMemoryPool::NewImpl(). In the dlmalloc() case, the 16 bytes
+				// preceding the memory will be a malloc_chunk, in the NewImpl()
+				// case the same 16 bytes will be an AllocHeader.
+				// The lowest order byte of an in-use malloc_chunk->head will
+				// never be zero, since it will have the CINUSE_BIT set.
+				// On a little-endian system, the same byte will
+				// be mapped to m_zero_marker, which we always set
+				// to 0. This allows us to distinguish which allocation
+				// method was used for the memory (0 means CMemoryPool::NewImpl(),
+				// non-zero means CMemoryPoolTracker::dlmalloc()
+				ULONG m_zero_marker;
 
 				// allocation request size
 				ULONG m_alloc;
@@ -174,43 +194,70 @@ namespace gpos
 			void *FinalizeAlloc(void *ptr, ULONG alloc, EAllocationType eat);
 
 			// return allocation to owning memory pool
-			inline static void
+			static void
 			FreeAlloc
 				(
 				void *ptr,
 				EAllocationType eat
-				)
-			{
-				GPOS_ASSERT(ptr != NULL);
-
-				AllocHeader *header = static_cast<AllocHeader*>(ptr) - 1;
-				BYTE *alloc_type = static_cast<BYTE*>(ptr) + header->m_alloc;
-				GPOS_RTL_ASSERT(*alloc_type == eat);
-				header->m_mp->Free(header);
-			}
+				 );
 
 			// implementation of placement new with memory pool
 			void *NewImpl
 				(
 				SIZE_T size,
+#ifdef GPOS_DEBUG
 				const CHAR *filename,
 				ULONG line,
+#endif
 				EAllocationType type
 				);
+
+			virtual
+			void *AggregatedNew
+				(
+				 SIZE_T size,
+#ifdef GPOS_DEBUG
+				 const CHAR * filename,
+				 ULONG line,
+#endif
+				 EAllocationType type
+				 );
+
+			static
+			void *AllocFuncForAggregator
+				(
+				 CMemoryPool *mp,
+				 SIZE_T size
+				 );
+
+			static
+			void DeallocFuncForAggregator
+				(
+				 CMemoryPool *mp,
+				 void *mem
+				);
+
+			virtual
+			void ReleaseUnusedAggregatedMemory();
 
 			// implementation of array-new with memory pool
 			template <typename T>
 			T* NewArrayImpl
 				(
-				SIZE_T num_elements,
+				SIZE_T num_elements
+#ifdef GPOS_DEBUG
+				,
 				const CHAR *filename,
 				ULONG line
+#endif
 				)
 			{
 				T *array = static_cast<T*>(NewImpl(
 												   sizeof(T) * num_elements,
+#ifdef GPOS_DEBUG
 												   filename,
 												   line,
+#endif
 												   EatArray));
 				for (SIZE_T idx = 0; idx < num_elements; ++idx) {
 					try {
@@ -240,9 +287,12 @@ namespace gpos
 			virtual
 			void *Allocate
 				(
-				const ULONG num_bytes,
+				const ULONG num_bytes
+#ifdef GPOS_DEBUG
+				,
 				const CHAR *filename,
 				const ULONG line
+#endif
 				) = 0;
 
 			// free memory previously allocated by a call to pvAllocate; NULL may be passed
@@ -400,12 +450,20 @@ namespace gpos
 inline void *operator new
 	(
 	gpos::SIZE_T size,
-	gpos::CMemoryPool *mp,
+	gpos::CMemoryPool *mp
+#ifdef GPOS_DEBUG
+	,
 	const gpos::CHAR *filename,
 	gpos::ULONG line
+#endif
 	)
 {
-	return mp->NewImpl(size, filename, line, gpos::CMemoryPool::EatSingleton);
+	return mp->AggregatedNew(size,
+#ifdef GPOS_DEBUG
+							 filename,
+							 line,
+#endif
+							 gpos::CMemoryPool::EatSingleton);
 }
 
 // Corresponding placement variant of delete operator. Note that, for delete
@@ -429,7 +487,11 @@ inline void operator delete
 // Placement new-style macro to do 'new' with a memory pool. Anything allocated
 // with this *must* be deleted by GPOS_DELETE, *not* the ordinary delete
 // operator.
+#ifdef GPOS_DEBUG
 #define GPOS_NEW(mp) new(mp, __FILE__, __LINE__)
+#else
+#define GPOS_NEW(mp) new(mp)
+#endif
 
 // Replacement for array-new. Conceptually equivalent to
 // 'new(mp) datatype[count]'. Any arrays allocated with this *must* be deleted
@@ -439,8 +501,11 @@ inline void operator delete
 // arrays, because when we do so the C++ compiler adds its own book-keeping
 // information to the allocation in a non-portable way such that we can not
 // recover GPOS' own book-keeping information reliably.
-#define GPOS_NEW_ARRAY(mp, datatype, count) \
-mp->NewArrayImpl<datatype>(count, __FILE__, __LINE__)
+#ifdef GPOS_DEBUG
+#define GPOS_NEW_ARRAY(mp, datatype, count) mp->NewArrayImpl<datatype>(count, __FILE__, __LINE__)
+#else
+#define GPOS_NEW_ARRAY(mp, datatype, count) mp->NewArrayImpl<datatype>(count)
+#endif
 
 // Delete a singleton object allocated by GPOS_NEW().
 template <typename T>

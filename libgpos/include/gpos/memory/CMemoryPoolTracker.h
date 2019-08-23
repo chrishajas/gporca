@@ -24,6 +24,7 @@
 #include "gpos/common/CList.h"
 #include "gpos/common/CStackDescriptor.h"
 #include "gpos/memory/CMemoryPool.h"
+#include "gpos/memory/dlmalloc.h"
 
 namespace gpos
 {
@@ -81,6 +82,20 @@ namespace gpos
 			// list of allocated (live) objects
 			CList<SAllocHeader> m_allocations_list;
 
+			// Members for aggregating memory pools
+
+			// should we aggregate allocations to reduce memory/bookkeeping overhead?
+			BOOL m_aggregate;
+
+			struct malloc_state m_malloc_state;
+
+			void* dlmalloc(size_t bytes);
+			int init_mstate();
+			void dlmalloc_delete_segments(bool check_free);
+			void* sys_alloc(malloc_state *m, size_t nb);
+			size_t dlmalloc_footprint();
+			size_t dlmalloc_max_footprint();
+
 			// attempt to reserve memory for allocation
 			BOOL Reserve(ULONG ulAlloc);
 
@@ -111,9 +126,12 @@ namespace gpos
 			virtual
 			void *Allocate
 				(
-				const ULONG bytes,
+				const ULONG bytes
+#ifdef GPOS_DEBUG
+				,
 				const CHAR *file,
 				const ULONG line
+#endif
 				);
 
 			// free memory
@@ -123,6 +141,22 @@ namespace gpos
 			// prepare the memory pool to be deleted
 			virtual
 			void TearDown();
+
+			virtual
+			void *AggregatedNew
+				(
+				 SIZE_T size,
+#ifdef GPOS_DEBUG
+				 const CHAR * filename,
+				 ULONG line,
+#endif
+				 EAllocationType type
+				 );
+
+			virtual
+			void ReleaseUnusedAggregatedMemory();
+
+			static void dlfree(void* mem);
 
 			// check if the pool stores a pointer to itself at the end of
 			// the header of each allocated object;
