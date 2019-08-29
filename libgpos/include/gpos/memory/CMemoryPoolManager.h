@@ -120,6 +120,11 @@ namespace gpos
 				return m_global_memory_pool;
 			}
 
+			virtual
+			~CMemoryPoolManager()
+			{
+			}
+
 			// are allocations using global new operator allowed?
 			BOOL IsGlobalNewAllowed() const
 			{
