@@ -32,7 +32,7 @@ IDatumStatisticsMappable::StatsAreEqual
 {
 	GPOS_ASSERT(NULL != datum);
 	
-	const IDatumStatisticsMappable *datum_cast = dynamic_cast<const IDatumStatisticsMappable*>(datum);
+	const IDatumStatisticsMappable *datum_cast = static_cast<const IDatumStatisticsMappable*>(datum);
 
 	// datums can be compared based on either LINT or Doubles or BYTEA values
 #ifdef GPOS_DEBUG
@@ -84,7 +84,7 @@ IDatumStatisticsMappable::StatsAreLessThan
 {
 	GPOS_ASSERT(NULL != datum);
 	
-	const IDatumStatisticsMappable *datum_cast = dynamic_cast<const IDatumStatisticsMappable*>(datum);
+	const IDatumStatisticsMappable *datum_cast = static_cast<const IDatumStatisticsMappable*>(datum);
 
 	// datums can be compared based on either LINT or Doubles or BYTEA values
 #ifdef GPOS_DEBUG
@@ -136,7 +136,7 @@ IDatumStatisticsMappable::GetStatsDistanceFrom
 {
 	GPOS_ASSERT(NULL != datum);
 
-	const IDatumStatisticsMappable *datum_cast = dynamic_cast<const IDatumStatisticsMappable*>(datum);
+	const IDatumStatisticsMappable *datum_cast = static_cast<const IDatumStatisticsMappable*>(datum);
 
 	// datums can be compared based on either LINT or Doubles or BYTEA values
 #ifdef GPOS_DEBUG
@@ -213,7 +213,7 @@ IDatumStatisticsMappable::StatsAreComparable
 {
 	GPOS_ASSERT(NULL != datum);
 
-	const IDatumStatisticsMappable *datum_cast = dynamic_cast<const IDatumStatisticsMappable*>(datum);
+	const IDatumStatisticsMappable *datum_cast = static_cast<const IDatumStatisticsMappable*>(datum);
 
 	BOOL is_types_match = this->MDId()->Equals(datum_cast->MDId());
 
