@@ -24,7 +24,9 @@ namespace gpos
 	// memory pool manager that uses GPDB memory contexts
 	class CMemoryContextPoolManager : public CMemoryPoolManager
 	{
-
+	private:
+		void* (*m_alloc) (SIZE_T);
+		void (*m_free) (void*);
 	protected:
 
 		// dtor
@@ -37,7 +39,7 @@ namespace gpos
 	public:
 
 		// ctor
-		CMemoryContextPoolManager();
+		CMemoryContextPoolManager(void* (*) (SIZE_T), void (*) (void*));
 
 		// create new memory pool
 		CMemoryPool *Create

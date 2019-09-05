@@ -11,34 +11,11 @@
 //
 //---------------------------------------------------------------------------
 
-extern "C" {
-#include "postgres.h"
-
-#include "utils/memutils.h"
-}
-
 #include "gpos/memory/CMemoryPool.h"
 
-#include "gpopt/utils/CMemoryContextPool.h"
+#include "gpos/memory/CMemoryContextPool.h"
 
 using namespace gpos;
-
-//---------------------------------------------------------------------------
-//	@function:
-//		CMemoryContextPool::CMemoryContextPool
-//
-//	@doc:
-//		Ctor.
-//
-//---------------------------------------------------------------------------
-CMemoryContextPool::CMemoryContextPool()
-{
-	m_cxt = AllocSetContextCreate(TopMemoryContext,
-								  "GPORCA memory pool",
-								  ALLOCSET_DEFAULT_MINSIZE,
-								  ALLOCSET_DEFAULT_INITSIZE,
-								  ALLOCSET_DEFAULT_MAXSIZE);
-}
 
 
 //---------------------------------------------------------------------------
@@ -70,7 +47,8 @@ CMemoryContextPool::Allocate
  const ULONG line
  )
 {
-	return palloc(m_cxt, bytes);
+	void* ptr = m_alloc(bytes);
+	return ptr;
 }
 
 //---------------------------------------------------------------------------
@@ -87,7 +65,7 @@ CMemoryContextPool::Free
  void *ptr
  )
 {
-	pfree(ptr);
+	m_free(ptr);
 }
 
 

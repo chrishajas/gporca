@@ -26,12 +26,21 @@ namespace gpos
 	{
 	private:
 
-		MemoryContext m_cxt;
+		void* (*m_alloc) (SIZE_T);
+		void (*m_free) (void*);
 
 	public:
 
 		// ctor
-		CMemoryContextPool();
+		CMemoryContextPool
+				(
+				void* (*alloc)(SIZE_T),
+				void (*free_func)(void*)
+				)
+				:
+				m_alloc(alloc),
+				m_free(free_func)
+		{}
 
 		// dtor
 		virtual

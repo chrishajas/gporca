@@ -20,6 +20,7 @@
 #include "gpos/memory/CMemoryPool.h"
 #include "gpos/memory/CMemoryPoolInjectFault.h"
 #include "gpos/memory/CMemoryPoolManager.h"
+#include "gpos/memory/CMemoryContextPoolManager.h"
 #include "gpos/memory/CMemoryPoolStack.h"
 #include "gpos/memory/CMemoryPoolTracker.h"
 #include "gpos/memory/CMemoryVisitorPrint.h"
@@ -75,43 +76,63 @@ CMemoryPoolManager::CMemoryPoolManager
 //		Initializer for global memory pool manager
 //
 //---------------------------------------------------------------------------
+
 GPOS_RESULT
 CMemoryPoolManager::Init
-	(
-		void* (*alloc) (SIZE_T) __attribute__ ((unused)),
-		void (*free_func) (void*) __attribute__ ((unused))
-	)
+(
+ void* (*alloc) (SIZE_T) __attribute__ ((unused)),
+ void (*free_func) (void*) __attribute__ ((unused))
+ )
 {
-	GPOS_ASSERT(NULL == CMemoryPoolManager::m_memory_pool_mgr);
 
-	// raw allocation of memory for internal memory pools
-	void *alloc_internal = Malloc(sizeof(CMemoryPoolTracker));
-
-	// create internal memory pool
-	CMemoryPool *internal = new(alloc_internal) CMemoryPoolTracker();
-
-	// instantiate manager
-	GPOS_TRY
+	if (NULL != alloc && NULL != free_func)
 	{
-		CMemoryPoolManager::m_memory_pool_mgr = GPOS_NEW(internal) CMemoryPoolManager
-				(
-				internal
-				);
-	}
-	GPOS_CATCH_EX(ex)
-	{
-		if (GPOS_MATCH_EX(ex, CException::ExmaSystem, CException::ExmiOOM))
+		GPOS_TRY
 		{
-			Free(alloc_internal);
-
-			return GPOS_OOM;
+			CMemoryPoolManager::m_memory_pool_mgr = new CMemoryContextPoolManager();
 		}
+		GPOS_CATCH_EX(ex)
+		{
+			if (GPOS_MATCH_EX(ex, CException::ExmaSystem, CException::ExmiOOM))
+			{
+				return GPOS_OOM;
+			}
+		}
+		GPOS_CATCH_END;
 	}
-	GPOS_CATCH_END;
+	else
+	{
+		alloc = clib::Malloc;
+		free_func = clib::Free;
+
+		// raw allocation of memory for internal memory pools
+		void *alloc_internal = Malloc(sizeof(CMemoryPoolTracker));
+
+		// create internal memory pool
+		CMemoryPool *internal = new(alloc_internal) CMemoryPoolTracker();
+
+		// instantiate manager
+		GPOS_TRY
+		{
+			CMemoryPoolManager::m_memory_pool_mgr = GPOS_NEW(internal) CMemoryPoolManager
+			(
+			 internal
+			 );
+		}
+		GPOS_CATCH_EX(ex)
+		{
+			if (GPOS_MATCH_EX(ex, CException::ExmaSystem, CException::ExmiOOM))
+			{
+				Free(alloc_internal);
+
+				return GPOS_OOM;
+			}
+		}
+		GPOS_CATCH_END;
+	}
 
 	return GPOS_OK;
 }
-
 
 //---------------------------------------------------------------------------
 //	@function:

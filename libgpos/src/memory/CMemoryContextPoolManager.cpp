@@ -11,7 +11,7 @@
 //
 //---------------------------------------------------------------------------
 
-//#include "gpos/memory/CMemoryContextPool.h"
+#include "gpos/memory/CMemoryContextPool.h"
 #include "gpos/memory/CMemoryContextPoolManager.h"
 
 using namespace gpos;
@@ -24,8 +24,10 @@ using namespace gpos;
 //		Ctor.
 //
 //---------------------------------------------------------------------------
-CMemoryContextPoolManager::CMemoryContextPoolManager()
+CMemoryContextPoolManager::CMemoryContextPoolManager(void* (*alloc) (SIZE_T), void (*free_func) (void*))
 {
+	m_alloc = alloc;
+	m_free = free_func;
 	m_global_memory_pool = Create(EatTracker);
 }
 
