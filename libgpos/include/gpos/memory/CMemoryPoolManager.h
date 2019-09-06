@@ -54,9 +54,6 @@ namespace gpos
 			// are allocated
 			CMemoryPool *m_global_memory_pool;
 
-			// global instance
-			//todo
-			static CMemoryPoolManager *m_memory_pool_mgr;
 
 			// private ctor
 			CMemoryPoolManager(CMemoryPool *internal);
@@ -82,6 +79,8 @@ namespace gpos
 			// hash table to maintain created pools
 			CSyncHashtable<CMemoryPool, ULONG_PTR> m_hash_table;
 
+			// global instance
+			static CMemoryPoolManager *m_memory_pool_mgr;
 
 			// create new pool of given type
 			virtual CMemoryPool *New
