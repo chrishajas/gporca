@@ -23,6 +23,7 @@
 #include "gpos/memory/CMemoryContextPoolManager.h"
 #include "gpos/memory/CMemoryPoolStack.h"
 #include "gpos/memory/CMemoryPoolTracker.h"
+#include "gpos/memory/CMemoryContextPool.h"
 #include "gpos/memory/CMemoryVisitorPrint.h"
 #include "gpos/task/CAutoSuspendAbort.h"
 
@@ -80,16 +81,22 @@ CMemoryPoolManager::CMemoryPoolManager
 GPOS_RESULT
 CMemoryPoolManager::Init
 (
- void* (*alloc) (SIZE_T) __attribute__ ((unused)),
- void (*free_func) (void*) __attribute__ ((unused))
+ void* (*alloc) (SIZE_T),
+ void (*free_func) (void*)
  )
 {
 
 	if (NULL != alloc && NULL != free_func)
 	{
+		// raw allocation of memory for internal memory pools
+		void *alloc_internal = Malloc(sizeof(CMemoryContextPool));
+
+		// create internal memory pool
+		CMemoryPool *internal = new(alloc_internal) CMemoryContextPool(alloc, free_func);
+
 		GPOS_TRY
 		{
-			CMemoryPoolManager::m_memory_pool_mgr = new CMemoryContextPoolManager(alloc, free_func);
+			CMemoryPoolManager::m_memory_pool_mgr = GPOS_NEW(internal) CMemoryContextPoolManager(alloc, free_func, internal);
 		}
 		GPOS_CATCH_EX(ex)
 		{

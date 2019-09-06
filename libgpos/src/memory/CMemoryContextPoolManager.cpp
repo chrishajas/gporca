@@ -24,12 +24,12 @@ using namespace gpos;
 //		Ctor.
 //
 //---------------------------------------------------------------------------
-CMemoryContextPoolManager::CMemoryContextPoolManager(void* (*alloc) (SIZE_T), void (*free_func) (void*))
-{
-	m_alloc = alloc;
-	m_free = free_func;
-	m_global_memory_pool = Create(EatTracker);
-}
+CMemoryContextPoolManager::CMemoryContextPoolManager(void* (*alloc) (SIZE_T), void (*free_func) (void*), CMemoryPool* internal)
+	:
+	CMemoryPoolManager(internal),
+	m_alloc(alloc),
+	m_free(free_func)
+{}
 
 
 //---------------------------------------------------------------------------
@@ -45,21 +45,12 @@ CMemoryContextPoolManager::~CMemoryContextPoolManager()
 }
 
 CMemoryPool *
-CMemoryContextPoolManager::Create(CMemoryPoolManager::AllocType)
+CMemoryContextPoolManager::New
+(
+ AllocType
+ )
 {
-	/*
-	 * We use the same implementation for all "kinds" of pools.
-	 * 'alloc_type' is ignored.
-	 */
-	return new CMemoryContextPool(m_alloc, m_free);
-}
-
-
-void
-CMemoryContextPoolManager::Destroy(CMemoryPool *mp)
-{
-	mp->TearDown();
-	delete (CMemoryContextPool *) mp;
+	return GPOS_NEW(m_internal_memory_pool) CMemoryContextPool(m_alloc, m_free);
 }
 
 // EOF

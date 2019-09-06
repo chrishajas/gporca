@@ -39,21 +39,13 @@ namespace gpos
 	public:
 
 		// ctor
-		CMemoryContextPoolManager(void* (*) (SIZE_T), void (*) (void*));
+		CMemoryContextPoolManager(void* (*) (SIZE_T), void (*) (void*), CMemoryPool* internal);
 
-		// create new memory pool
-		CMemoryPool *Create
+		CMemoryPool *New
 		(
-		 CMemoryPoolManager::AllocType alloc_type
+		 AllocType alloc_type
 		 );
 
-		// release memory pool
-		void Destroy(CMemoryPool *);
-
-		// delete memory pools and release manager
-		void Shutdown()
-		{
-		}
 
 	};
 }

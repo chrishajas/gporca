@@ -53,6 +53,18 @@ namespace gpos
 			// memory pool in which all objects created using global new operator
 			// are allocated
 			CMemoryPool *m_global_memory_pool;
+
+			// global instance
+			//todo
+			static CMemoryPoolManager *m_memory_pool_mgr;
+
+			// private ctor
+			CMemoryPoolManager(CMemoryPool *internal);
+
+			// memory pool in which all objects created by the manager itself
+			// are allocated - must be thread-safe
+			CMemoryPool *m_internal_memory_pool;
+
 		private:
 
 			typedef CSyncHashtableAccessByKey<CMemoryPool, ULONG_PTR>
@@ -64,24 +76,15 @@ namespace gpos
 			typedef CSyncHashtableAccessByIter<CMemoryPool, ULONG_PTR>
 				MemoryPoolIterAccessor;
 
-			// memory pool in which all objects created by the manager itself
-			// are allocated - must be thread-safe
-			CMemoryPool *m_internal_memory_pool;
-
 			// are allocations using global new operator allowed?
 			BOOL m_allow_global_new;
 
 			// hash table to maintain created pools
 			CSyncHashtable<CMemoryPool, ULONG_PTR> m_hash_table;
 
-			// global instance
-			static CMemoryPoolManager *m_memory_pool_mgr;
-
-			// private ctor
-			CMemoryPoolManager(CMemoryPool *internal);
 
 			// create new pool of given type
-			CMemoryPool *New
+			virtual CMemoryPool *New
 				(
 				AllocType alloc_type
 				);
