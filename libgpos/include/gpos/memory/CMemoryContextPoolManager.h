@@ -55,35 +55,9 @@ namespace gpos
 		{
 		}
 
-#ifdef GPOS_DEBUG
-
-		// check if the memory pool keeps track of live objects
-		BOOL SupportsLiveObjectWalk() const
-		{
-			return false;
-		}
-
-		// walk the live objects
-		void WalkLiveObjects(gpos::IMemoryVisitor *) const
-		{
-		}
-
-		// check if statistics tracking is supported
-		BOOL SupportsStatistics() const
-		{
-			return false;
-		}
-
-		// return the current statistics
-		void UpdateStatistics(CMemoryPoolStatistics &)
-		{
-		}
-
-#endif // GPOS_DEBUG
-
 	};
 }
 
-#endif // !GPDXL_CMemoryContextPool_H
+#endif // !GPDXL_CMemoryContextPoolManager_H
 
 // EOF
