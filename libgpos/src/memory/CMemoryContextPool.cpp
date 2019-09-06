@@ -43,8 +43,8 @@ void *
 CMemoryContextPool::Allocate
 (
  const ULONG bytes,
- const CHAR *file,
- const ULONG line
+ const CHAR*,
+ const ULONG
  )
 {
 	void* ptr = m_alloc(bytes);

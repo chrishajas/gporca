@@ -99,13 +99,13 @@ namespace gpos
 		public:
 
 			// create new memory pool
-			CMemoryPool *Create
+			virtual CMemoryPool *Create
 				(
 				CMemoryPoolManager::AllocType alloc_type
 				);
 				
 			// release memory pool
-			void Destroy(CMemoryPool *);
+			virtual void Destroy(CMemoryPool *);
 			
 #ifdef GPOS_DEBUG
 			// print internal contents of allocated memory pools
@@ -116,7 +116,7 @@ namespace gpos
 #endif // GPOS_DEBUG
 
 			// delete memory pools and release manager
-			void Shutdown();
+			virtual void Shutdown();
 
 			// accessor of memory pool used in global new allocations
 			CMemoryPool *GetGlobalMemoryPool()

@@ -79,7 +79,7 @@ namespace gpos
 
 		// walk the live objects
 		virtual
-		void WalkLiveObjects(gpos::IMemoryVisitor *visitor)
+		void WalkLiveObjects(gpos::IMemoryVisitor *)
 		{
 		}
 
@@ -92,7 +92,7 @@ namespace gpos
 
 		// return the current statistics
 		virtual
-		void UpdateStatistics(CMemoryPoolStatistics &memory_pool_statistics)
+		void UpdateStatistics(CMemoryPoolStatistics &)
 		{
 		}
 

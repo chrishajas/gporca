@@ -64,7 +64,7 @@ namespace gpos
 		}
 
 		// walk the live objects
-		void WalkLiveObjects(gpos::IMemoryVisitor *visitor) const
+		void WalkLiveObjects(gpos::IMemoryVisitor *) const
 		{
 		}
 
@@ -75,7 +75,7 @@ namespace gpos
 		}
 
 		// return the current statistics
-		void UpdateStatistics(CMemoryPoolStatistics &memory_pool_statistics)
+		void UpdateStatistics(CMemoryPoolStatistics &)
 		{
 		}
 

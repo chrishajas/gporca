@@ -89,7 +89,7 @@ CMemoryPoolManager::Init
 	{
 		GPOS_TRY
 		{
-			CMemoryPoolManager::m_memory_pool_mgr = new CMemoryContextPoolManager();
+			CMemoryPoolManager::m_memory_pool_mgr = new CMemoryContextPoolManager(alloc, free_func);
 		}
 		GPOS_CATCH_EX(ex)
 		{

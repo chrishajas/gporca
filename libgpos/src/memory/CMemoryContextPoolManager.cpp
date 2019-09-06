@@ -45,13 +45,13 @@ CMemoryContextPoolManager::~CMemoryContextPoolManager()
 }
 
 CMemoryPool *
-CMemoryContextPoolManager::Create(CMemoryPoolManager::AllocType alloc_type)
+CMemoryContextPoolManager::Create(CMemoryPoolManager::AllocType)
 {
 	/*
 	 * We use the same implementation for all "kinds" of pools.
 	 * 'alloc_type' is ignored.
 	 */
-	return new CMemoryContextPool();
+	return new CMemoryContextPool(m_alloc, m_free);
 }
 
 

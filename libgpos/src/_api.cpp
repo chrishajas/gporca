@@ -38,7 +38,6 @@ void gpos_init(struct gpos_init_params* params) {
 
 	void* (*func_ptr_alloc) (SIZE_T) = params->alloc;
 	void (*func_ptr_free) (void*) = params->free;
-
 	CWorker::abort_requested_by_system = params->abort_requested;
 
 	if (GPOS_OK != gpos::CMemoryPoolManager::Init(func_ptr_alloc, func_ptr_free))
