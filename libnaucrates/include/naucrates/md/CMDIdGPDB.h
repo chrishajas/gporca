@@ -61,6 +61,8 @@ namespace gpmd
 			
 			// string representation of the mdid
 			CWStringStatic m_str;
+
+			ULONG m_hash_value;
 			
 			// serialize mdid
 			virtual
@@ -114,6 +116,9 @@ namespace gpmd
 			virtual
 			ULONG HashValue() const
 			{
+				if (m_hash_value != 0){
+					return m_hash_value;
+				}
 				return gpos::CombineHashes(MdidType(),
 						gpos::CombineHashes(gpos::HashValue(&m_oid),
 											gpos::CombineHashes(gpos::HashValue(&m_major_version), gpos::HashValue(&m_minor_version))));

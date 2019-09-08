@@ -123,14 +123,17 @@ CMDIdGPDB::CMDIdGPDB
 	m_oid(oid),
 	m_major_version(1),
 	m_minor_version(0),
-	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array))
+	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array)),
+	m_hash_value(0)
+
 {
 	if (CMDIdGPDB::m_mdid_invalid_key.Oid() == oid)
 	{
 		// construct an invalid mdid 0.0.0
 		m_major_version = 0;
 	}
-		
+
+	m_hash_value = HashValue();
 	// serialize mdid into static string 
 	Serialize();
 }
@@ -153,14 +156,16 @@ CMDIdGPDB::CMDIdGPDB
 	m_oid(oid),
 	m_major_version(1),
 	m_minor_version(0),
-	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array))
+	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array)),
+	m_hash_value(0)
+
 {
 	if (CMDIdGPDB::m_mdid_invalid_key.Oid() == oid)
 	{
 		// construct an invalid mdid 0.0.0
 		m_major_version = 0;
 	}
-	
+	m_hash_value = HashValue();
 	// TODO:  - Jan 31, 2012; supply system id in constructor
 	
 	// serialize mdid into static string 
@@ -186,8 +191,10 @@ CMDIdGPDB::CMDIdGPDB
 	m_oid(oid),
 	m_major_version(version_major),
 	m_minor_version(version_minor),
-	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array))
+	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array)),
+	m_hash_value(0)
 {
+	m_hash_value = HashValue();
 	// TODO:  - Jan 31, 2012; supply system id in constructor
 	// serialize mdid into static string
 	Serialize();
@@ -211,11 +218,13 @@ CMDIdGPDB::CMDIdGPDB
 	  m_oid(mdid_source.Oid()),
 	m_major_version(mdid_source.VersionMajor()),
 	m_minor_version(mdid_source.VersionMinor()),
-	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array))
+	m_str(m_mdid_array, GPOS_ARRAY_SIZE(m_mdid_array)),
+	m_hash_value(0)
 {
 	GPOS_ASSERT(mdid_source.IsValid());
 	GPOS_ASSERT(IMDId::EmdidGPDB == mdid_source.MdidType());
 
+	m_hash_value = HashValue();
 	// serialize mdid into static string
 	Serialize();
 }
