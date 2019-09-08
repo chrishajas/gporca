@@ -34,7 +34,8 @@ CColRefSet::CColRefSet
 	ULONG ulSizeBits
 	)
 	:
-	CBitSet(mp, ulSizeBits)
+	CBitSet(mp, ulSizeBits),
+	m_hash_value(0)
 {}
 
 
@@ -52,7 +53,8 @@ CColRefSet::CColRefSet
 	const CColRefSet &bs
 	)
 	:
-	CBitSet(mp, bs)
+	CBitSet(mp, bs),
+	m_hash_value(0)
 {}
 
 
@@ -71,7 +73,8 @@ CColRefSet::CColRefSet
 	ULONG size
 	)
 	:
-	CBitSet(mp, size)
+	CBitSet(mp, size),
+	m_hash_value(0)
 {
 	Include(colref_array);
 }
@@ -158,6 +161,7 @@ CColRefSet::Include
 	const CColRef *colref
 	)
 {
+	m_hash_value = 0;
 	CBitSet::ExchangeSet(colref->Id());
 }
 
@@ -220,6 +224,7 @@ CColRefSet::Exclude
 	const CColRef *colref
 	)
 {
+	m_hash_value = 0;
 	CBitSet::ExchangeClear(colref->Id());
 }
 
@@ -353,6 +358,10 @@ CColRefSet::Pdrgpcr
 ULONG
 CColRefSet::HashValue()
 {
+	if (m_hash_value != 0)
+	{
+		return m_hash_value;
+	}
 	ULONG size = this->Size();
 	ULONG ulHash = gpos::HashValue<ULONG>(&size);
 	
@@ -365,7 +374,7 @@ CColRefSet::HashValue()
 		(void) crsi.Advance();
 		ulHash = gpos::CombineHashes(ulHash, gpos::HashPtr<CColRef>(crsi.Pcr()));
 	}
-
+	m_hash_value = ulHash;
 	return ulHash;
 }
 

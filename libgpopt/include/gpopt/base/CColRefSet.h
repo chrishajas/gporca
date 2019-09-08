@@ -63,6 +63,8 @@ namespace gpopt
 			// clear given bit; return previous value
 			BOOL ExchangeClear(ULONG ulBit);
 
+			ULONG m_hash_value;
+
 		public:
 				
 			// ctor
