@@ -541,6 +541,7 @@ CHistogram::GetNumDistinct
 void
 CHistogram::CapNDVs
 	(
+	CMemoryPool *mp,
 	CDouble rows
 	)
 {
@@ -553,15 +554,18 @@ CHistogram::CapNDVs
 	}
 
 	m_NDVs_were_scaled = true;
-
+	CBucketArray *histogram_buckets = GPOS_NEW(mp) CBucketArray(mp, m_histogram_buckets->Size()+1);
 	CDouble scale_ratio = (rows / distinct).Get();
 	for (ULONG ul = 0; ul < num_of_buckets; ul++)
 	{
 		CBucket *bucket = (*m_histogram_buckets)[ul];
 		CDouble distinct_bucket = bucket->GetNumDistinct();
-		bucket->SetDistinct(std::max(CHistogram::MinDistinct.Get(), (distinct_bucket * scale_ratio).Get()));
+		CBucket *newBucket = bucket->MakeBucketCopy(mp);
+		newBucket->SetDistinct(std::max(CHistogram::MinDistinct.Get(), (distinct_bucket * scale_ratio).Get()));
+		histogram_buckets->Append(newBucket);
 	}
-
+	m_histogram_buckets->Release();
+	m_histogram_buckets = histogram_buckets;
 	m_distinct_remaining = m_distinct_remaining * scale_ratio;
 }
 
@@ -631,7 +635,7 @@ CHistogram::MakeHistogramFilterNormalize
 	}
 
 	CHistogram *result_histogram = MakeHistogramFilter(mp, stats_cmp_type, point);
-	*scale_factor = result_histogram->NormalizeHistogram();
+	*scale_factor = result_histogram->NormalizeHistogram(mp);
 	GPOS_ASSERT(result_histogram->IsValid());
 
 	return result_histogram;
@@ -687,7 +691,7 @@ CHistogram::MakeJoinHistogramNormalize
 	}
 	
 	CHistogram *result_histogram = MakeJoinHistogram(mp, stats_cmp_type, other_histogram);
-	*scale_factor = result_histogram->NormalizeHistogram();
+	*scale_factor = result_histogram->NormalizeHistogram(mp);
 
 	// based on Ramakrishnan and Gehrke, "Database Management Systems, Third Ed", page 484
 	// the scaling factor of equality join is the MAX of the number of distinct
@@ -803,7 +807,7 @@ CHistogram::MakeLASJHistogramNormalize
 	}
 
 	CHistogram *result_histogram = MakeLASJHistogram(mp, stats_cmp_type, other_histogram);
-	*scale_factor = result_histogram->NormalizeHistogram();
+	*scale_factor = result_histogram->NormalizeHistogram(mp);
 
 	if (CStatsPred::EstatscmptEq != stats_cmp_type && CStatsPred::EstatscmptINDF != stats_cmp_type)
 	{
@@ -994,7 +998,10 @@ CHistogram::MakeLASJHistogram
 // scales frequencies on histogram so that they add up to 1.0.
 // Returns the scaling factor that was employed. Should not be called on empty histogram.
 CDouble
-CHistogram::NormalizeHistogram()
+CHistogram::NormalizeHistogram
+(
+CMemoryPool *mp
+)
 {
 	// trivially normalized
 	if (Buckets() == 0 && CStatistics::Epsilon > m_null_freq && CStatistics::Epsilon > m_distinct_remaining)
@@ -1004,10 +1011,18 @@ CHistogram::NormalizeHistogram()
 
 	CDouble scale_factor = std::max(DOUBLE(1.0), (CDouble(1.0) / GetFrequency()).Get());
 
-	for (ULONG ul = 0; ul < m_histogram_buckets->Size(); ul++)
+	if (scale_factor != DOUBLE(1.0))
 	{
-		CBucket *bucket = (*m_histogram_buckets)[ul];
-		bucket->SetFrequency(bucket->GetFrequency() * scale_factor);
+		CBucketArray *histogram_buckets = GPOS_NEW(mp) CBucketArray(mp, m_histogram_buckets->Size()+1);
+		for (ULONG ul = 0; ul < m_histogram_buckets->Size(); ul++)
+		{
+			CBucket *bucket = (*m_histogram_buckets)[ul];
+			CBucket *newBucket = bucket->MakeBucketCopy(mp);
+			newBucket->SetFrequency(bucket->GetFrequency() * scale_factor);
+			histogram_buckets->Append(newBucket);
+		}
+		m_histogram_buckets->Release();
+		m_histogram_buckets = histogram_buckets;
 	}
 
 	m_null_freq = m_null_freq * scale_factor;
@@ -1030,14 +1045,8 @@ CHistogram::CopyHistogram
 	)
 	const
 {
-	CBucketArray *buckets = GPOS_NEW(mp) CBucketArray(mp, m_histogram_buckets->Size()+1);
-	for (ULONG ul = 0; ul < m_histogram_buckets->Size(); ul++)
-	{
-		CBucket *bucket = (*m_histogram_buckets)[ul];
-		buckets->Append(bucket->MakeBucketCopy(mp));
-	}
-
-	CHistogram *histogram_copy = GPOS_NEW(mp) CHistogram(buckets, m_is_well_defined, m_null_freq, m_distinct_remaining, m_freq_remaining);
+	m_histogram_buckets->AddRef();
+	CHistogram *histogram_copy = GPOS_NEW(mp) CHistogram(m_histogram_buckets, m_is_well_defined, m_null_freq, m_distinct_remaining, m_freq_remaining);
 	if (WereNDVsScaled())
 	{
 		histogram_copy->SetNDVScaled();
@@ -1536,7 +1545,7 @@ CHistogram::MakeUnionAllHistogramNormalize
 	CDouble freq_remaining = (m_freq_remaining * rows + histogram->m_freq_remaining * rows_other) / rows_new;
 
 	CHistogram *result_histogram = GPOS_NEW(mp) CHistogram(new_buckets, true /*is_well_defined*/, new_null_freq, distinct_remaining, freq_remaining);
-	(void) result_histogram->NormalizeHistogram();
+	(void) result_histogram->NormalizeHistogram(mp);
 
 	return result_histogram;
 }

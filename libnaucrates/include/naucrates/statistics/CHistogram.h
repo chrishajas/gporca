@@ -411,7 +411,7 @@ namespace gpnaucrates
 			}
 
 			// normalize histogram and return scaling factor
-			CDouble NormalizeHistogram();
+			CDouble NormalizeHistogram(CMemoryPool *mp);
 
 			// is histogram normalized
 			BOOL IsNormalized() const;
@@ -462,7 +462,7 @@ namespace gpnaucrates
 			BOOL IsEmpty() const;
 
 			// cap the total number of distinct values (NDVs) in buckets to the number of rows
-			void CapNDVs(CDouble rows);
+			void CapNDVs(CMemoryPool *mp, CDouble rows);
 
 			// is comparison type supported for filters for text columns
 			static
