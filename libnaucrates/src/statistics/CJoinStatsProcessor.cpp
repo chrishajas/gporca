@@ -352,10 +352,18 @@ CJoinStatsProcessor::SetResultingJoinStats
 	join_conds_scale_factors->Release();
 	join_colids->Release();
 
-	UlongToDoubleMap *col_width_mapping_result = outer_stats->CopyWidths(mp);
+	UlongToDoubleMap *col_width_mapping_result;
+
 	if (!semi_join)
 	{
+		// TODO
+		col_width_mapping_result = GPOS_NEW(mp) UlongToDoubleMap(mp);
+		outer_stats->CopyWidthsInto(mp, col_width_mapping_result);
 		inner_side_stats->CopyWidthsInto(mp, col_width_mapping_result);
+	}
+	else
+	{
+		col_width_mapping_result = outer_stats->CopyWidths(mp);
 	}
 
 	// create an output stats object

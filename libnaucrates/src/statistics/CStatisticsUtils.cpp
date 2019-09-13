@@ -1926,6 +1926,7 @@ CStatisticsUtils::AddWidthInfo
 				UlongToDoubleMap *dest_width
 		)
 {
+	
 	UlongToDoubleMapIter col_width_map_iterator(src_width);
 	while (col_width_map_iterator.Advance())
 	{

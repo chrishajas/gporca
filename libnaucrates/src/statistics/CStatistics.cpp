@@ -485,14 +485,12 @@ CStatistics::AddNotExcludedHistograms
 UlongToDoubleMap *
 CStatistics::CopyWidths
 	(
-	CMemoryPool *mp
+	CMemoryPool *
 	)
 	const
 {
-	UlongToDoubleMap *widths_copy = GPOS_NEW(mp) UlongToDoubleMap(mp);
-	CStatisticsUtils::AddWidthInfo(mp, m_colid_width_mapping, widths_copy);
-
-	return widths_copy;
+	m_colid_width_mapping->AddRef();
+	return m_colid_width_mapping;
 }
 
 void
@@ -580,7 +578,7 @@ CStatistics::AppendStats
 
 	CHistogram::AddHistograms(mp, stats->m_colid_histogram_mapping, m_colid_histogram_mapping);
 	GPOS_CHECK_ABORT;
-
+	// TODO
 	CStatisticsUtils::AddWidthInfo(mp, stats->m_colid_width_mapping, m_colid_width_mapping);
 	GPOS_CHECK_ABORT;
 }
@@ -606,12 +604,12 @@ CStatistics::ScaleStats
 	const
 {
 	UlongToHistogramMap *histograms_new = GPOS_NEW(mp) UlongToHistogramMap(mp);
-	UlongToDoubleMap *widths_new = GPOS_NEW(mp) UlongToDoubleMap(mp);
 
 	CHistogram::AddHistograms(mp, m_colid_histogram_mapping, histograms_new);
 	GPOS_CHECK_ABORT;
 
-	CStatisticsUtils::AddWidthInfo(mp, m_colid_width_mapping, widths_new);
+	UlongToDoubleMap *widths_new = CopyWidths(mp);
+
 	GPOS_CHECK_ABORT;
 
 	CDouble scaled_num_rows = m_rows * factor;
