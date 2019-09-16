@@ -46,7 +46,7 @@ CAutoMemoryPool::CAutoMemoryPool
 	:
 	m_leak_check_type(leak_check_type)
 {
-	m_mp = CMemoryPoolManager::GetMemoryPoolMgr()->Create(ept);
+	m_mp = CMemoryPoolManager::GetMemoryPoolMgr()->CreateMemoryPool(ept);
 }
 
 

@@ -73,9 +73,8 @@ namespace gpos
 			// global instance
 			static CMemoryPoolManager *m_memory_pool_mgr;
 
-
 			// create new pool of given type
-			virtual CMemoryPool *New(AllocType alloc_type);
+			virtual CMemoryPool *NewMemoryPool(AllocType alloc_type);
 
 			// no copy ctor
 			CMemoryPoolManager(const CMemoryPoolManager&);
@@ -89,7 +88,7 @@ namespace gpos
 
 		protected:
 
-			// private ctor
+			// ctor
 			CMemoryPoolManager(CMemoryPool *internal);
 
 			CMemoryPool *GetInternalMemoryPool()
@@ -100,7 +99,7 @@ namespace gpos
 		public:
 
 			// create new memory pool
-			virtual CMemoryPool *Create
+			virtual CMemoryPool *CreateMemoryPool
 				(
 				CMemoryPoolManager::AllocType alloc_type
 				);

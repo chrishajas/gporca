@@ -63,7 +63,7 @@ CMemoryPoolManager::CMemoryPoolManager
 		);
 
 	// create pool used in allocations made using global new operator
-	m_global_memory_pool = Create(EatTracker);
+	m_global_memory_pool = CreateMemoryPool(EatTracker);
 }
 
 //---------------------------------------------------------------------------
@@ -116,21 +116,13 @@ CMemoryPoolManager::Init
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CMemoryPoolManager::Create
-//
-//	@doc:
-//		Create new memory pool
-//
-//---------------------------------------------------------------------------
 CMemoryPool *
-CMemoryPoolManager::Create
+CMemoryPoolManager::CreateMemoryPool
 	(
 	AllocType alloc_type
 	)
 {
-	CMemoryPool *mp = New(alloc_type);
+	CMemoryPool *mp = NewMemoryPool(alloc_type);
 
 	// accessor scope
 	{
@@ -147,14 +139,14 @@ CMemoryPoolManager::Create
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CMemoryPoolManager::New
+//		CMemoryPoolManager::NewMemoryPool
 //
 //	@doc:
 //		Create new pool of given type
 //
 //---------------------------------------------------------------------------
 CMemoryPool *
-CMemoryPoolManager::New
+CMemoryPoolManager::NewMemoryPool
 	(
 	AllocType alloc_type
 	)

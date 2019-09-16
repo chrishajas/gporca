@@ -84,7 +84,7 @@ CSchedulerContext::Init
 
 	GPOS_ASSERT(!FInit() && "Scheduling context is already initialized");
 
-	m_pmpLocal = CMemoryPoolManager::GetMemoryPoolMgr()->Create
+	m_pmpLocal = CMemoryPoolManager::GetMemoryPoolMgr()->CreateMemoryPool
 					(
 					CMemoryPoolManager::EatTracker
 					);
