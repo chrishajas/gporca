@@ -63,7 +63,7 @@ CMemoryPoolManager::CMemoryPoolManager
 		);
 
 	// create pool used in allocations made using global new operator
-	m_global_memory_pool = CreateMemoryPool(EatTracker);
+	m_global_memory_pool = CreateMemoryPool();
 }
 
 //---------------------------------------------------------------------------
@@ -117,12 +117,9 @@ CMemoryPoolManager::Init
 
 
 CMemoryPool *
-CMemoryPoolManager::CreateMemoryPool
-	(
-	AllocType alloc_type
-	)
+CMemoryPoolManager::CreateMemoryPool()
 {
-	CMemoryPool *mp = NewMemoryPool(alloc_type);
+	CMemoryPool *mp = NewMemoryPool();
 
 	// accessor scope
 	{
@@ -142,25 +139,15 @@ CMemoryPoolManager::CreateMemoryPool
 //		CMemoryPoolManager::NewMemoryPool
 //
 //	@doc:
-//		Create new pool of given type
+//		Create new pool
 //
 //---------------------------------------------------------------------------
 CMemoryPool *
-CMemoryPoolManager::NewMemoryPool
-	(
-	AllocType alloc_type
-	)
+CMemoryPoolManager::NewMemoryPool()
 {
-	switch (alloc_type)
-	{
-		// FIGGY: Can we remove CMemoryPoolManager::EatTracker altogether?
-		case CMemoryPoolManager::EatTracker:
-			return GPOS_NEW(m_internal_memory_pool) CMemoryPoolTracker();
-	}
-
-	GPOS_ASSERT(!"No matching pool type found");
-	return NULL;
+	return GPOS_NEW(m_internal_memory_pool) CMemoryPoolTracker();
 }
+
 
 //---------------------------------------------------------------------------
 //	@function:

@@ -36,14 +36,6 @@ namespace gpos
 	//---------------------------------------------------------------------------
 	class CMemoryPoolManager
 	{
-		public:
-
-			// different types of pools
-			enum AllocType
-			{
-				EatTracker
-			};
-
 		private:
 
 			typedef CSyncHashtableAccessByKey<CMemoryPool, ULONG_PTR>
@@ -74,7 +66,7 @@ namespace gpos
 			static CMemoryPoolManager *m_memory_pool_mgr;
 
 			// create new pool of given type
-			virtual CMemoryPool *NewMemoryPool(AllocType alloc_type);
+			virtual CMemoryPool *NewMemoryPool();
 
 			// no copy ctor
 			CMemoryPoolManager(const CMemoryPoolManager&);
@@ -99,10 +91,7 @@ namespace gpos
 		public:
 
 			// create new memory pool
-			virtual CMemoryPool *CreateMemoryPool
-				(
-				CMemoryPoolManager::AllocType alloc_type
-				);
+			virtual CMemoryPool *CreateMemoryPool();
 
 			// release memory pool
 			void Destroy(CMemoryPool *);
