@@ -44,17 +44,6 @@ namespace gpos
 				EatTracker
 			};
 
-		protected:
-
-			// private ctor
-			CMemoryPoolManager()
-			{
-			}
-
-			// memory pool in which all objects created using global new operator
-			// are allocated
-			CMemoryPool *m_global_memory_pool;
-
 		private:
 
 			typedef CSyncHashtableAccessByKey<CMemoryPool, ULONG_PTR>
@@ -70,23 +59,23 @@ namespace gpos
 			// are allocated - must be thread-safe
 			CMemoryPool *m_internal_memory_pool;
 
+			// memory pool in which all objects created using global new operator
+			// are allocated
+			CMemoryPool *m_global_memory_pool;
+
 			// are allocations using global new operator allowed?
 			BOOL m_allow_global_new;
 
 			// hash table to maintain created pools
+			// FIGGY: Rename to "m_ht_all_pools"
 			CSyncHashtable<CMemoryPool, ULONG_PTR> m_hash_table;
 
 			// global instance
 			static CMemoryPoolManager *m_memory_pool_mgr;
 
-			// private ctor
-			CMemoryPoolManager(CMemoryPool *internal);
 
 			// create new pool of given type
-			CMemoryPool *New
-				(
-				AllocType alloc_type
-				);
+			virtual CMemoryPool *New(AllocType alloc_type);
 
 			// no copy ctor
 			CMemoryPoolManager(const CMemoryPoolManager&);
@@ -98,6 +87,16 @@ namespace gpos
 			static
 			void DestroyMemoryPoolAtShutdown(CMemoryPool *mp);
 
+		protected:
+
+			// private ctor
+			CMemoryPoolManager(CMemoryPool *internal);
+
+			CMemoryPool *GetInternalMemoryPool()
+			{
+				return m_internal_memory_pool;
+			}
+
 		public:
 
 			// create new memory pool
@@ -107,7 +106,7 @@ namespace gpos
 				);
 
 			// release memory pool
-			virtual void Destroy(CMemoryPool *);
+			void Destroy(CMemoryPool *);
 
 #ifdef GPOS_DEBUG
 			// print internal contents of allocated memory pools
@@ -118,10 +117,10 @@ namespace gpos
 #endif // GPOS_DEBUG
 
 			// delete memory pools and release manager
-			virtual void Shutdown();
+			void Shutdown();
 
 			// accessor of memory pool used in global new allocations
-			virtual CMemoryPool *GetGlobalMemoryPool()
+			CMemoryPool *GetGlobalMemoryPool()
 			{
 				return m_global_memory_pool;
 			}
@@ -150,7 +149,7 @@ namespace gpos
 			}
 
 			// return total allocated size in bytes
-			virtual ULLONG TotalAllocatedSize();
+			ULLONG TotalAllocatedSize();
 
 			// initialize global instance
 			static

@@ -161,9 +161,9 @@ CMemoryPoolManager::New
 {
 	switch (alloc_type)
 	{
+		// FIGGY: Can we remove CMemoryPoolManager::EatTracker altogether?
 		case CMemoryPoolManager::EatTracker:
 			return GPOS_NEW(m_internal_memory_pool) CMemoryPoolTracker();
-
 	}
 
 	GPOS_ASSERT(!"No matching pool type found");
@@ -382,6 +382,7 @@ CMemoryPoolManager::Shutdown()
 	internal->AssertEmpty(oswcerr);
 #endif // GPOS_DEBUG
 
+	// FIGGY: Maybe call internal::~CMemoryPoolPalloc() ?
 	Free(internal);
 }
 
