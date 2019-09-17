@@ -234,7 +234,7 @@ namespace gpopt
 			// check if attached expression must execute on a single host
 			BOOL NeedsSingletonExecution()
 			{
-				return this->DeriveFunctionProperties()->NeedsSingletonExecution();
+				return DeriveFunctionProperties()->NeedsSingletonExecution();
 			}
 
 			// check for outer references in the given child

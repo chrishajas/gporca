@@ -51,6 +51,8 @@ namespace gpopt
 	{
 		friend class CExpression;
 
+		// See member variables (below) with the same name for description on what
+		// the property types respresent
 		enum EDrvdPropType
 		{
 			EdptPcrsOutput = 0,
@@ -123,6 +125,17 @@ namespace gpopt
 			static
 			CFunctionalDependencyArray *DeriveLocalFunctionalDependencies(CMemoryPool *mp, CExpressionHandle &exprhdl);
 
+			// Have all the properties been derivied?
+			//
+			// NOTE1: This is set ONLY when Derive() is called. If all the properties
+			// are independently derived, m_is_complete will remain false. In that
+			// case, even though Derive() would attempt to derive all the properties
+			// once again, it should be quick, since each individual member has been
+			// cached.
+			// NOTE2: Once these properties are detached from the
+			// corresponding expression used to derive it, this MUST be set to true,
+			// since after the detachment, there will be no way to derive the
+			// properties once again.
 			BOOL m_is_complete;
 
 		protected:
@@ -218,7 +231,7 @@ namespace gpopt
 			CFunctionProp *GetFunctionProperties() const;
 
 			// has partial indexes
-			BOOL GetHasPartialIndexes() const;
+			BOOL HasPartialIndexes() const;
 
 			// shorthand for conversion
 			static

@@ -1121,7 +1121,10 @@ CExpressionHandle::GetRelationalProperties() const
 	if (NULL != m_pcc || NULL != m_pgexpr)
 	{
 		// get relational props from group
-		return CDrvdPropRelational::GetRelationalProperties(Pgexpr()->Pgroup()->Pdp());
+		CDrvdPropRelational* drvdProps =
+			CDrvdPropRelational::GetRelationalProperties(Pgexpr()->Pgroup()->Pdp());
+		GPOS_ASSERT(drvdProps->IsComplete());
+		return drvdProps;
 	}
 
 	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
@@ -2054,7 +2057,7 @@ CExpressionHandle::DeriveHasPartialIndexes(ULONG child_index)
 		return (*Pexpr())[child_index]->DeriveHasPartialIndexes();
 	}
 
-	return GetRelationalProperties(child_index)->GetHasPartialIndexes();
+	return GetRelationalProperties(child_index)->HasPartialIndexes();
 }
 
 BOOL
@@ -2065,7 +2068,7 @@ CExpressionHandle::DeriveHasPartialIndexes()
 		return Pexpr()->DeriveHasPartialIndexes();
 	}
 
-	return GetRelationalProperties()->GetHasPartialIndexes();
+	return GetRelationalProperties()->HasPartialIndexes();
 }
 
 // EOF

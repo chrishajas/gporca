@@ -345,7 +345,7 @@ CDrvdPropRelational::OsPrint
 
 	os << ", Part Info: [" << *GetPartitionInfo() << "]";
 
-	if (GetHasPartialIndexes())
+	if (HasPartialIndexes())
 	{
 		os <<", Has Partial Indexes";
 	}
@@ -606,7 +606,7 @@ CDrvdPropRelational::DeriveFunctionProperties(CExpressionHandle &exprhdl)
 
 // has partial indexes
 BOOL
-CDrvdPropRelational::GetHasPartialIndexes() const
+CDrvdPropRelational::HasPartialIndexes() const
 {
 	GPOS_RTL_ASSERT(IsComplete());
 	return m_fHasPartialIndexes;
@@ -625,7 +625,7 @@ CDrvdPropRelational::DeriveHasPartialIndexes(CExpressionHandle &exprhdl)
 		if (COperator::EopLogicalDynamicGet == op_id)
 		{
 			m_fHasPartialIndexes =
-					CLogicalDynamicGet::PopConvert(popLogical)->Ptabdesc()->DeriveHasPartialIndexes();
+					CLogicalDynamicGet::PopConvert(popLogical)->Ptabdesc()->HasPartialIndexes();
 		}
 		else if (COperator::EopLogicalSelect == op_id)
 		{

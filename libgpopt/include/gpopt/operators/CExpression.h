@@ -254,7 +254,9 @@ namespace gpopt
 			// get the suitable derived property type based on operator
 			CDrvdProp::EPropType Ept() const;
 
-			// derive properties, determine the suitable derived property type internally
+			// Derive all properties immediately. The suitable derived property is
+			// determined internally. To derive properties on an on-demand bases, use
+			// DeriveXXX() methods.
 			CDrvdProp *PdpDerive(CDrvdPropCtxt *pdpctxt = NULL);
 
 			// derive statistics
@@ -326,7 +328,7 @@ namespace gpopt
 			static
 			CExpression *PexprRehydrate(CMemoryPool *mp, CCostContext *pcc, CExpressionArray *pdrgpexpr, CDrvdPropCtxtPlan *pdpctxtplan);
 
-			// Property accessors
+			// Relational property accessors - derived as needed
 			CColRefSet *DeriveOuterReferences();
 			CColRefSet *DeriveOutputColumns();
 			CColRefSet *DeriveNotNullColumns();

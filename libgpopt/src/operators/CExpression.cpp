@@ -405,26 +405,23 @@ CExpression::Pdp
 }
 
 CDrvdPropRelational *
-CExpression::GetDrvdPropRelational()
-	const
+CExpression::GetDrvdPropRelational() const
 {
-	GPOS_ASSERT(m_pdprel->IsComplete());
+	GPOS_RTL_ASSERT(m_pdprel->IsComplete());
 	return m_pdprel;
 }
 
 CDrvdPropPlan *
-CExpression::GetDrvdPropPlan()
-	const
+CExpression::GetDrvdPropPlan() const
 {
-	GPOS_ASSERT(m_pdpplan->IsComplete());
+	GPOS_RTL_ASSERT(m_pdpplan->IsComplete());
 	return m_pdpplan;
 }
 
 CDrvdPropScalar *
-CExpression::GetDrvdPropScalar()
-	const
+CExpression::GetDrvdPropScalar() const
 {
-	GPOS_ASSERT(m_pdpscalar->IsComplete());
+	GPOS_RTL_ASSERT(m_pdpscalar->IsComplete());
 	return m_pdpscalar;
 }
 
@@ -503,15 +500,9 @@ CExpression::Ept() const
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CExpression::PdpDerive
-//
-//	@doc:
-//		Derive properties. This will derive all properties for the type, not on-demand
-//		Determine the suitable derived property type internally
-//
-//---------------------------------------------------------------------------
+// Derive all properties immediately. The suitable derived property is
+// determined internally. To derive properties on an on-demand bases, use
+// DeriveXXX() methods.
 CDrvdProp *
 CExpression::PdpDerive
 	(
