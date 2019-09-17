@@ -59,8 +59,7 @@ namespace gpos
 			BOOL m_allow_global_new;
 
 			// hash table to maintain created pools
-			// FIGGY: Rename to "m_ht_all_pools"
-			CSyncHashtable<CMemoryPool, ULONG_PTR> m_hash_table;
+			CSyncHashtable<CMemoryPool, ULONG_PTR> m_ht_all_pools;
 
 			// global instance
 			static CMemoryPoolManager *m_memory_pool_mgr;
