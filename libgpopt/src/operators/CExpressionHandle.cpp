@@ -1085,13 +1085,10 @@ CExpressionHandle::GetRelationalProperties
 		return CDrvdPropRelational::GetRelationalProperties((*Pexpr()->Pgexpr())[child_index]->Pdp());
 	}
 
-	if (NULL != m_pcc || NULL != m_pgexpr)
-	{
-		// handle is used for deriving plan properties, get relational props from child group
-		return CDrvdPropRelational::GetRelationalProperties((*Pgexpr())[child_index]->Pdp());
-	}
+	GPOS_ASSERT(NULL != m_pcc || NULL != m_pgexpr);
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiUnsatisfiedRequiredProperties);
+	// handle is used for deriving plan properties, get relational props from child group
+	return CDrvdPropRelational::GetRelationalProperties((*Pgexpr())[child_index]->Pdp());
 }
 
 //---------------------------------------------------------------------------
@@ -1118,16 +1115,14 @@ CExpressionHandle::GetRelationalProperties() const
 		return CDrvdPropRelational::GetRelationalProperties(Pexpr()->PdpDerive());
 	}
 
-	if (NULL != m_pcc || NULL != m_pgexpr)
-	{
-		// get relational props from group
-		CDrvdPropRelational* drvdProps =
-			CDrvdPropRelational::GetRelationalProperties(Pgexpr()->Pgroup()->Pdp());
-		GPOS_ASSERT(drvdProps->IsComplete());
-		return drvdProps;
-	}
+	GPOS_ASSERT(NULL != m_pcc || NULL != m_pgexpr);
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
+	// get relational props from group
+	CDrvdPropRelational* drvdProps =
+			CDrvdPropRelational::GetRelationalProperties(Pgexpr()->Pgroup()->Pdp());
+	GPOS_ASSERT(drvdProps->IsComplete());
+
+	return drvdProps;
 }
 
 
@@ -1173,15 +1168,12 @@ CExpressionHandle::Pdpplan
 		return CDrvdPropPlan::Pdpplan((*m_pexpr)[child_index]->Pdp(CDrvdProp::EptPlan));
 	}
 
-	if (NULL != m_pcc)
-	{
-		COptimizationContext *pocChild = (*m_pcc->Pdrgpoc())[child_index];
-		CDrvdPropPlan *pdpplan = pocChild->PccBest()->Pdpplan();
+	GPOS_ASSERT(NULL != m_pcc || NULL != m_pgexpr);
 
-		return pdpplan;
-	}
+	COptimizationContext *pocChild = (*m_pcc->Pdrgpoc())[child_index];
+	CDrvdPropPlan *pdpplan = pocChild->PccBest()->Pdpplan();
 
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
+	return pdpplan;
 }
 
 
@@ -1217,18 +1209,10 @@ CExpressionHandle::GetDrvdScalarProps
 		return CDrvdPropScalar::GetDrvdScalarProps((*Pexpr()->Pgexpr())[child_index]->Pdp());
 	}
 
-	if (NULL != m_pcc)
-	{
-		// handle is used for deriving plan properties, get scalar props from child group
-		return CDrvdPropScalar::GetDrvdScalarProps((*Pgexpr())[child_index]->Pdp());
-	}
+	GPOS_ASSERT(NULL != m_pcc || NULL != m_pgexpr);
 
-	if (NULL != m_pgexpr)
-	{
-		return CDrvdPropScalar::GetDrvdScalarProps((*m_pgexpr)[child_index]->Pdp());
-	}
-
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
+	// handle is used for deriving plan properties, get scalar props from child group
+	return CDrvdPropScalar::GetDrvdScalarProps((*Pgexpr())[child_index]->Pdp());
 }
 
 
@@ -1792,12 +1776,8 @@ CExpressionHandle::Pdp() const
 		return Pexpr()->Pdp(Pexpr()->Ept());
 	}
 
-	if (NULL != Pgexpr())
-	{
-		return Pgexpr()->Pgroup()->Pdp();
-	}
-
-	GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties);
+	GPOS_ASSERT(NULL != Pgexpr());
+	return Pgexpr()->Pgroup()->Pdp();
 }
 
 IStatistics *

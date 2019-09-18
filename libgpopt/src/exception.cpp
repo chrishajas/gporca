@@ -94,12 +94,6 @@ gpopt::EresExceptionInit
 					 GPOS_WSZ_WSZLEN("CTE Producer-Consumer execution locality mismatch for CTE id %lld"),
 					 1,
 					 GPOS_WSZ_WSZLEN("CTE Producer-Consumer execution locality mismatch")),
-
-			CMessage(CException(gpopt::ExmaGPOPT, gpopt::ExmiIncompleteDerivedProperties),
-					 CException::ExsevError,
-					 GPOS_WSZ_WSZLEN("No valid context to derive properties from"),
-					 0,
-					 GPOS_WSZ_WSZLEN("No valid context to derive properties from")),
 	};
 
 	GPOS_RESULT eres = GPOS_FAILED;

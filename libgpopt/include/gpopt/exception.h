@@ -37,7 +37,6 @@ namespace gpopt
 		ExmiUnsatisfiedRequiredProperties,
 		ExmiEvalUnsupportedScalarExpr,
 		ExmiCTEProducerConsumerMisAligned,
-		ExmiIncompleteDerivedProperties,
 
 		ExmiSentinel
 	};
