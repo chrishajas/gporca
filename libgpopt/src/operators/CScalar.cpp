@@ -85,8 +85,7 @@ CScalar::FHasSubquery
 	{
 		if (exprhdl.FScalarChild(i))
 		{
-			CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(i);
-			if (pdpscalar->FHasSubquery())
+			if (exprhdl.DeriveHasSubquery(i))
 			{
 				return true;
 			}

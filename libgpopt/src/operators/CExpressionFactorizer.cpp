@@ -367,7 +367,7 @@ CExpressionFactorizer::PcrsUsedByPushableScalar
 
 	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive());
 	if (0 < pexpr->DeriveDefinedColumns()->Size() ||
-	    pdpscalar->FHasSubquery() ||
+	    pexpr->DeriveHasSubquery() ||
 	    IMDFunction::EfsVolatile == pexpr->DeriveScalarFunctionProperties()->Efs() ||
 	    IMDFunction::EfdaNoSQL != pexpr->DeriveScalarFunctionProperties()->Efda())
 	{

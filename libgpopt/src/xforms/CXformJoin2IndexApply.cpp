@@ -44,7 +44,7 @@ CXformJoin2IndexApply::Exfp
 
 	if (
 		0 == pdpscalar->PcrsUsed()->Size() ||
-		pdpscalar->FHasSubquery() ||
+		exprhdl.DeriveHasSubquery(2) ||
 		exprhdl.HasOuterRefs()
 		)
 	{

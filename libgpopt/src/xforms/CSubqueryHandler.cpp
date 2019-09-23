@@ -2078,7 +2078,7 @@ CSubqueryHandler::FRecursiveHandler
 
 		GPOS_ASSERT(NULL != pexprNewScalar);
 
-		if (CDrvdPropScalar::GetDrvdScalarProps(pexprScalarChild->PdpDerive())->FHasSubquery())
+		if (pexprScalarChild->DeriveHasSubquery())
 		{
 			// the logical expression must have been updated during recursion
 			GPOS_ASSERT(NULL != pexprNewLogical);
@@ -2253,7 +2253,7 @@ CSubqueryHandler::FProcess
 	AssertValidArguments(m_mp, pexprOuter, pexprScalar, ppexprNewOuter, ppexprResidualScalar);
 #endif // GPOS_DEBUG
 
-	if (!CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->FHasSubquery())
+	if (!pexprScalar->DeriveHasSubquery())
 	{
 		// no subqueries, add-ref root node and return immediately
 		pexprScalar->AddRef();

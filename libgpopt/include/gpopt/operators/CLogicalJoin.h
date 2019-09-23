@@ -134,7 +134,7 @@ namespace gpopt
 				const
 			{
 				// no stat derivation on Join trees with subqueries
-				if (exprhdl.GetDrvdScalarProps(exprhdl.Arity() - 1)->FHasSubquery())
+				if (exprhdl.DeriveHasSubquery(exprhdl.Arity() - 1))
 				{
 					 return EspLow;
 				}

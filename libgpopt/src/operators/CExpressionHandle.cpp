@@ -1470,7 +1470,7 @@ CExpressionHandle::PexprScalarChild
 		// get the scalar child from that group
 		CGroupExpression *pgexpr = (*m_pexpr)[child_index]->Pgexpr();
 		CExpression *pexprScalar = pgexpr->Pgroup()->PexprScalar();
-		GPOS_ASSERT_IMP(NULL == pexprScalar, CDrvdPropScalar::GetDrvdScalarProps((*m_pexpr)[child_index]->PdpDerive())->FHasSubquery());
+		GPOS_ASSERT_IMP(NULL == pexprScalar, (*m_pexpr)[child_index]->DeriveHasSubquery());
 
 		return pexprScalar;
 	}

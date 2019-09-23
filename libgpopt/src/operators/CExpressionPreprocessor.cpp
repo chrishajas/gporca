@@ -1720,7 +1720,7 @@ CExpressionPreprocessor::CollectCTEPredicates
 		)
 	{
 		CExpression *pexprScalar = (*pexpr)[1];
-		if (!CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->FHasSubquery())
+		if (!pexprScalar->DeriveHasSubquery())
 		{
 			CExpression *pexprChild = (*pexpr)[0];
 			CLogicalCTEConsumer *popConsumer = CLogicalCTEConsumer::PopConvert(pexprChild->Pop());

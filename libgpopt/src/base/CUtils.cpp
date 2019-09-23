@@ -894,10 +894,7 @@ CUtils::FHasSubquery
 	GPOS_ASSERT(NULL != pexpr);
 	GPOS_ASSERT(pexpr->Pop()->FScalar());
 
-	CDrvdProp *pdp = pexpr->PdpDerive();
-	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pdp);
-
-	return pdpscalar->FHasSubquery();
+	return pexpr->DeriveHasSubquery();
 }
 
 
@@ -927,7 +924,7 @@ CUtils::FHasSubqueryOrApply
 			return true;
 		}
 
-		if (pop->FScalar() && CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive())->FHasSubquery())
+		if (pop->FScalar() && pexpr->DeriveHasSubquery())
 		{
 			return true;
 		}
@@ -3179,7 +3176,7 @@ CUtils::FVarFreeExpr
 	}
 	
 	CDrvdPropScalar *pdpScalar = CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive());
-	if (pdpScalar->FHasSubquery())
+	if (pexpr->DeriveHasSubquery())
 	{
 		return false;
 	}

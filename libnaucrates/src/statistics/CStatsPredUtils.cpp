@@ -1315,7 +1315,7 @@ CStatsPredUtils::ExtractJoinStatsFromExprHandle
 	)
 {
 	// in case of subquery in join predicate, we return empty stats
-	if (expr_handle.GetDrvdScalarProps(expr_handle.Arity() - 1)->FHasSubquery())
+	if (expr_handle.DeriveHasSubquery(expr_handle.Arity() - 1))
 	{
 		return GPOS_NEW(mp) CStatsPredJoinArray(mp);
 	}

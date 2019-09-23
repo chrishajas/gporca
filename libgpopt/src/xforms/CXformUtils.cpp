@@ -58,7 +58,7 @@ CXformUtils::ExfpLogicalJoin2PhysicalJoin
 	// if scalar predicate has a subquery, we must have an
 	// equivalent logical Apply expression created during exploration;
 	// no need for generating a physical join
-	if (exprhdl.GetDrvdScalarProps(2)->FHasSubquery())
+	if (exprhdl.DeriveHasSubquery(2))
 	{
 		return CXform::ExfpNone;
 	}
@@ -114,7 +114,7 @@ CXformUtils::ExfpExpandJoinOrder
 	CExpressionHandle &exprhdl
 	)
 {
-	if (exprhdl.GetDrvdScalarProps(exprhdl.Arity() - 1)->FHasSubquery() || exprhdl.HasOuterRefs())
+	if (exprhdl.DeriveHasSubquery(exprhdl.Arity() - 1) || exprhdl.HasOuterRefs())
 	{
 		// subqueries must be unnested before applying xform
 		return CXform::ExfpNone;
@@ -1084,7 +1084,7 @@ CXformUtils::PexprSeparateSubqueryPreds
 		CExpression *pexprConj = (*pdrgpexprConjuncts)[ul];
 		pexprConj->AddRef();
 
-		if (CDrvdPropScalar::GetDrvdScalarProps(pexprConj->PdpDerive())->FHasSubquery())
+		if (pexprConj->DeriveHasSubquery())
 		{
 			pdrgpexprSQ->Append(pexprConj);
 		}

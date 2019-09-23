@@ -66,7 +66,7 @@ CXformLeftSemiJoin2InnerJoin::Exfp
 	)
 	const
 {
-	if (exprhdl.HasOuterRefs() || exprhdl.GetDrvdScalarProps(2)->FHasSubquery())
+	if (exprhdl.HasOuterRefs() || exprhdl.DeriveHasSubquery(2))
 	{
 		return ExfpNone;
 	}

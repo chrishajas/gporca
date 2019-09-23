@@ -378,7 +378,7 @@ CLogicalDynamicGetBase::PstatsDeriveFilter
 	
 	pcrsStat->Release();
 	
-	if (NULL == pexprFilterNew || pdpscalar->FHasSubquery())
+	if (NULL == pexprFilterNew || pexprFilterNew->DeriveHasSubquery())
 	{
 		return pstatsFullTable;
 	}

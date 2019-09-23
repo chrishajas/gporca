@@ -68,7 +68,7 @@ CXformSelect2DynamicIndexGet::Exfp
 	)
 	const
 {
-	if (exprhdl.GetDrvdScalarProps(1)->FHasSubquery())
+	if (exprhdl.DeriveHasSubquery(1))
 	{
 		return CXform::ExfpNone;
 	}

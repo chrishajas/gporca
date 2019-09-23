@@ -67,7 +67,7 @@ CXformSubqJoin2Apply::Exfp
 	)
 	const
 {
-	if (exprhdl.GetDrvdScalarProps(exprhdl.Arity() - 1)->FHasSubquery())
+	if (exprhdl.DeriveHasSubquery(exprhdl.Arity() - 1))
 	{
 		return CXform::ExfpHigh;
 	}
@@ -335,7 +335,7 @@ CXformSubqJoin2Apply::Transform
 	pexprSelect->Release();
 
 	CExpression *pexprResult = NULL;
-	BOOL fHasSubquery = CDrvdPropScalar::GetDrvdScalarProps((*pexprSubqsPushedDown)[1]->PdpDerive())->FHasSubquery();
+	BOOL fHasSubquery = (*pexprSubqsPushedDown)[1]->DeriveHasSubquery();
 	if (fHasSubquery)
 	{
 		// unnest subqueries remaining in the top Select expression
