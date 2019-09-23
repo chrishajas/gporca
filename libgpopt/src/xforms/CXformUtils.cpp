@@ -4887,7 +4887,7 @@ CXformUtils::PexprGbAggOnCTEConsumer2Join
 	}
 
 	CExpression *pexprPrjList = (*pexprGbAgg)[1];
-	ULONG ulDistinctAggs = CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive())->UlDistinctAggs();
+	ULONG ulDistinctAggs = pexprPrjList->DeriveTotalDistinctAggs();
 
 	if (1 == ulDistinctAggs)
 	{
