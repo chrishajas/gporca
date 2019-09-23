@@ -1357,9 +1357,7 @@ CNormalizer::PexprPullUpProjectElements
 		// NB we don't pull up projections that call set-returning functions
 		pexprPrEl->AddRef();
 
-		CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprPrEl->PdpDerive());
-
-		if (!pcrsUsed->FMember(pcrDefined) && pcrsOutput->ContainsAll(pcrsUsedByProjElem) && !pdpscalar->FHasNonScalarFunction())
+		if (!pcrsUsed->FMember(pcrDefined) && pcrsOutput->ContainsAll(pcrsUsedByProjElem) && !pexprPrEl->DeriveHasNonScalarFunction())
 		{
 			(*ppdrgpexprPrElPullUp)->Append(pexprPrEl);
 		}

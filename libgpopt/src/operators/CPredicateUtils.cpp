@@ -2521,7 +2521,7 @@ CPredicateUtils::FNullRejecting
 
 	if (fHasVolatileFunctions ||
 		fHasSQL ||
-		pdpscalar->FHasNonScalarFunction())
+		pexprScalar->DeriveHasNonScalarFunction())
 	{
 		// scalar expression must not have volatile functions, functions with SQL, subquery or non-scalar functions
 		return false;

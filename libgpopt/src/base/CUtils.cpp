@@ -4439,7 +4439,7 @@ CUtils::PexprCollapseProjects
 	CExpressionArray *pdrgpexprSetReturnFunc = GPOS_NEW(mp) CExpressionArray(mp);
 	ULONG ulCollapsableSetReturnFunc = 0;
 
-	BOOL fChildProjElHasSetReturn = CDrvdPropScalar::GetDrvdScalarProps(pexprChildScalar->PdpDerive())->FHasNonScalarFunction();
+	BOOL fChildProjElHasSetReturn = pexprChildScalar->DeriveHasNonScalarFunction();
 
 	// iterate over the parent project elements and see if we can add it to the child's project node
 	CExpressionArray *pdrgpexprPrEl = GPOS_NEW(mp) CExpressionArray(mp);
@@ -4456,7 +4456,7 @@ CUtils::PexprCollapseProjects
 
 		pexprPrE->AddRef();
 
-		BOOL fHasSetReturn = CDrvdPropScalar::GetDrvdScalarProps(pexprPrE->PdpDerive())->FHasNonScalarFunction();
+		BOOL fHasSetReturn = pexprPrE->DeriveHasNonScalarFunction();
 
 		pcrsUsed->Intersection(pcrsDefinedChild);
 		ULONG ulIntersect = pcrsUsed->Size();

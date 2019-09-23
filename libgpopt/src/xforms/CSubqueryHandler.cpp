@@ -268,7 +268,7 @@ CSubqueryHandler::FProjectCountSubquery
 	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive());
 
 	if (COperator::EopLogicalGbAgg != pexprPrjChild->Pop()->Eopid() ||
-		pdpscalar->FHasNonScalarFunction() ||
+		pexprPrjList->DeriveHasNonScalarFunction() ||
 		IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs())
 	{
 		// fail if Project child is not GbAgg, or there are non-scalar/volatile functions in project list

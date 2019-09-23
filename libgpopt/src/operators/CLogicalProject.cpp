@@ -317,7 +317,7 @@ CLogicalProject::DeriveMaxCard
 	)
 	const
 {
-	if (exprhdl.GetDrvdScalarProps(1)->FHasNonScalarFunction())
+	if (exprhdl.DeriveHasNonScalarFunction(1))
 	{
 		// unbounded by default
 		return CMaxCard();

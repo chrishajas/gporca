@@ -189,14 +189,12 @@ CPhysicalComputeScalar::PdsRequired
 		return pds;
 	}
 
-	CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(1 /*child_index*/);
-
 	// if a Project operator has a call to a set function, passing a Random distribution through this
 	// Project may have the effect of not distributing the results of the set function to all nodes,
 	// but only to the nodes on which first child of the Project is distributed.
 	// to avoid that, we don't push the distribution requirement in this case and thus, for a random
 	// distribution, the result of the set function is spread uniformly over all nodes
-	if (pdpscalar->FHasNonScalarFunction())
+	if (exprhdl.DeriveHasNonScalarFunction(1))
 	{
 		return GPOS_NEW(mp) CDistributionSpecAny(this->Eopid());
 	}
@@ -441,7 +439,7 @@ CPhysicalComputeScalar::PrsDerive
 	CRewindabilitySpec *prsChild = PrsDerivePassThruOuter(mp, exprhdl);
 
 	CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(1 /*ulChildIndex*/);
-	if (pdpscalar->FHasNonScalarFunction() || IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs())
+	if (exprhdl.DeriveHasNonScalarFunction(1) || IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs())
 	{
 		// ComputeScalar is not rewindable if it has non-scalar/volatile functions in project list
 		CRewindabilitySpec * prs = GPOS_NEW(mp) CRewindabilitySpec(CRewindabilitySpec::ErtRescannable, prsChild->Emht());

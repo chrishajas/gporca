@@ -2299,12 +2299,11 @@ CTranslatorExprToDXL::PdxlnComputeScalar
 	for (ULONG ul = 0; ul < ulPrLs; ul++)
 	{
 		CExpression *pexprPrE = (*pexprProjList)[ul];
-		CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprPrE->PdpDerive());
 
 		// for column that doesn't contain set-returning function, if it is not the
 		// required column in the relational plan properties, then no need to add them
 		// to the output columns
-		if (pdpscalar->FHasNonScalarFunction())
+		if (pexprPrE->DeriveHasNonScalarFunction())
 		{
 			CScalarProjectElement *popScPrE = CScalarProjectElement::PopConvert(pexprPrE->Pop());
 			pcrsOutput->Include(popScPrE->Pcr());

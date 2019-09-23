@@ -376,8 +376,7 @@ CScalar::FHasNonScalarFunction
 	{
 		if (exprhdl.FScalarChild(i))
 		{
-			CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(i);
-			if (pdpscalar->FHasNonScalarFunction())
+			if (exprhdl.DeriveHasNonScalarFunction(i))
 			{
 				return true;
 			}
