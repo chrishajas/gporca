@@ -585,7 +585,7 @@ CPhysical::PcrsChildReqd
 	if (gpos::ulong_max != ulScalarIndex)
 	{
 		// include used columns and exclude defined columns of scalar child
-		pcrs->Union(exprhdl.GetDrvdScalarProps(ulScalarIndex)->PcrsUsed());
+		pcrs->Union(exprhdl.DeriveUsedColumns(ulScalarIndex));
 		pcrs->Exclude(exprhdl.DeriveDefinedColumns(ulScalarIndex));
 	}
 

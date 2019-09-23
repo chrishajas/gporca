@@ -359,12 +359,10 @@ CLogicalDynamicGetBase::PstatsDeriveFilter
 	}
 
 	CColRefSet *pcrsStat = GPOS_NEW(mp) CColRefSet(mp);
-	CDrvdPropScalar *pdpscalar = NULL;
 
 	if (NULL != pexprFilterNew)
 	{
-		pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprFilterNew->PdpDerive());
-		pcrsStat->Include(pdpscalar->PcrsUsed());
+		pcrsStat->Include(pexprFilterNew->DeriveUsedColumns());
 	}
 
 	// requesting statistics on distribution columns to estimate data skew

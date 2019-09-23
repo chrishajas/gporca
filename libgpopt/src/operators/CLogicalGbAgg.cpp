@@ -435,7 +435,7 @@ CLogicalGbAgg::PcrsStatGbAgg
 	pcrs->Include(pdrgpcrGrp);
 
 	// other columns used in aggregates
-	pcrs->Union(exprhdl.GetDrvdScalarProps(1 /*child_index*/)->PcrsUsed());
+	pcrs->Union(exprhdl.DeriveUsedColumns(1));
 
 	// if the grouping column is a computed column, then add its corresponding used columns
 	// to required columns for statistics computation

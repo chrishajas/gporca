@@ -365,7 +365,6 @@ CExpressionFactorizer::PcrsUsedByPushableScalar
 		return NULL;
 	}
 
-	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive());
 	if (0 < pexpr->DeriveDefinedColumns()->Size() ||
 	    pexpr->DeriveHasSubquery() ||
 	    IMDFunction::EfsVolatile == pexpr->DeriveScalarFunctionProperties()->Efs() ||
@@ -374,7 +373,7 @@ CExpressionFactorizer::PcrsUsedByPushableScalar
 		return NULL;
 	}
 
-	return pdpscalar->PcrsUsed();
+	return pexpr->DeriveUsedColumns();
 }
 
 //---------------------------------------------------------------------------

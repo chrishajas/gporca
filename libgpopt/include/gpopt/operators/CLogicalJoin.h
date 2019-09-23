@@ -175,7 +175,7 @@ namespace gpopt
 			{
 				const ULONG arity = exprhdl.Arity();
 
-				return PcrsReqdChildStats(mp, exprhdl, pcrsInput, exprhdl.GetDrvdScalarProps(arity - 1)->PcrsUsed(), child_index);
+				return PcrsReqdChildStats(mp, exprhdl, pcrsInput, exprhdl.DeriveUsedColumns(arity - 1), child_index);
 			}
 
 			// return true if operator can select a subset of input tuples based on some predicate

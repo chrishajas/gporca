@@ -782,13 +782,13 @@ CTranslatorExprToDXL::AddBitmapFilterColumns
 	if (NULL != pexprRecheckCond)
 	{
 		// add the columns used in the recheck condition
-		pcrsAdditional->Include(CDrvdPropScalar::GetDrvdScalarProps(pexprRecheckCond->PdpDerive())->PcrsUsed());
+		pcrsAdditional->Include(pexprRecheckCond->DeriveUsedColumns());
 	}
 
 	if (NULL != pexprScalar)
 	{
 		// add the columns used in the filter condition
-		pcrsAdditional->Include(CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed());
+		pcrsAdditional->Include(pexprScalar->DeriveUsedColumns());
 	}
 
 	CColRefSet *pcrsBitmap =  GPOS_NEW(mp) CColRefSet(mp);
@@ -1677,7 +1677,7 @@ CTranslatorExprToDXL::PdxlnResultFromFilter
 	for (ULONG ul=0; ul < scalar_exprs->Size(); ul++)
 	{
 		CExpression *scalar_child_expr = (*scalar_exprs)[ul];
-		CColRefSet *scalar_child_colrefset = scalar_child_expr->GetDrvdPropScalar()->PcrsUsed();
+		CColRefSet *scalar_child_colrefset = scalar_child_expr->DeriveUsedColumns();
 
 		// What qualifies for a one time filter qual?
 		// 1. if there is no column in the scalar child of filter expression coming from its relational
@@ -2970,7 +2970,7 @@ CTranslatorExprToDXL::PdxlnQuantifiedSubplan
 		// overwrite required inner column based on scalar expression
 
 		CColRefSet *pcrsInner = pexprInner->DeriveOutputColumns();
-		CColRefSet *pcrsUsed = GPOS_NEW(m_mp) CColRefSet (m_mp, *pexprScalar->GetDrvdPropScalar()->PcrsUsed());
+		CColRefSet *pcrsUsed = GPOS_NEW(m_mp) CColRefSet (m_mp, *pexprScalar->DeriveUsedColumns());
 		pcrsUsed->Intersection(pcrsInner);
 		if (0 < pcrsUsed->Size())
 		{
@@ -3902,11 +3902,11 @@ CTranslatorExprToDXL::PdxlnMergeJoin
 
 		// align extracted columns with outer and inner children of the join
 		CColRefSet *pcrsOuterChild = pexprOuterChild->DeriveOutputColumns();
-		CColRefSet *pcrsPredInner = CDrvdPropScalar::GetDrvdScalarProps(pexprPredInner->PdpDerive())->PcrsUsed();
+		CColRefSet *pcrsPredInner = pexprPredInner->DeriveUsedColumns();
 #ifdef GPOS_DEBUG
 		CColRefSet *pcrsInnerChild =
 			pexprInnerChild->DeriveOutputColumns();
-		CColRefSet *pcrsPredOuter = CDrvdPropScalar::GetDrvdScalarProps(pexprPredOuter->PdpDerive())->PcrsUsed();
+		CColRefSet *pcrsPredOuter = pexprPredOuter->DeriveUsedColumns();
 #endif
 
 		if (pcrsOuterChild->ContainsAll(pcrsPredInner))

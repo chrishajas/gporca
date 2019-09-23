@@ -2076,7 +2076,7 @@ CExpressionPreprocessor::PexprPruneProjListProjectOrGbAgg
 			{
 				pexprPrEl->AddRef();
 				pdrgpexprPrElRemain->Append(pexprPrEl);
-				pcrsReqdNew->Include(CDrvdPropScalar::GetDrvdScalarProps(pexprPrEl->PdpDerive())->PcrsUsed());
+				pcrsReqdNew->Include(pexprPrEl->DeriveUsedColumns());
 			}
 		}
 

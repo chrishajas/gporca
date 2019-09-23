@@ -169,11 +169,11 @@ CPhysicalSequenceProject::ComputeRequiredLocalColumns
 		CWindowFrame *pwf = (*m_pdrgpwf)[ul];
 		if (NULL != pwf->PexprLeading())
 		{
-			m_pcrsRequiredLocal->Union(CDrvdPropScalar::GetDrvdScalarProps(pwf->PexprLeading()->PdpDerive())->PcrsUsed());
+			m_pcrsRequiredLocal->Union(pwf->PexprLeading()->DeriveUsedColumns());
 		}
 		if (NULL != pwf->PexprTrailing())
 		{
-			m_pcrsRequiredLocal->Union(CDrvdPropScalar::GetDrvdScalarProps(pwf->PexprTrailing()->PdpDerive())->PcrsUsed());
+			m_pcrsRequiredLocal->Union(pwf->PexprTrailing()->DeriveUsedColumns());
 		}
 	}
 }

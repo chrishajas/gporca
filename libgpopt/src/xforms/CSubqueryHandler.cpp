@@ -265,7 +265,6 @@ CSubqueryHandler::FProjectCountSubquery
 	CExpression *pexprPrj = (*pexprSubquery)[0];
 	CExpression *pexprPrjChild = (*pexprPrj)[0];
 	CExpression *pexprPrjList = (*pexprPrj)[1];
-	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprPrjList->PdpDerive());
 
 	if (COperator::EopLogicalGbAgg != pexprPrjChild->Pop()->Eopid() ||
 		pexprPrjList->DeriveHasNonScalarFunction() ||
@@ -282,7 +281,7 @@ CSubqueryHandler::FProjectCountSubquery
 		return false;
 	}
 
-	CColRefSet *pcrsUsed = pdpscalar->PcrsUsed();
+	CColRefSet *pcrsUsed = pexprPrjList->DeriveUsedColumns();
 	BOOL fPrjUsesCount = (0 == pcrsUsed->Size()) || (1 == pcrsUsed->Size() && pcrsUsed->FMember(pcrCount));
 	if (!fPrjUsesCount)
 	{
@@ -812,7 +811,7 @@ CSubqueryHandler::FCreateGrpCols
 	CColRefArray *colref_array = NULL;
 	if (fGbOnInner)
 	{
-		CColRefSet *pcrsUsed = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed();
+		CColRefSet *pcrsUsed = pexprScalar->DeriveUsedColumns();
 		CColRefSet *pcrsGb = GPOS_NEW(mp) CColRefSet(mp);
 		pcrsGb->Include(pcrsUsed);
 		pcrsGb->Difference(pcrsUsedOuter);
@@ -1497,7 +1496,7 @@ CSubqueryHandler::PexprIsNotNull
 	if (fUsesInnerNullable)
 	{
 		CColRefSet *pcrsUsed = GPOS_NEW(mp) CColRefSet(mp);
-		pcrsUsed->Include(CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive())->PcrsUsed());
+		pcrsUsed->Include(pexprScalar->DeriveUsedColumns());
 		pcrsUsed->Intersection(pexprOuter->DeriveOutputColumns());
 		BOOL fHasOuterRefs = (0 < pcrsUsed->Size());
 		pcrsUsed->Release();

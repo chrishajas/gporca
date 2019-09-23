@@ -1754,7 +1754,7 @@ CExpressionHandle::PcrsUsedColumns
 	{
 		if (FScalarChild(ul))
 		{
-			pcrs->Include(GetDrvdScalarProps(ul)->PcrsUsed());
+			pcrs->Include(DeriveUsedColumns(ul));
 		}
 	}
 

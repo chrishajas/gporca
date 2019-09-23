@@ -490,8 +490,7 @@ CLogical::DeriveOuterReferences
 	{
 		if (exprhdl.FScalarChild(i))
 		{
-			CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(i);
-			pcrsUsed->Union(pdpscalar->PcrsUsed());
+			pcrsUsed->Union(exprhdl.DeriveUsedColumns(i));
 		}
 		else
 		{
@@ -540,8 +539,7 @@ CLogical::PcrsDeriveOuterIndexGet
 	for (ULONG i = 0; i < arity; i++)
 	{
 		GPOS_ASSERT(exprhdl.FScalarChild(i));
-		CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(i);
-		pcrsUsed->Union(pdpscalar->PcrsUsed());
+		pcrsUsed->Union(exprhdl.DeriveUsedColumns(i));
 	}
 
 	// outer references are columns used by scalar children

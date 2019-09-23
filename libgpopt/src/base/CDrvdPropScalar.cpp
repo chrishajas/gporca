@@ -206,7 +206,7 @@ CDrvdPropScalar::DeriveUsedColumns(CExpressionHandle &exprhdl)
 			// only propagate properties from scalar children
 			if (exprhdl.FScalarChild(i))
 			{
-				m_pcrsUsed->Union(exprhdl.GetDrvdScalarProps(i)->PcrsUsed());
+				m_pcrsUsed->Union(exprhdl.DeriveUsedColumns(i));
 			}
 			else
 			{
