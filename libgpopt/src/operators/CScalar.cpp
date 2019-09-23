@@ -440,8 +440,7 @@ CScalar::FHasScalarArrayCmp
 	{
 		if (exprhdl.FScalarChild(i))
 		{
-			CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(i);
-			if (pdpscalar->FHasScalarArrayCmp())
+			if (exprhdl.DeriveHasScalarArrayCmp(i))
 			{
 				return true;
 			}

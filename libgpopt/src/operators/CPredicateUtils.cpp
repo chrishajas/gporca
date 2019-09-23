@@ -1672,9 +1672,7 @@ CPredicateUtils::PexprExtractPredicatesOnPartKeys
 	CExpressionArray *pdrgpexprConjuncts = PdrgpexprConjuncts(mp, pexprScalar);
 	CColRefSetArray *pdrgpcrsChild = NULL;
 	CConstraint *pcnstr = NULL;
-	(void) pexprScalar->PdpDerive();
-	CDrvdPropScalar *pdpScalar = pexprScalar->GetDrvdPropScalar();
-	if (pdpScalar->FHasScalarArrayCmp() &&
+	if (pexprScalar->DeriveHasScalarArrayCmp() &&
 	    !GPOS_FTRACE(EopttraceArrayConstraints))
 	{
 		// if we have any Array Comparisons, we expand them into conjunctions/disjunctions
