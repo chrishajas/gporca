@@ -75,6 +75,8 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pop);
 
 	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
+
 	if (NULL != pgexpr)
 	{
 		CopyGroupPropsAndStats(NULL /*input_stats*/);
@@ -115,6 +117,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pexpr);
 
 	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
 	m_pdrgpexpr = GPOS_NEW(mp) CExpressionArray(mp, 1);
 	m_pdrgpexpr->Append(pexpr);
 
@@ -158,6 +161,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pexprChildSecond);
 
 	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
 	m_pdrgpexpr = GPOS_NEW(mp) CExpressionArray(mp, 2);
 	m_pdrgpexpr->Append(pexprChildFirst);
 	m_pdrgpexpr->Append(pexprChildSecond);
@@ -204,6 +208,7 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pexprChildThird);
 
 	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
 	m_pdrgpexpr = GPOS_NEW(mp) CExpressionArray(mp, 3);
 	m_pdrgpexpr->Append(pexprChildFirst);
 	m_pdrgpexpr->Append(pexprChildSecond);
@@ -246,6 +251,8 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pdrgpexpr);
 
 	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
+
 }
 
 
@@ -286,6 +293,8 @@ CExpression::CExpression
 	GPOS_ASSERT(NULL != pgexpr->Pgroup());
 
 	m_pdprel = GPOS_NEW(m_mp) CDrvdPropRelational(m_mp);
+	m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
+
 	CopyGroupPropsAndStats(input_stats);
 }
 
@@ -338,8 +347,7 @@ CExpression::CopyGroupPropsAndStats
 	pdp->AddRef();
 	if (m_pgexpr->Pgroup()->FScalar())
 	{
-		GPOS_ASSERT(NULL == m_pdpscalar);
-
+		m_pdpscalar->Release();
 		m_pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pdp);
 	}
 	else
@@ -543,9 +551,6 @@ CExpression::PdpDerive
 			case CDrvdProp::EptPlan:
 				m_pdpplan = GPOS_NEW(m_mp) CDrvdPropPlan();
 				break;
-			case CDrvdProp::EptScalar:
-				m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar();
-				break;
 			default:
 				break;
 		}
@@ -695,7 +700,7 @@ CExpression::ResetDerivedProperty
 			break;
 		case CDrvdProp::EptScalar:
 			CRefCount::SafeRelease(m_pdpscalar);
-			m_pdpscalar  = NULL;
+			m_pdpscalar = GPOS_NEW(m_mp) CDrvdPropScalar(m_mp);
 			break;
 		default:
 			GPOS_ASSERT(!"Invalid property type");

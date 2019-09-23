@@ -1196,8 +1196,7 @@ CExpressionHandle::GetDrvdScalarProps
 	if (NULL != Pexpr())
 	{
 		// handle is used for required property computation
-		CDrvdProp *pdp = (*Pexpr())[child_index]->PdpDerive();
-		return CDrvdPropScalar::GetDrvdScalarProps(pdp);
+		return CDrvdPropScalar::GetDrvdScalarProps((*Pexpr())[child_index]->PdpDerive());
 	}
 
 	if (FAttachedToLeafPattern())

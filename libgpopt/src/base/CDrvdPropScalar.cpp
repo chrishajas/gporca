@@ -26,8 +26,13 @@ using namespace gpopt;
 //		Ctor
 //
 //---------------------------------------------------------------------------
-CDrvdPropScalar::CDrvdPropScalar()
+CDrvdPropScalar::CDrvdPropScalar
+	(
+	CMemoryPool *mp
+	)
 	:
+	m_mp(mp),
+	m_is_prop_derived(NULL),
 	m_pcrsDefined(NULL),
 	m_pcrsSetReturningFunction(NULL),
 	m_pcrsUsed(NULL),
@@ -37,8 +42,11 @@ CDrvdPropScalar::CDrvdPropScalar()
 	m_fHasNonScalarFunction(false),
 	m_ulDistinctAggs(0),
 	m_fHasMultipleDistinctAggs(false),
-	m_fHasScalarArrayCmp(false)
-{}
+	m_fHasScalarArrayCmp(false),
+	m_is_complete(false)
+{
+	m_is_prop_derived = GPOS_NEW(mp) CBitSet(mp, EdptSentinel);
+}
 
 
 //---------------------------------------------------------------------------
@@ -51,6 +59,7 @@ CDrvdPropScalar::CDrvdPropScalar()
 //---------------------------------------------------------------------------
 CDrvdPropScalar::~CDrvdPropScalar()
 {
+	CRefCount::SafeRelease(m_is_prop_derived);
 	CRefCount::SafeRelease(m_pcrsDefined);
 	CRefCount::SafeRelease(m_pcrsSetReturningFunction);
 	CRefCount::SafeRelease(m_pcrsUsed);
@@ -70,78 +79,35 @@ CDrvdPropScalar::~CDrvdPropScalar()
 void
 CDrvdPropScalar::Derive
 	(
-	CMemoryPool *mp,
+	CMemoryPool *,
 	CExpressionHandle &exprhdl,
 	CDrvdPropCtxt * // pdpctxt
 	)
 {
-	CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
-	
 	// call derivation functions on the operator
-	GPOS_ASSERT(NULL == m_pcrsDefined);
-	m_pcrsDefined = popScalar->PcrsDefined(mp, exprhdl);
+	DeriveDefinedColumns(exprhdl);
 
-	GPOS_ASSERT(NULL == m_pcrsSetReturningFunction);
-	m_pcrsSetReturningFunction = popScalar->PcrsSetReturningFunction(mp, exprhdl);
-	
-	GPOS_ASSERT(NULL == m_pcrsUsed);
-	m_pcrsUsed = popScalar->PcrsUsed(mp, exprhdl);
+	DeriveSetReturningFunctionColumns(exprhdl);
 
-	// derive function properties
-	m_pfp = popScalar->DeriveFunctionProperties(mp, exprhdl);
+	DeriveUsedColumns(exprhdl);
 
-	// add defined and used columns of children
-	const ULONG arity = exprhdl.Arity();
-	for (ULONG i = 0; i < arity; i++)
-	{
-		// only propagate properties from scalar children
-		if (exprhdl.FScalarChild(i))
-		{
-			m_pcrsDefined->Union(exprhdl.GetDrvdScalarProps(i)->PcrsDefined());
-			m_pcrsUsed->Union(exprhdl.GetDrvdScalarProps(i)->PcrsUsed());
-			m_pcrsSetReturningFunction->Union(exprhdl.GetDrvdScalarProps(i)->PcrsSetReturningFunction());
-		}
-		else
-		{
-			GPOS_ASSERT(CUtils::FSubquery(popScalar));
+	DeriveFunctionProperties(exprhdl);
 
-			// parent operator is a subquery, add outer references
-			// from its relational child as used columns
- 			m_pcrsUsed->Union(exprhdl.DeriveOuterReferences(0));
-		}
-	}
 
 	// derive existence of subqueries
-	GPOS_ASSERT(!m_fHasSubquery);
-	m_fHasSubquery = popScalar->FHasSubquery(exprhdl);
-	
-	if (m_fHasSubquery)
-	{
-		m_ppartinfo = popScalar->PpartinfoDerive(mp, exprhdl);
-	}
-	else
-	{
-		m_ppartinfo = GPOS_NEW(mp) CPartInfo(mp);
-	}
+	DeriveHasSubquery(exprhdl);
 
-	m_fHasNonScalarFunction = popScalar->FHasNonScalarFunction(exprhdl);
+	DerivePartitionInfo(exprhdl);
 
-	if (COperator::EopScalarProjectList == exprhdl.Pop()->Eopid())
-	{
-		m_ulDistinctAggs = CScalarProjectList::UlDistinctAggs(exprhdl);
-		m_fHasMultipleDistinctAggs = CScalarProjectList::FHasMultipleDistinctAggs(exprhdl);
-	}
+	DeriveHasNonScalarFunction(exprhdl);
 
-	if (COperator::EopScalarProjectElement == exprhdl.Pop()->Eopid())
-	{
-		if (m_fHasNonScalarFunction)
-		{
-			CScalarProjectElement *pspeProject = (CScalarProjectElement *)(exprhdl.Pop());
-			m_pcrsSetReturningFunction->Include(pspeProject->Pcr());
-		}
-	}
+	DeriveTotalDistinctAggs(exprhdl);
 
-	m_fHasScalarArrayCmp = popScalar->FHasScalarArrayCmp(exprhdl);
+	DeriveHasMultipleDistinctAggs(exprhdl);
+
+	DeriveHasScalarArrayCmp(exprhdl);
+
+	m_is_complete = true;
 }
 
 
@@ -196,10 +162,61 @@ CDrvdPropScalar::PcrsDefined() const
 	return m_pcrsDefined;
 }
 
+CColRefSet *
+CDrvdPropScalar::DeriveDefinedColumns(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptPcrsDefined))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+        m_pcrsDefined = popScalar->PcrsDefined(m_mp, exprhdl);
+
+		// add defined columns of children
+		const ULONG arity = exprhdl.Arity();
+		for (ULONG i = 0; i < arity; i++)
+		{
+			// only propagate properties from scalar children
+			if (exprhdl.FScalarChild(i))
+			{
+			m_pcrsDefined->Union(exprhdl.GetDrvdScalarProps(i)->PcrsDefined());
+			}
+		}
+	}
+	return m_pcrsDefined;
+}
+
 // used columns
 CColRefSet *
 CDrvdPropScalar::PcrsUsed() const
 {
+	return m_pcrsUsed;
+}
+
+CColRefSet *
+CDrvdPropScalar::DeriveUsedColumns(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptPcrsUsed))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+		m_pcrsUsed = popScalar->PcrsUsed(m_mp, exprhdl);
+
+		// add used columns of children
+		const ULONG arity = exprhdl.Arity();
+		for (ULONG i = 0; i < arity; i++)
+		{
+			// only propagate properties from scalar children
+			if (exprhdl.FScalarChild(i))
+			{
+				m_pcrsUsed->Union(exprhdl.GetDrvdScalarProps(i)->PcrsUsed());
+			}
+			else
+			{
+				GPOS_ASSERT(CUtils::FSubquery(popScalar));
+				// parent operator is a subquery, add outer references
+				// from its relational child as used columns
+				m_pcrsUsed->Union(exprhdl.DeriveOuterReferences(0));
+			}
+		}
+	}
 	return m_pcrsUsed;
 }
 
@@ -210,10 +227,50 @@ CDrvdPropScalar::PcrsSetReturningFunction() const
 	return m_pcrsSetReturningFunction;
 }
 
+CColRefSet *
+CDrvdPropScalar::DeriveSetReturningFunctionColumns(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptPcrsSetReturningFunction))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+		m_pcrsSetReturningFunction = popScalar->PcrsSetReturningFunction(m_mp, exprhdl);
+
+		const ULONG arity = exprhdl.Arity();
+		for (ULONG i = 0; i < arity; i++)
+		{
+			// only propagate properties from scalar children
+			if (exprhdl.FScalarChild(i))
+			{
+			m_pcrsSetReturningFunction->Union(exprhdl.GetDrvdScalarProps(i)->PcrsSetReturningFunction());
+			}
+		}
+		if (COperator::EopScalarProjectElement == exprhdl.Pop()->Eopid())
+		{
+			if (DeriveHasNonScalarFunction(exprhdl))
+			{
+				CScalarProjectElement *pspeProject = (CScalarProjectElement *)(exprhdl.Pop());
+				m_pcrsSetReturningFunction->Include(pspeProject->Pcr());
+			}
+		}
+	}
+	return m_pcrsSetReturningFunction;
+}
+
 // do subqueries appear in the operator's tree?
 BOOL
 CDrvdPropScalar::FHasSubquery() const
 {
+	return m_fHasSubquery;
+}
+
+BOOL
+CDrvdPropScalar::DeriveHasSubquery(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptFHasSubquery))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+		m_fHasSubquery = popScalar->FHasSubquery(exprhdl);
+	}
 	return m_fHasSubquery;
 }
 
@@ -224,10 +281,40 @@ CDrvdPropScalar::Ppartinfo() const
 	return m_ppartinfo;
 }
 
+CPartInfo *
+CDrvdPropScalar::DerivePartitionInfo(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptPPartInfo))
+	{
+		if (DeriveHasSubquery(exprhdl))
+		{
+			CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+			m_ppartinfo = popScalar->PpartinfoDerive(m_mp, exprhdl);
+		}
+		else
+		{
+			m_ppartinfo = GPOS_NEW(m_mp) CPartInfo(m_mp);
+		}
+
+	}
+	return m_ppartinfo;
+}
+
 // function properties
 CFunctionProp *
 CDrvdPropScalar::Pfp() const
 {
+	return m_pfp;
+}
+
+CFunctionProp *
+CDrvdPropScalar::DeriveFunctionProperties(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptPfp))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+		m_pfp = popScalar->DeriveFunctionProperties(m_mp, exprhdl);
+	}
 	return m_pfp;
 }
 
@@ -238,10 +325,34 @@ CDrvdPropScalar::FHasNonScalarFunction() const
 	return m_fHasNonScalarFunction;
 }
 
+BOOL
+CDrvdPropScalar::DeriveHasNonScalarFunction(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptFHasNonScalarFunction))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+		m_fHasNonScalarFunction = popScalar->FHasNonScalarFunction(exprhdl);
+	}
+	return m_fHasNonScalarFunction;
+}
+
 // return total number of Distinct Aggs, only applicable to project list
 ULONG
 CDrvdPropScalar::UlDistinctAggs() const
 {
+	return m_ulDistinctAggs;
+}
+
+ULONG
+CDrvdPropScalar::DeriveTotalDistinctAggs(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptUlDistinctAggs))
+	{
+		if (COperator::EopScalarProjectList == exprhdl.Pop()->Eopid())
+		{
+			m_ulDistinctAggs = CScalarProjectList::UlDistinctAggs(exprhdl);
+		}
+	}
 	return m_ulDistinctAggs;
 }
 
@@ -253,8 +364,32 @@ CDrvdPropScalar::FHasMultipleDistinctAggs() const
 }
 
 BOOL
+CDrvdPropScalar::DeriveHasMultipleDistinctAggs(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptFHasMultipleDistinctAggs))
+	{
+		if (COperator::EopScalarProjectList == exprhdl.Pop()->Eopid())
+		{
+			m_fHasMultipleDistinctAggs = CScalarProjectList::FHasMultipleDistinctAggs(exprhdl);
+		}
+	}
+	return m_fHasMultipleDistinctAggs;
+}
+
+BOOL
 CDrvdPropScalar::FHasScalarArrayCmp() const
 {
+	return m_fHasScalarArrayCmp;
+}
+
+BOOL
+CDrvdPropScalar::DeriveHasScalarArrayCmp(CExpressionHandle &exprhdl)
+{
+	if (!m_is_prop_derived->ExchangeSet(EdptFHasScalarArrayCmp))
+	{
+		CScalar *popScalar = CScalar::PopConvert(exprhdl.Pop());
+		m_fHasScalarArrayCmp = popScalar->FHasScalarArrayCmp(exprhdl);
+	}
 	return m_fHasScalarArrayCmp;
 }
 

@@ -35,7 +35,7 @@ CScalar::PdpCreate
 	)
 	const
 {
-	return GPOS_NEW(mp) CDrvdPropScalar();
+	return GPOS_NEW(mp) CDrvdPropScalar(mp);
 }
 
 
