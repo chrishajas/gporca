@@ -269,7 +269,7 @@ CSubqueryHandler::FProjectCountSubquery
 
 	if (COperator::EopLogicalGbAgg != pexprPrjChild->Pop()->Eopid() ||
 		pexprPrjList->DeriveHasNonScalarFunction() ||
-		IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs())
+		IMDFunction::EfsVolatile == pexprPrjList->DeriveScalarFunctionProperties()->Efs())
 	{
 		// fail if Project child is not GbAgg, or there are non-scalar/volatile functions in project list
 		return false;
@@ -341,7 +341,7 @@ CSubqueryHandler::Psd
 	SSubqueryDesc *psd = GPOS_NEW(mp) SSubqueryDesc();
 	psd->m_returns_set = (1 < pexprInner->DeriveMaxCard().Ull());
 	psd->m_fHasOuterRefs = pexprInner->HasOuterRefs();
-	psd->m_fHasVolatileFunctions = (IMDFunction::EfsVolatile == CDrvdPropScalar::GetDrvdScalarProps(pexprSubquery->PdpDerive())->Pfp()->Efs());
+	psd->m_fHasVolatileFunctions = (IMDFunction::EfsVolatile == pexprSubquery->DeriveScalarFunctionProperties()->Efs());
 	psd->m_fHasSkipLevelCorrelations = 0 < outer_refs->Size() && !pcrsOuterOutput->ContainsAll(outer_refs);
 
 	psd->m_fHasCountAgg = CUtils::FHasCountAgg((*pexprSubquery)[0], &psd->m_pcrCountAgg);
@@ -1439,11 +1439,9 @@ CSubqueryHandler::FRemoveAnySubquery
 		//       DeriveFunctionProperties() method in these classes.
 		//       Once we do that, we can remove the line below and related code.
 		const IMDFunction *pmdFunc = md_accessor->RetrieveFunc(pmdOp->FuncMdId());
-		// function attributes for the children of the subquery
-		CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprSubquery->PdpDerive());
 
 		if (IMDFunction::EfsVolatile == pmdFunc->GetFuncStability() ||
-			IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs())
+			IMDFunction::EfsVolatile == pexprSubquery->DeriveScalarFunctionProperties()->Efs())
 		{
 			// the non-correlated plan would evaluate the comparison operation twice
 			// per outer row, that is not a good idea when the operation is volatile

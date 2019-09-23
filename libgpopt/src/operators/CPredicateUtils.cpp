@@ -182,7 +182,7 @@ CPredicateUtils::FValidRefsOnly
 	}
 
 	return CUtils::FVarFreeExpr(pexprScalar) &&
-			IMDFunction::EfsVolatile != pdpscalar->Pfp()->Efs();
+			IMDFunction::EfsVolatile != pexprScalar->DeriveScalarFunctionProperties()->Efs();
 }
 
 // is the given expression a conjunction of equality comparisons
@@ -1432,9 +1432,8 @@ CPredicateUtils::PexprPartPruningPredicate
 		if (FComparison(pexpr, pcrPartKey, pcrsAllowedRefs))
 		{
 			CScalarCmp *popCmp = CScalarCmp::PopConvert(pexpr->Pop());
-			CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive());
-			
-			if (!pdpscalar->Pfp()->NeedsSingletonExecution() && FRangeComparison(popCmp->ParseCmpType()))
+
+			if (!pexpr->DeriveScalarFunctionProperties()->NeedsSingletonExecution() && FRangeComparison(popCmp->ParseCmpType()))
 			{
 				pexpr->AddRef();
 				pdrgpexprResult->Append(pexpr);
@@ -2513,9 +2512,8 @@ CPredicateUtils::FNullRejecting
 	GPOS_ASSERT(NULL != pexprScalar);
 	GPOS_ASSERT(pexprScalar->Pop()->FScalar());
 
-	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexprScalar->PdpDerive());
-	BOOL fHasVolatileFunctions = (IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs());
-	BOOL fHasSQL = (IMDFunction::EfdaNoSQL != pdpscalar->Pfp()->Efda());
+	BOOL fHasVolatileFunctions = (IMDFunction::EfsVolatile == pexprScalar->DeriveScalarFunctionProperties()->Efs());
+	BOOL fHasSQL = (IMDFunction::EfdaNoSQL != pexprScalar->DeriveScalarFunctionProperties()->Efda());
 
 	if (fHasVolatileFunctions ||
 		fHasSQL ||

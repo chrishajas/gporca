@@ -404,7 +404,7 @@ CPhysicalComputeScalar::PdsDerive
 	CDistributionSpec *pds = exprhdl.Pdpplan(0 /*child_index*/)->Pds();
 	
 	if (CDistributionSpec::EdtUniversal == pds->Edt() && 
-		IMDFunction::EfsVolatile == exprhdl.GetDrvdScalarProps(1 /*child_index*/)->Pfp()->Efs())
+		IMDFunction::EfsVolatile == exprhdl.DeriveScalarFunctionProperties(1)->Efs())
 	{
 		if (COptCtxt::PoctxtFromTLS()->OptimizeDMLQueryWithSingletonSegment())
 		{
@@ -438,8 +438,7 @@ CPhysicalComputeScalar::PrsDerive
 {
 	CRewindabilitySpec *prsChild = PrsDerivePassThruOuter(mp, exprhdl);
 
-	CDrvdPropScalar *pdpscalar = exprhdl.GetDrvdScalarProps(1 /*ulChildIndex*/);
-	if (exprhdl.DeriveHasNonScalarFunction(1) || IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs())
+	if (exprhdl.DeriveHasNonScalarFunction(1) || IMDFunction::EfsVolatile == exprhdl.DeriveScalarFunctionProperties(1)->Efs())
 	{
 		// ComputeScalar is not rewindable if it has non-scalar/volatile functions in project list
 		CRewindabilitySpec * prs = GPOS_NEW(mp) CRewindabilitySpec(CRewindabilitySpec::ErtRescannable, prsChild->Emht());

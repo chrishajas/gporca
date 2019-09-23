@@ -531,7 +531,7 @@ CPhysicalAgg::PdsDerive
 	CDistributionSpec *pds = exprhdl.Pdpplan(0 /*child_index*/)->Pds();
 
 	if (CDistributionSpec::EdtUniversal == pds->Edt() &&
-		IMDFunction::EfsVolatile == exprhdl.GetDrvdScalarProps(1 /*child_index*/)->Pfp()->Efs())
+		IMDFunction::EfsVolatile == exprhdl.DeriveScalarFunctionProperties(1)->Efs())
 	{
 		return GPOS_NEW(mp) CDistributionSpecStrictSingleton(CDistributionSpecSingleton::EstMaster);
 	}

@@ -368,8 +368,8 @@ CExpressionFactorizer::PcrsUsedByPushableScalar
 	CDrvdPropScalar *pdpscalar = CDrvdPropScalar::GetDrvdScalarProps(pexpr->PdpDerive());
 	if (0 < pexpr->DeriveDefinedColumns()->Size() ||
 	    pdpscalar->FHasSubquery() ||
-	    IMDFunction::EfsVolatile == pdpscalar->Pfp()->Efs() ||
-	    IMDFunction::EfdaNoSQL != pdpscalar->Pfp()->Efda())
+	    IMDFunction::EfsVolatile == pexpr->DeriveScalarFunctionProperties()->Efs() ||
+	    IMDFunction::EfdaNoSQL != pexpr->DeriveScalarFunctionProperties()->Efda())
 	{
 		return NULL;
 	}

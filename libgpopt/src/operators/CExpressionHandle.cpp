@@ -1529,7 +1529,7 @@ CExpressionHandle::PfpChild
 {
 	if (FScalarChild(child_index))
 	{
-		return GetDrvdScalarProps(child_index)->Pfp();
+		return DeriveScalarFunctionProperties(child_index);
 	}
 
 	return this->DeriveFunctionProperties(child_index);
