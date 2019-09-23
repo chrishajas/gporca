@@ -241,7 +241,7 @@ CDrvdPropScalar::DeriveSetReturningFunctionColumns(CExpressionHandle &exprhdl)
 			// only propagate properties from scalar children
 			if (exprhdl.FScalarChild(i))
 			{
-			m_pcrsSetReturningFunction->Union(exprhdl.GetDrvdScalarProps(i)->PcrsSetReturningFunction());
+			m_pcrsSetReturningFunction->Union(exprhdl.DeriveSetReturningFunctionColumns(i));
 			}
 		}
 		if (COperator::EopScalarProjectElement == exprhdl.Pop()->Eopid())

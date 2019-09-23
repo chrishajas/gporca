@@ -1948,7 +1948,7 @@ CExpressionPreprocessor::PexprPruneUnusedComputedColsRecursive
 	{
 		CExpression *pexprProjList = (*pexpr)[1];
 		CColRefSet *pcrsDefined = pexprProjList->DeriveDefinedColumns();
-		CColRefSet *pcrsSetReturningFunction = CDrvdPropScalar::GetDrvdScalarProps(pexprProjList->PdpDerive())->PcrsSetReturningFunction();
+		CColRefSet *pcrsSetReturningFunction = pexprProjList->DeriveSetReturningFunctionColumns();
 
 		pcrsReqd->Include(CLogical::PopConvert(pop)->PcrsLocalUsed());
 		// columns containing set-returning functions are needed for correct query results
