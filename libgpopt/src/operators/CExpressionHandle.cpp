@@ -2050,4 +2050,105 @@ CExpressionHandle::DeriveHasPartialIndexes()
 	return GetRelationalProperties()->HasPartialIndexes();
 }
 
+// Scalar property accessors
+
+CColRefSet *
+CExpressionHandle::DeriveDefinedColumns(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveDefinedColumns();
+	}
+
+	return GetDrvdScalarProps(child_index)->PcrsDefined();
+}
+
+CColRefSet *
+CExpressionHandle::DeriveUsedColumns(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveUsedColumns();
+	}
+
+	return GetDrvdScalarProps(child_index)->PcrsUsed();
+}
+
+CColRefSet *
+CExpressionHandle::DeriveSetReturningFunctionColumns(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveSetReturningFunctionColumns();
+	}
+
+	return GetDrvdScalarProps(child_index)->PcrsSetReturningFunction();
+}
+
+BOOL
+CExpressionHandle::DeriveHasSubquery(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveHasSubquery();
+	}
+
+	return GetDrvdScalarProps(child_index)->FHasSubquery();
+}
+
+CPartInfo *
+CExpressionHandle::DeriveScalarPartitionInfo(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveScalarPartitionInfo();
+	}
+
+	return GetDrvdScalarProps(child_index)->Ppartinfo();
+}
+
+CFunctionProp *
+CExpressionHandle::DeriveScalarFunctionProperties(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveScalarFunctionProperties();
+	}
+
+	return GetDrvdScalarProps(child_index)->Pfp();
+}
+
+BOOL
+CExpressionHandle::DeriveHasNonScalarFunction(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveHasNonScalarFunction();
+	}
+
+	return GetDrvdScalarProps(child_index)->FHasNonScalarFunction();
+}
+
+ULONG
+CExpressionHandle::DeriveTotalDistinctAggs(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveTotalDistinctAggs();
+	}
+
+	return GetDrvdScalarProps(child_index)->UlDistinctAggs();
+}
+
+BOOL
+CExpressionHandle::DeriveHasMultipleDistinctAggs(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveHasMultipleDistinctAggs();
+	}
+
+	return GetDrvdScalarProps(child_index)->FHasMultipleDistinctAggs();
+}
+
+BOOL
+CExpressionHandle::DeriveHasScalarArrayCmp(ULONG child_index){
+	if (NULL != Pexpr())
+	{
+		return (*Pexpr())[child_index]->DeriveHasScalarArrayCmp();
+	}
+
+	return GetDrvdScalarProps(child_index)->FHasScalarArrayCmp();
+}
 // EOF

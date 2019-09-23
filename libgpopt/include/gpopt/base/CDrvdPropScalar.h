@@ -40,6 +40,7 @@ namespace gpopt
 	//---------------------------------------------------------------------------
 	class CDrvdPropScalar : public CDrvdProp
 	{
+		friend class CExpression;
 		enum EDrvdPropType
 		{
 			EdptPcrsDefined = 0,

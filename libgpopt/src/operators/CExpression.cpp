@@ -1643,4 +1643,75 @@ CExpression::DeriveHasPartialIndexes()
 	return m_pdprel->DeriveHasPartialIndexes(exprhdl);
 }
 
+// Scalar property accessors - derived as needed
+CColRefSet *
+CExpression::DeriveDefinedColumns()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveDefinedColumns(exprhdl);
+}
+CColRefSet *
+CExpression::DeriveUsedColumns()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveUsedColumns(exprhdl);
+}
+CColRefSet *
+CExpression::DeriveSetReturningFunctionColumns()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveSetReturningFunctionColumns(exprhdl);
+}
+BOOL
+CExpression::DeriveHasSubquery()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveHasSubquery(exprhdl);
+}
+CPartInfo *
+CExpression::DeriveScalarPartitionInfo()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DerivePartitionInfo(exprhdl);
+}
+CFunctionProp *
+CExpression::DeriveScalarFunctionProperties()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveFunctionProperties(exprhdl);
+}
+BOOL
+CExpression::DeriveHasNonScalarFunction()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveHasNonScalarFunction(exprhdl);
+}
+ULONG
+CExpression::DeriveTotalDistinctAggs()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveTotalDistinctAggs(exprhdl);
+}
+BOOL
+CExpression::DeriveHasMultipleDistinctAggs()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveHasMultipleDistinctAggs(exprhdl);
+}
+BOOL
+CExpression::DeriveHasScalarArrayCmp()
+{
+	CExpressionHandle exprhdl(m_mp);
+	exprhdl.Attach(this);
+	return m_pdpscalar->DeriveHasScalarArrayCmp(exprhdl);
+}
 // EOF
