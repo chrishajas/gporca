@@ -1947,7 +1947,7 @@ CExpressionPreprocessor::PexprPruneUnusedComputedColsRecursive
 	if (COperator::EopLogicalProject == pop->Eopid() || COperator::EopLogicalGbAgg == pop->Eopid())
 	{
 		CExpression *pexprProjList = (*pexpr)[1];
-		CColRefSet *pcrsDefined = CDrvdPropScalar::GetDrvdScalarProps(pexprProjList->PdpDerive())->PcrsDefined();
+		CColRefSet *pcrsDefined = pexprProjList->DeriveDefinedColumns();
 		CColRefSet *pcrsSetReturningFunction = CDrvdPropScalar::GetDrvdScalarProps(pexprProjList->PdpDerive())->PcrsSetReturningFunction();
 
 		pcrsReqd->Include(CLogical::PopConvert(pop)->PcrsLocalUsed());

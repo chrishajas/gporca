@@ -504,7 +504,7 @@ CPhysicalAgg::FProvidesReqdCols
 	pcrs->Include(PdrgpcrGroupingCols());
 	
 	// include defined columns by scalar child
-	pcrs->Union(exprhdl.GetDrvdScalarProps(1 /*child_index*/)->PcrsDefined());
+	pcrs->Union(exprhdl.DeriveDefinedColumns(1));
 	BOOL fProvidesCols = pcrs->ContainsAll(pcrsRequired);
 	pcrs->Release();
 

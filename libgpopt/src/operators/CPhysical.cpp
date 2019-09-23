@@ -586,7 +586,7 @@ CPhysical::PcrsChildReqd
 	{
 		// include used columns and exclude defined columns of scalar child
 		pcrs->Union(exprhdl.GetDrvdScalarProps(ulScalarIndex)->PcrsUsed());
-		pcrs->Exclude(exprhdl.GetDrvdScalarProps(ulScalarIndex)->PcrsDefined());
+		pcrs->Exclude(exprhdl.DeriveDefinedColumns(ulScalarIndex));
 	}
 
 	// intersect computed column set with child's output columns
@@ -1346,7 +1346,7 @@ CPhysical::FUnaryUsesDefinedColumns
 		return false;
 	}
 
-	return !pcrs->IsDisjoint(exprhdl.GetDrvdScalarProps(1)->PcrsDefined());
+	return !pcrs->IsDisjoint(exprhdl.DeriveDefinedColumns(1));
 }
 
 CEnfdDistribution::EDistributionMatching

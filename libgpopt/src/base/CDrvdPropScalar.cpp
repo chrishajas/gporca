@@ -177,7 +177,7 @@ CDrvdPropScalar::DeriveDefinedColumns(CExpressionHandle &exprhdl)
 			// only propagate properties from scalar children
 			if (exprhdl.FScalarChild(i))
 			{
-			m_pcrsDefined->Union(exprhdl.GetDrvdScalarProps(i)->PcrsDefined());
+				m_pcrsDefined->Union(exprhdl.DeriveDefinedColumns(i));
 			}
 		}
 	}

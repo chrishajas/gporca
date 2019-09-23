@@ -3184,7 +3184,7 @@ CUtils::FVarFreeExpr
 		return false;
 	}
 	
-	GPOS_ASSERT(0 == pdpScalar->PcrsDefined()->Size());
+	GPOS_ASSERT(0 == pexpr->DeriveDefinedColumns()->Size());
 	CColRefSet *pcrsUsed = pdpScalar->PcrsUsed();
 	
 	// no variables in expression
@@ -4429,7 +4429,7 @@ CUtils::PexprCollapseProjects
 	CColRefSet *pcrsDefinedChild = GPOS_NEW(mp) CColRefSet
 										(
 										mp,
-										*CDrvdPropScalar::GetDrvdScalarProps(pexprChildScalar->PdpDerive())->PcrsDefined()
+										*pexprChildScalar->DeriveDefinedColumns()
 										);
 
 	// array of project elements for the new child project node
