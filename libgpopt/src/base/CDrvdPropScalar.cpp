@@ -157,7 +157,7 @@ CDrvdPropScalar::FSatisfies
 
 // defined columns
 CColRefSet *
-CDrvdPropScalar::PcrsDefined() const
+CDrvdPropScalar::GetDefinedColumns() const
 {
 	return m_pcrsDefined;
 }
@@ -186,7 +186,7 @@ CDrvdPropScalar::DeriveDefinedColumns(CExpressionHandle &exprhdl)
 
 // used columns
 CColRefSet *
-CDrvdPropScalar::PcrsUsed() const
+CDrvdPropScalar::GetUsedColumns() const
 {
 	return m_pcrsUsed;
 }
@@ -222,7 +222,7 @@ CDrvdPropScalar::DeriveUsedColumns(CExpressionHandle &exprhdl)
 
 // columns containing set-returning function
 CColRefSet *
-CDrvdPropScalar::PcrsSetReturningFunction() const
+CDrvdPropScalar::GetSetReturningFunctionColumns() const
 {
 	return m_pcrsSetReturningFunction;
 }
@@ -258,7 +258,7 @@ CDrvdPropScalar::DeriveSetReturningFunctionColumns(CExpressionHandle &exprhdl)
 
 // do subqueries appear in the operator's tree?
 BOOL
-CDrvdPropScalar::FHasSubquery() const
+CDrvdPropScalar::GetHasSubquery() const
 {
 	return m_fHasSubquery;
 }
@@ -276,7 +276,7 @@ CDrvdPropScalar::DeriveHasSubquery(CExpressionHandle &exprhdl)
 
 // derived partition consumers
 CPartInfo *
-CDrvdPropScalar::Ppartinfo() const
+CDrvdPropScalar::GetPartitionInfo() const
 {
 	return m_ppartinfo;
 }
@@ -302,7 +302,7 @@ CDrvdPropScalar::DerivePartitionInfo(CExpressionHandle &exprhdl)
 
 // function properties
 CFunctionProp *
-CDrvdPropScalar::Pfp() const
+CDrvdPropScalar::GetFunctionProperties() const
 {
 	return m_pfp;
 }
@@ -320,7 +320,7 @@ CDrvdPropScalar::DeriveFunctionProperties(CExpressionHandle &exprhdl)
 
 // scalar expression contains non-scalar function?
 BOOL
-CDrvdPropScalar::FHasNonScalarFunction() const
+CDrvdPropScalar::GetHasNonScalarFunction() const
 {
 	return m_fHasNonScalarFunction;
 }
@@ -338,7 +338,7 @@ CDrvdPropScalar::DeriveHasNonScalarFunction(CExpressionHandle &exprhdl)
 
 // return total number of Distinct Aggs, only applicable to project list
 ULONG
-CDrvdPropScalar::UlDistinctAggs() const
+CDrvdPropScalar::GetTotalDistinctAggs() const
 {
 	return m_ulDistinctAggs;
 }
@@ -358,7 +358,7 @@ CDrvdPropScalar::DeriveTotalDistinctAggs(CExpressionHandle &exprhdl)
 
 // does operator define Distinct Aggs on different arguments, only applicable to project lists
 BOOL
-CDrvdPropScalar::FHasMultipleDistinctAggs() const
+CDrvdPropScalar::GetHasMultipleDistinctAggs() const
 {
 	return m_fHasMultipleDistinctAggs;
 }
@@ -377,7 +377,7 @@ CDrvdPropScalar::DeriveHasMultipleDistinctAggs(CExpressionHandle &exprhdl)
 }
 
 BOOL
-CDrvdPropScalar::FHasScalarArrayCmp() const
+CDrvdPropScalar::GetHasScalarArrayCmp() const
 {
 	return m_fHasScalarArrayCmp;
 }

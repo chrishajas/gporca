@@ -1459,7 +1459,7 @@ CExpressionHandle::PexprScalarChild
 		GPOS_ASSERT((*m_pgexpr)[child_index]->FScalar());
 
 		CExpression *pexprScalar = (*m_pgexpr)[child_index]->PexprScalar();
-		GPOS_ASSERT_IMP(NULL == pexprScalar, CDrvdPropScalar::GetDrvdScalarProps((*m_pgexpr)[child_index]->Pdp())->FHasSubquery());
+		GPOS_ASSERT_IMP(NULL == pexprScalar, CDrvdPropScalar::GetDrvdScalarProps((*m_pgexpr)[child_index]->Pdp())->GetHasSubquery());
 
 		return pexprScalar;
 	}
@@ -2059,7 +2059,7 @@ CExpressionHandle::DeriveDefinedColumns(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveDefinedColumns();
 	}
 
-	return GetDrvdScalarProps(child_index)->PcrsDefined();
+	return GetDrvdScalarProps(child_index)->GetDefinedColumns();
 }
 
 CColRefSet *
@@ -2069,7 +2069,7 @@ CExpressionHandle::DeriveUsedColumns(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveUsedColumns();
 	}
 
-	return GetDrvdScalarProps(child_index)->PcrsUsed();
+	return GetDrvdScalarProps(child_index)->GetUsedColumns();
 }
 
 CColRefSet *
@@ -2079,7 +2079,7 @@ CExpressionHandle::DeriveSetReturningFunctionColumns(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveSetReturningFunctionColumns();
 	}
 
-	return GetDrvdScalarProps(child_index)->PcrsSetReturningFunction();
+	return GetDrvdScalarProps(child_index)->GetSetReturningFunctionColumns();
 }
 
 BOOL
@@ -2089,7 +2089,7 @@ CExpressionHandle::DeriveHasSubquery(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveHasSubquery();
 	}
 
-	return GetDrvdScalarProps(child_index)->FHasSubquery();
+	return GetDrvdScalarProps(child_index)->GetHasSubquery();
 }
 
 CPartInfo *
@@ -2099,7 +2099,7 @@ CExpressionHandle::DeriveScalarPartitionInfo(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveScalarPartitionInfo();
 	}
 
-	return GetDrvdScalarProps(child_index)->Ppartinfo();
+	return GetDrvdScalarProps(child_index)->GetPartitionInfo();
 }
 
 CFunctionProp *
@@ -2109,7 +2109,7 @@ CExpressionHandle::DeriveScalarFunctionProperties(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveScalarFunctionProperties();
 	}
 
-	return GetDrvdScalarProps(child_index)->Pfp();
+	return GetDrvdScalarProps(child_index)->GetFunctionProperties();
 }
 
 BOOL
@@ -2119,7 +2119,7 @@ CExpressionHandle::DeriveHasNonScalarFunction(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveHasNonScalarFunction();
 	}
 
-	return GetDrvdScalarProps(child_index)->FHasNonScalarFunction();
+	return GetDrvdScalarProps(child_index)->GetHasNonScalarFunction();
 }
 
 ULONG
@@ -2129,7 +2129,7 @@ CExpressionHandle::DeriveTotalDistinctAggs(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveTotalDistinctAggs();
 	}
 
-	return GetDrvdScalarProps(child_index)->UlDistinctAggs();
+	return GetDrvdScalarProps(child_index)->GetTotalDistinctAggs();
 }
 
 BOOL
@@ -2139,7 +2139,7 @@ CExpressionHandle::DeriveHasMultipleDistinctAggs(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveHasMultipleDistinctAggs();
 	}
 
-	return GetDrvdScalarProps(child_index)->FHasMultipleDistinctAggs();
+	return GetDrvdScalarProps(child_index)->GetHasMultipleDistinctAggs();
 }
 
 BOOL
@@ -2149,6 +2149,6 @@ CExpressionHandle::DeriveHasScalarArrayCmp(ULONG child_index){
 		return (*Pexpr())[child_index]->DeriveHasScalarArrayCmp();
 	}
 
-	return GetDrvdScalarProps(child_index)->FHasScalarArrayCmp();
+	return GetDrvdScalarProps(child_index)->GetHasScalarArrayCmp();
 }
 // EOF

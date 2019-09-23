@@ -158,34 +158,34 @@ namespace gpopt
 			BOOL FSatisfies(const CReqdPropPlan *prpp) const;
 
 			// defined columns
-			CColRefSet *PcrsDefined() const;
+			CColRefSet *GetDefinedColumns() const;
 
 			// used columns
-			CColRefSet *PcrsUsed() const;
+			CColRefSet *GetUsedColumns() const;
 
 			// columns containing set-returning function
-			CColRefSet *PcrsSetReturningFunction() const;
+			CColRefSet *GetSetReturningFunctionColumns() const;
 
 			// do subqueries appear in the operator's tree?
-			BOOL FHasSubquery() const;
+			BOOL GetHasSubquery() const;
 
 			// derived partition consumers
-			CPartInfo *Ppartinfo() const;
+			CPartInfo *GetPartitionInfo() const;
 
 			// function properties
-			CFunctionProp *Pfp() const;
+			CFunctionProp *GetFunctionProperties() const;
 
 			// scalar expression contains non-scalar function?
 			virtual
-			BOOL FHasNonScalarFunction() const;
+			BOOL GetHasNonScalarFunction() const;
 
 			// return total number of Distinct Aggs, only applicable to project list
-			ULONG UlDistinctAggs() const;
+			ULONG GetTotalDistinctAggs() const;
 
 			// does operator define Distinct Aggs on different arguments, only applicable to project lists
-			BOOL FHasMultipleDistinctAggs() const;
+			BOOL GetHasMultipleDistinctAggs() const;
 
-			BOOL FHasScalarArrayCmp() const;
+			BOOL GetHasScalarArrayCmp() const;
 
 			// short hand for conversion
 			static
