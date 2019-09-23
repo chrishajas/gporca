@@ -447,7 +447,7 @@ CLogical::PpartinfoDeriveCombine
 		CPartInfo *ppartinfoChild = NULL;
 		if (exprhdl.FScalarChild(ul))
 		{
-			ppartinfoChild = exprhdl.GetDrvdScalarProps(ul)->Ppartinfo();
+			ppartinfoChild = exprhdl.DeriveScalarPartitionInfo(ul);
 		}
 		else
 		{

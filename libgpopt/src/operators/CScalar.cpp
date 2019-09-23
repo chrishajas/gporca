@@ -412,7 +412,7 @@ CScalar::PpartinfoDeriveCombineScalar
 	{
 		if (exprhdl.FScalarChild(ul))
 		{
-			CPartInfo *ppartinfoChild = exprhdl.GetDrvdScalarProps(ul)->Ppartinfo();
+			CPartInfo *ppartinfoChild = exprhdl.DeriveScalarPartitionInfo(ul);
 			GPOS_ASSERT(NULL != ppartinfoChild);
 			CPartInfo *ppartinfoCombined = CPartInfo::PpartinfoCombine(mp, ppartinfo, ppartinfoChild);
 			ppartinfo->Release();
