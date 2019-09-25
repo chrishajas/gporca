@@ -51,10 +51,6 @@ namespace gpos
 			// are allocated - must be thread-safe
 			CMemoryPool *m_internal_memory_pool;
 
-			// memory pool in which all objects created using global new operator
-			// are allocated
-			CMemoryPool *m_global_memory_pool;
-
 			// are allocations using global new operator allowed?
 			BOOL m_allow_global_new;
 
@@ -88,6 +84,10 @@ namespace gpos
 			}
 
 		public:
+
+			// memory pool in which all objects created using global new operator
+			// are allocated
+			CMemoryPool *m_global_memory_pool;
 
 			// create new memory pool
 			virtual CMemoryPool *CreateMemoryPool();

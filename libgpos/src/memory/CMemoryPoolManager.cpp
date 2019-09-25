@@ -62,8 +62,6 @@ CMemoryPoolManager::CMemoryPoolManager
 		EqualULongPtr
 		);
 
-	// create pool used in allocations made using global new operator
-	m_global_memory_pool = CreateMemoryPool();
 }
 
 //---------------------------------------------------------------------------
@@ -99,6 +97,9 @@ CMemoryPoolManager::Init
 					(
 					internal
 					);
+			// create pool used in allocations made using global new operator
+			m_memory_pool_mgr->m_global_memory_pool = m_memory_pool_mgr->CreateMemoryPool();
+
 		}
 		GPOS_CATCH_EX(ex)
 		{
