@@ -159,6 +159,7 @@ CDrvdPropScalar::FSatisfies
 CColRefSet *
 CDrvdPropScalar::GetDefinedColumns() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsDefined;
 }
 
@@ -188,6 +189,7 @@ CDrvdPropScalar::DeriveDefinedColumns(CExpressionHandle &exprhdl)
 CColRefSet *
 CDrvdPropScalar::GetUsedColumns() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsUsed;
 }
 
@@ -224,6 +226,7 @@ CDrvdPropScalar::DeriveUsedColumns(CExpressionHandle &exprhdl)
 CColRefSet *
 CDrvdPropScalar::GetSetReturningFunctionColumns() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pcrsSetReturningFunction;
 }
 
@@ -260,6 +263,7 @@ CDrvdPropScalar::DeriveSetReturningFunctionColumns(CExpressionHandle &exprhdl)
 BOOL
 CDrvdPropScalar::GetHasSubquery() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_fHasSubquery;
 }
 
@@ -278,6 +282,7 @@ CDrvdPropScalar::DeriveHasSubquery(CExpressionHandle &exprhdl)
 CPartInfo *
 CDrvdPropScalar::GetPartitionInfo() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_ppartinfo;
 }
 
@@ -304,6 +309,7 @@ CDrvdPropScalar::DerivePartitionInfo(CExpressionHandle &exprhdl)
 CFunctionProp *
 CDrvdPropScalar::GetFunctionProperties() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_pfp;
 }
 
@@ -322,6 +328,7 @@ CDrvdPropScalar::DeriveFunctionProperties(CExpressionHandle &exprhdl)
 BOOL
 CDrvdPropScalar::GetHasNonScalarFunction() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_fHasNonScalarFunction;
 }
 
@@ -340,6 +347,7 @@ CDrvdPropScalar::DeriveHasNonScalarFunction(CExpressionHandle &exprhdl)
 ULONG
 CDrvdPropScalar::GetTotalDistinctAggs() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_ulDistinctAggs;
 }
 
@@ -360,6 +368,7 @@ CDrvdPropScalar::DeriveTotalDistinctAggs(CExpressionHandle &exprhdl)
 BOOL
 CDrvdPropScalar::GetHasMultipleDistinctAggs() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_fHasMultipleDistinctAggs;
 }
 
@@ -379,6 +388,7 @@ CDrvdPropScalar::DeriveHasMultipleDistinctAggs(CExpressionHandle &exprhdl)
 BOOL
 CDrvdPropScalar::GetHasScalarArrayCmp() const
 {
+	GPOS_RTL_ASSERT(IsComplete());
 	return m_fHasScalarArrayCmp;
 }
 
@@ -409,18 +419,18 @@ CDrvdPropScalar::OsPrint
 	)
 	const
 {
-		os	<<	"Defined Columns: [" << *m_pcrsDefined << "], "
-			<<	"Used Columns: [" << *m_pcrsUsed << "], "
-			<<	"Set Returning Function Columns: [" << *m_pcrsSetReturningFunction << "], "
-			<<	"Has Subqs: [" << m_fHasSubquery << "], "
-			<<	"Function Properties: [" << *m_pfp << "], "
-			<<	"Has Non-scalar Funcs: [" << m_fHasNonScalarFunction << "], ";
+		os	<<	"Defined Columns: [" << GetDefinedColumns() << "], "
+			<<	"Used Columns: [" << GetUsedColumns() << "], "
+			<<	"Set Returning Function Columns: [" << GetSetReturningFunctionColumns() << "], "
+			<<	"Has Subqs: [" << GetHasSubquery() << "], "
+			<<	"Function Properties: [" << GetFunctionProperties() << "], "
+			<<	"Has Non-scalar Funcs: [" << GetHasNonScalarFunction() << "], ";
 
 		if (0 < m_ulDistinctAggs)
 		{
 			os
-				<<	"Distinct Aggs: [" << m_ulDistinctAggs << "]"
-				<<	"Has Multiple Distinct Aggs: [" << m_fHasMultipleDistinctAggs << "]";
+				<<	"Distinct Aggs: [" << GetTotalDistinctAggs() << "]"
+				<<	"Has Multiple Distinct Aggs: [" << GetHasMultipleDistinctAggs() << "]";
 		}
 
 		return os;
