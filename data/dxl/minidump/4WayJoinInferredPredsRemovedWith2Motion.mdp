@@ -4649,10 +4649,10 @@ explain select * from cs catalog_sales, it item, sr store_returns, ss store_sale
         </dxl:And>
       </dxl:LogicalJoin>
     </dxl:Query>
-    <dxl:Plan Id="0" SpaceSize="224937">
+    <dxl:Plan Id="0" SpaceSize="228464">
       <dxl:GatherMotion InputSegments="0,1,2" OutputSegments="-1">
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="1725.860514" Rows="3.473875" Width="44"/>
+          <dxl:Cost StartupCost="0" TotalCost="1725.858077" Rows="3.491374" Width="44"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="0" Alias="cs_item_sk">
@@ -4693,7 +4693,7 @@ explain select * from cs catalog_sales, it item, sr store_returns, ss store_sale
         <dxl:SortingColumnList/>
         <dxl:HashJoin JoinType="Inner">
           <dxl:Properties>
-            <dxl:Cost StartupCost="0" TotalCost="1725.859944" Rows="3.473875" Width="44"/>
+            <dxl:Cost StartupCost="0" TotalCost="1725.857504" Rows="3.491374" Width="44"/>
           </dxl:Properties>
           <dxl:ProjList>
             <dxl:ProjElem ColId="0" Alias="cs_item_sk">
@@ -4771,7 +4771,7 @@ explain select * from cs catalog_sales, it item, sr store_returns, ss store_sale
           </dxl:TableScan>
           <dxl:BroadcastMotion InputSegments="0,1,2" OutputSegments="0,1,2">
             <dxl:Properties>
-              <dxl:Cost StartupCost="0" TotalCost="1293.875914" Rows="8.097602" Width="32"/>
+              <dxl:Cost StartupCost="0" TotalCost="1293.874877" Rows="3.000000" Width="32"/>
             </dxl:Properties>
             <dxl:ProjList>
               <dxl:ProjElem ColId="10" Alias="i_item_sk">
@@ -4803,7 +4803,7 @@ explain select * from cs catalog_sales, it item, sr store_returns, ss store_sale
             <dxl:SortingColumnList/>
             <dxl:HashJoin JoinType="Inner">
               <dxl:Properties>
-                <dxl:Cost StartupCost="0" TotalCost="1293.874368" Rows="2.699201" Width="32"/>
+                <dxl:Cost StartupCost="0" TotalCost="1293.874305" Rows="1.000000" Width="32"/>
               </dxl:Properties>
               <dxl:ProjList>
                 <dxl:ProjElem ColId="10" Alias="i_item_sk">
