@@ -50,7 +50,7 @@ CScaleFactorUtils::CumulativeJoinScaleFactor
 	CDoubleArray *join_conds_scale_factors
 	)
 {
-	GPOS_ASSERT(NULL != stats_config);
+	//GPOS_ASSERT(NULL != stats_config);
 	GPOS_ASSERT(NULL != join_conds_scale_factors);
 
 	const ULONG num_join_conds = join_conds_scale_factors->Size();

@@ -854,7 +854,7 @@ CHistogram::MakeLASJHistogramNormalize
 		*scale_factor = CDouble(1.0) / CHistogram::DefaultSelectivity;
 	}
 	*scale_factor = std::min((*scale_factor).Get(), rows.Get());
-	GPOS_ASSERT(result_histogram->IsValid());
+	//GPOS_ASSERT(result_histogram->IsValid());
 
 	return result_histogram;
 }
