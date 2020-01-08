@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dxl:DXLMessage xmlns:dxl="http://greenplum.com/dxl/2010/12/">
   <dxl:Statistics>
-    <dxl:DerivedRelationStats Rows="64339.688592" EmptyRelation="false">
+    <dxl:DerivedRelationStats Rows="449.739026" EmptyRelation="false">
       <dxl:DerivedColumnStats ColId="1" Width="34.000000" NullFreq="0.000000" NdvRemain="0.000000" FreqRemain="0.000000"/>
       <dxl:DerivedColumnStats ColId="16" Width="4.000000" NullFreq="0.000000" NdvRemain="0.000000" FreqRemain="0.000000">
         <dxl:StatsBucket Frequency="0.163977" DistinctValues="91939.817511">
