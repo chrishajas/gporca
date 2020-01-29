@@ -68,18 +68,18 @@ GenerateScaleFactorMap
 
 		if (oid_pair != NULL && oid_pair->Size() == 2)
 		{
-			CDoubleArray *oid_pair_array = scale_factor_hashmap->Find(oid_pair);
-			if (oid_pair_array)
+			CDoubleArray *scale_factor_array = scale_factor_hashmap->Find(oid_pair);
+			if (scale_factor_array)
 			{
 				// append to the existing array
-				oid_pair_array->Append(GPOS_NEW(mp) CDouble(local_scale_factor));
+				scale_factor_array->Append(GPOS_NEW(mp) CDouble(local_scale_factor));
 			}
 			else
 			{
 				//instantiate the array
-				oid_pair_array = GPOS_NEW(mp) CDoubleArray(mp);
-				oid_pair_array->Append(GPOS_NEW(mp) CDouble(local_scale_factor));
-				scale_factor_hashmap->Insert(oid_pair, oid_pair_array);
+				scale_factor_array = GPOS_NEW(mp) CDoubleArray(mp);
+				scale_factor_array->Append(GPOS_NEW(mp) CDouble(local_scale_factor));
+				scale_factor_hashmap->Insert(oid_pair, scale_factor_array);
 			}
 		}
 		else
@@ -105,7 +105,9 @@ GenerateScaleFactorMap
 //			(S1) t1.a = t2.a has selectivity .3
 //			(S2) t1.b = t2.b has selectivity .5
 //			(S3) t2.b = t3.a has selectivity .1
-//	  The cumulative selectivity would be as follows:
+//	  S1 and S2 would use the sqrt algorithm, and S3 is independent. Additionally,
+//    S2 has a larger selectivity so comes first.
+//    The cumulative selectivity would be as follows:
 //      S = ( S2 * sqrt(S1) ) * S3
 //    .03 = .5 * sqrt(.3) * .1
 //    For scale factors, this is equivalent to ( SF2 * sqrt(SF1) ) * SF3
@@ -128,17 +130,14 @@ CalcCumulativeScaleFactorSqrtAlg
 	// calculate damping using new sqrt algorithm
 	while (iter.Advance())
 	{
-		const CDoubleArray *oid_pair_array = iter.Value();
+		const CDoubleArray *scale_factor_array = iter.Value();
 
 		// damp the join preds if they are on the same tables (ex: t1.a = t2.a AND t1.b = t2.b)
-		for (ULONG ul = 0; ul < oid_pair_array->Size(); ul++)
+		for (ULONG ul = 0; ul < scale_factor_array->Size(); ul++)
 		{
-			CDouble local_scale_factor =  *(*oid_pair_array)[ul];
-			CDouble nth_root = 1;
-			if (ul > 0)
-			{
-				nth_root = 2<<(ul-1);
-			}
+			CDouble local_scale_factor =  *(*scale_factor_array	)[ul];
+			CDouble fp(2);
+			CDouble nth_root = fp.Pow(ul);
 			cumulative_scale_factor = cumulative_scale_factor * std::max(CStatistics::MinRows.Get(), local_scale_factor.Pow(CDouble(1)/nth_root).Get());
 		}
 	}
@@ -182,7 +181,7 @@ CumulativeJoinScaleFactor
 
 	// We have two methods to calculate the cumulative scale factor:
 	// 1. When optimizer_damping_factor_join is greater than 0, use the legacy damping method
-	//    Note: The default value (.01) severly overestimates cardinalities for non-correlated columns
+	//    Note: The default value (.01) severely overestimates cardinalities for non-correlated columns
 	//
 	// 2. Otherwise, use a damping method to moderately decrease the impact of subsequent predicates to account for correlated columns. This damping only occurs on sorted predicates of the same table, otherwise we assume independence.
 	//    For example, given ANDed predicates (t1.a = t2.a AND t1.b = t2.b AND t2.b = t3.a) with the given selectivities:
