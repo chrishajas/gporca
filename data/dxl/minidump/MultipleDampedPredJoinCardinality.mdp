@@ -12,6 +12,8 @@ insert into t1 select floor(random()*1000),floor(random()*1000) from generate_se
 insert into t2 select floor(random()*1000),floor(random()*1000) from generate_series(1,1000)i;
 analyze t1;
 analyze t2;
+set optimizer_damping_factor_join=0;
+
 explain select * from t1, t2 where t1.a=t2.a and t1.b=t2.b;
 
                                    QUERY PLAN

@@ -57,12 +57,15 @@ namespace gpnaucrates
 					CRefCount::SafeRelease(m_oid_pair);
 				}
 
-				// hash map requirements
+				// We hash/compare the pointer rather than the contents of the IMdId, as we want to discern between different instances of IMdIds.
+				// For example, when performing a self join, the underlying tables will have different IMdId pointers, but the same contents.
+				// We treat them as different instances and assume independence to calculate the correct join cardinality.
 				static
 				ULONG HashValue(const IMdIdArray *oid_pair)
 				{
-					return CombineHashes((*oid_pair)[0]->HashValue(),(*oid_pair)[1]->HashValue());
+					return CombineHashes(gpos::HashPtr<IMDId>((*oid_pair)[0]), gpos::HashPtr<IMDId>((*oid_pair)[1]));
 				}
+
 				static
 				BOOL Equals(const IMdIdArray *first,
 							const IMdIdArray *second)
