@@ -63,7 +63,6 @@ const CHAR *rgszFileNames[] =
 #ifndef GPOS_DEBUG
 		// TODO:  - Jul 14 2015; disabling it for debug build to reduce testing time
 		// "../data/dxl/minidump/HAWQ-TPCH09-NoTopBroadcast.mdp",
-		"../data/dxl/minidump/HAWQ-TPCH-Stat-Derivation.mdp",
 		"../data/dxl/minidump/HJN-Redistribute-One-Side.mdp",
 		"../data/dxl/minidump/TPCH-Q5.mdp",
 		"../data/dxl/minidump/TPCDS-39-InnerJoin-JoinEstimate.mdp",
@@ -96,15 +95,11 @@ struct UnSupportedTestCase
 const struct UnSupportedTestCase unSupportedTestCases[] =
 	{
 		{"../data/dxl/minidump/OneSegmentGather.mdp", gpdxl::ExmaDXL, gpdxl::ExmiExpr2DXLUnsupportedFeature},
-		{"../data/dxl/minidump/CTEWithOuterReferences.mdp", gpopt::ExmaGPOPT, gpopt::ExmiUnsupportedOp},
-		{"../data/dxl/minidump/BitmapIndexUnsupportedOperator.mdp", gpopt::ExmaGPOPT, gpopt::ExmiNoPlanFound},
-		{"../data/dxl/minidump/CTEMisAlignedProducerConsumer.mdp",gpopt::ExmaGPOPT, gpopt::ExmiCTEProducerConsumerMisAligned}
 	};
 
 // negative index apply tests
 const CHAR *rgszNegativeIndexApplyFileNames[] =
 	{
-		"../data/dxl/minidump/Negative-IndexApply1.mdp",
 		"../data/dxl/minidump/Negative-IndexApply2.mdp",
 	};
 
@@ -129,10 +124,6 @@ CICGTest::EresUnittest()
 	CUnittest rgut[] =
 		{
 		// keep test for testing partially supported operators/xforms
-		GPOS_UNITTEST_FUNC(CICGTest::EresUnittest_RunUnsupportedMinidumpTests),
-		GPOS_UNITTEST_FUNC(CICGTest::EresUnittest_NegativeIndexApplyTests),
-
-		GPOS_UNITTEST_FUNC(CICGTest::EresUnittest_RunMinidumpTests),
 		GPOS_UNITTEST_FUNC(CICGTest::EresUnittest_RunTestsWithoutAdditionalTraceFlags),
 
 #ifndef GPOS_DEBUG
