@@ -79,6 +79,7 @@ GenerateScaleFactorMap
 				//instantiate the array
 				scale_factor_array = GPOS_NEW(mp) CDoubleArray(mp);
 				scale_factor_array->Append(GPOS_NEW(mp) CDouble(local_scale_factor));
+				oid_pair->AddRef();
 				scale_factor_hashmap->Insert(oid_pair, scale_factor_array);
 			}
 		}

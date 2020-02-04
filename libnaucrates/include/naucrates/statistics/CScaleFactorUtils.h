@@ -74,9 +74,9 @@ namespace gpnaucrates
 
 			typedef CDynamicPtrArray<SJoinCondition, CleanupDelete> SJoinConditionArray;
 
-			typedef CHashMap<IMdIdArray, CDoubleArray, SJoinCondition::HashValue, SJoinCondition::Equals, CleanupNULL<IMdIdArray>, CleanupRelease<CDoubleArray> > OIDPairToScaleFactorArrayMap;
+			typedef CHashMap<IMdIdArray, CDoubleArray, SJoinCondition::HashValue, SJoinCondition::Equals, CleanupRelease<IMdIdArray>, CleanupRelease<CDoubleArray> > OIDPairToScaleFactorArrayMap;
 
-			typedef CHashMapIter<IMdIdArray, CDoubleArray, SJoinCondition::HashValue, SJoinCondition::Equals, CleanupNULL<IMdIdArray>, CleanupRelease<CDoubleArray> > OIDPairToScaleFactorArrayMapIter;
+			typedef CHashMapIter<IMdIdArray, CDoubleArray, SJoinCondition::HashValue, SJoinCondition::Equals, CleanupRelease<IMdIdArray>, CleanupRelease<CDoubleArray> > OIDPairToScaleFactorArrayMapIter;
 
 			// generate the hashmap of scale factors grouped by pred tables, also produces array of complex join preds
 			static
