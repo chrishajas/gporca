@@ -828,7 +828,7 @@ select * from dbs_target, dbs_helper where dbs_target.c1 = dbs_helper.c1 and dbs
     <dxl:Plan Id="0" SpaceSize="35">
       <dxl:GatherMotion InputSegments="0,1" OutputSegments="-1">
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="635.393021" Rows="22.230000" Width="24"/>
+          <dxl:Cost StartupCost="0" TotalCost="862.113607" Rows="22.230000" Width="24"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="0" Alias="c1">
@@ -854,7 +854,7 @@ select * from dbs_target, dbs_helper where dbs_target.c1 = dbs_helper.c1 and dbs
         <dxl:SortingColumnList/>
         <dxl:HashJoin JoinType="Inner">
           <dxl:Properties>
-            <dxl:Cost StartupCost="0" TotalCost="635.390625" Rows="22.230000" Width="24"/>
+            <dxl:Cost StartupCost="0" TotalCost="862.111211" Rows="22.230000" Width="24"/>
           </dxl:Properties>
           <dxl:ProjList>
             <dxl:ProjElem ColId="0" Alias="c1">
@@ -888,9 +888,9 @@ select * from dbs_target, dbs_helper where dbs_target.c1 = dbs_helper.c1 and dbs
               <dxl:Ident ColId="12" ColName="c3" TypeMdid="0.23.1.0"/>
             </dxl:Comparison>
           </dxl:HashCondList>
-          <dxl:DynamicBitmapTableScan PartIndexId="1">
+          <dxl:DynamicTableScan PartIndexId="1">
             <dxl:Properties>
-              <dxl:Cost StartupCost="0" TotalCost="204.385855" Rows="3.705000" Width="12"/>
+              <dxl:Cost StartupCost="0" TotalCost="431.106441" Rows="3.705000" Width="12"/>
             </dxl:Properties>
             <dxl:ProjList>
               <dxl:ProjElem ColId="0" Alias="c1">
@@ -909,21 +909,6 @@ select * from dbs_target, dbs_helper where dbs_target.c1 = dbs_helper.c1 and dbs
                 <dxl:ConstValue TypeMdid="0.23.1.0" Value="5"/>
               </dxl:Comparison>
             </dxl:Filter>
-            <dxl:RecheckCond>
-              <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
-                <dxl:Ident ColId="2" ColName="c3" TypeMdid="0.23.1.0"/>
-                <dxl:ConstValue TypeMdid="0.23.1.0" Value="5"/>
-              </dxl:Comparison>
-            </dxl:RecheckCond>
-            <dxl:BitmapIndexProbe>
-              <dxl:IndexCondList>
-                <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
-                  <dxl:Ident ColId="2" ColName="c3" TypeMdid="0.23.1.0"/>
-                  <dxl:ConstValue TypeMdid="0.23.1.0" Value="5"/>
-                </dxl:Comparison>
-              </dxl:IndexCondList>
-              <dxl:IndexDescriptor Mdid="0.42822830.1.0" IndexName="dbs_index1_1_prt_1"/>
-            </dxl:BitmapIndexProbe>
             <dxl:TableDescriptor Mdid="0.42822392.1.1" TableName="dbs_target">
               <dxl:Columns>
                 <dxl:Column ColId="0" Attno="1" ColName="c1" TypeMdid="0.23.1.0"/>
@@ -938,7 +923,7 @@ select * from dbs_target, dbs_helper where dbs_target.c1 = dbs_helper.c1 and dbs
                 <dxl:Column ColId="9" Attno="-8" ColName="gp_segment_id" TypeMdid="0.23.1.0"/>
               </dxl:Columns>
             </dxl:TableDescriptor>
-          </dxl:DynamicBitmapTableScan>
+          </dxl:DynamicTableScan>
           <dxl:PartitionSelector RelationMdid="0.42822392.1.1" PartitionLevels="1" ScanId="1">
             <dxl:Properties>
               <dxl:Cost StartupCost="10" TotalCost="100" Rows="100" Width="4"/>

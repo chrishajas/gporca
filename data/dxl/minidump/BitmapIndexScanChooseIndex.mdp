@@ -262,10 +262,10 @@
         </dxl:LogicalGet>
       </dxl:LogicalSelect>
     </dxl:Query>
-    <dxl:Plan Id="0" SpaceSize="2">
+    <dxl:Plan Id="0" SpaceSize="1">
       <dxl:GatherMotion InputSegments="0,1,2" OutputSegments="-1">
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="370.389010" Rows="30656.925390" Width="4"/>
+          <dxl:Cost StartupCost="0" TotalCost="433.284154" Rows="30656.925390" Width="4"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="0" Alias="a">
@@ -274,17 +274,16 @@
         </dxl:ProjList>
         <dxl:Filter/>
         <dxl:SortingColumnList/>
-        <dxl:BitmapTableScan>
+        <dxl:TableScan>
           <dxl:Properties>
-            <dxl:Cost StartupCost="0" TotalCost="369.855988" Rows="30656.925390" Width="4"/>
+            <dxl:Cost StartupCost="0" TotalCost="432.827161" Rows="30656.925390" Width="4"/>
           </dxl:Properties>
           <dxl:ProjList>
             <dxl:ProjElem ColId="0" Alias="a">
               <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
             </dxl:ProjElem>
           </dxl:ProjList>
-          <dxl:Filter/>
-          <dxl:RecheckCond>
+          <dxl:Filter>
             <dxl:And>
               <dxl:Comparison ComparisonOperator="&gt;=" OperatorMdid="0.525.1.0">
                 <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
@@ -295,20 +294,7 @@
                 <dxl:ConstValue TypeMdid="0.23.1.0" Value="2"/>
               </dxl:Comparison>
             </dxl:And>
-          </dxl:RecheckCond>
-          <dxl:BitmapIndexProbe>
-            <dxl:IndexCondList>
-              <dxl:Comparison ComparisonOperator="&gt;=" OperatorMdid="0.525.1.0">
-                <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
-                <dxl:ConstValue TypeMdid="0.23.1.0" Value="0"/>
-              </dxl:Comparison>
-              <dxl:Comparison ComparisonOperator="&lt;=" OperatorMdid="0.523.1.0">
-                <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
-                <dxl:ConstValue TypeMdid="0.23.1.0" Value="2"/>
-              </dxl:Comparison>
-            </dxl:IndexCondList>
-            <dxl:IndexDescriptor Mdid="0.2870813.1.0" IndexName="my_idx"/>
-          </dxl:BitmapIndexProbe>
+          </dxl:Filter>
           <dxl:TableDescriptor Mdid="0.2870810.1.0" TableName="foo">
             <dxl:Columns>
               <dxl:Column ColId="0" Attno="1" ColName="a" TypeMdid="0.23.1.0" ColWidth="4"/>
@@ -321,7 +307,7 @@
               <dxl:Column ColId="7" Attno="-8" ColName="gp_segment_id" TypeMdid="0.23.1.0" ColWidth="4"/>
             </dxl:Columns>
           </dxl:TableDescriptor>
-        </dxl:BitmapTableScan>
+        </dxl:TableScan>
       </dxl:GatherMotion>
     </dxl:Plan>
   </dxl:Thread>

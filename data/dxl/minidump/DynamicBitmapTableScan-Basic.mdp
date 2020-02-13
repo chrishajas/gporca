@@ -267,7 +267,7 @@
     <dxl:Plan Id="0" SpaceSize="2">
       <dxl:GatherMotion InputSegments="0,1,2" OutputSegments="-1">
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="68.127612" Rows="1.000000" Width="4"/>
+          <dxl:Cost StartupCost="0" TotalCost="431.000050" Rows="1.000000" Width="4"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="1" Alias="x2">
@@ -278,7 +278,7 @@
         <dxl:SortingColumnList/>
         <dxl:Result>
           <dxl:Properties>
-            <dxl:Cost StartupCost="0" TotalCost="68.127597" Rows="1.000000" Width="4"/>
+            <dxl:Cost StartupCost="0" TotalCost="431.000035" Rows="1.000000" Width="4"/>
           </dxl:Properties>
           <dxl:ProjList>
             <dxl:ProjElem ColId="1" Alias="x2">
@@ -289,7 +289,7 @@
           <dxl:OneTimeFilter/>
           <dxl:Sequence>
             <dxl:Properties>
-              <dxl:Cost StartupCost="0" TotalCost="68.127597" Rows="1.000000" Width="4"/>
+              <dxl:Cost StartupCost="0" TotalCost="431.000035" Rows="1.000000" Width="8"/>
             </dxl:Properties>
             <dxl:ProjList>
               <dxl:ProjElem ColId="1" Alias="x2">
@@ -323,9 +323,9 @@
                 </dxl:Comparison>
               </dxl:PrintableFilter>
             </dxl:PartitionSelector>
-            <dxl:DynamicBitmapTableScan PartIndexId="1">
+            <dxl:DynamicTableScan PartIndexId="1">
               <dxl:Properties>
-                <dxl:Cost StartupCost="0" TotalCost="68.127597" Rows="1.000000" Width="4"/>
+                <dxl:Cost StartupCost="0" TotalCost="431.000035" Rows="1.000000" Width="8"/>
               </dxl:Properties>
               <dxl:ProjList>
                 <dxl:ProjElem ColId="1" Alias="x2">
@@ -347,21 +347,6 @@
                   </dxl:Comparison>
                 </dxl:And>
               </dxl:Filter>
-              <dxl:RecheckCond>
-                <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
-                  <dxl:Ident ColId="1" ColName="x2" TypeMdid="0.23.1.0"/>
-                  <dxl:ConstValue TypeMdid="0.23.1.0" Value="10"/>
-                </dxl:Comparison>
-              </dxl:RecheckCond>
-              <dxl:BitmapIndexProbe>
-                <dxl:IndexCondList>
-                  <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
-                    <dxl:Ident ColId="1" ColName="x2" TypeMdid="0.23.1.0"/>
-                    <dxl:ConstValue TypeMdid="0.23.1.0" Value="10"/>
-                  </dxl:Comparison>
-                </dxl:IndexCondList>
-                <dxl:IndexDescriptor Mdid="0.3723795.1.0" IndexName="x2_ind_1_prt_1"/>
-              </dxl:BitmapIndexProbe>
               <dxl:TableDescriptor Mdid="0.3723603.1.0" TableName="foobar">
                 <dxl:Columns>
                   <dxl:Column ColId="0" Attno="1" ColName="x1" TypeMdid="0.23.1.0"/>
@@ -376,7 +361,7 @@
                   <dxl:Column ColId="9" Attno="-8" ColName="gp_segment_id" TypeMdid="0.23.1.0"/>
                 </dxl:Columns>
               </dxl:TableDescriptor>
-            </dxl:DynamicBitmapTableScan>
+            </dxl:DynamicTableScan>
           </dxl:Sequence>
         </dxl:Result>
       </dxl:GatherMotion>

@@ -315,7 +315,7 @@ Result  (cost=0.00..0.00 rows=1 width=36)
         </dxl:LogicalProject>
       </dxl:LogicalLimit>
     </dxl:Query>
-    <dxl:Plan Id="0" SpaceSize="9">
+    <dxl:Plan Id="0" SpaceSize="6">
       <dxl:Result>
         <dxl:Properties>
           <dxl:Cost StartupCost="0" TotalCost="6.000347" Rows="1.000000" Width="36"/>

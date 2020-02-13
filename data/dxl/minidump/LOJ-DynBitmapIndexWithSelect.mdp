@@ -373,10 +373,10 @@
         </dxl:And>
       </dxl:LogicalJoin>
     </dxl:Query>
-    <dxl:Plan Id="0" SpaceSize="6">
+    <dxl:Plan Id="0" SpaceSize="5">
       <dxl:GatherMotion InputSegments="0,1,2" OutputSegments="-1">
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="499.128549" Rows="10.000000" Width="16"/>
+          <dxl:Cost StartupCost="0" TotalCost="862.001848" Rows="10.000000" Width="16"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="0" Alias="a">
@@ -394,9 +394,9 @@
         </dxl:ProjList>
         <dxl:Filter/>
         <dxl:SortingColumnList/>
-        <dxl:NestedLoopJoin JoinType="Left" IndexNestedLoopJoin="true" OuterRefAsParam="false">
+        <dxl:HashJoin JoinType="Left">
           <dxl:Properties>
-            <dxl:Cost StartupCost="0" TotalCost="499.127953" Rows="10.000000" Width="16"/>
+            <dxl:Cost StartupCost="0" TotalCost="862.001252" Rows="10.000000" Width="16"/>
           </dxl:Properties>
           <dxl:ProjList>
             <dxl:ProjElem ColId="0" Alias="a">
@@ -413,9 +413,13 @@
             </dxl:ProjElem>
           </dxl:ProjList>
           <dxl:Filter/>
-          <dxl:JoinFilter>
-            <dxl:ConstValue TypeMdid="0.16.1.0" Value="true"/>
-          </dxl:JoinFilter>
+          <dxl:JoinFilter/>
+          <dxl:HashCondList>
+            <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
+              <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
+              <dxl:Ident ColId="9" ColName="a" TypeMdid="0.23.1.0"/>
+            </dxl:Comparison>
+          </dxl:HashCondList>
           <dxl:TableScan>
             <dxl:Properties>
               <dxl:Cost StartupCost="0" TotalCost="431.000070" Rows="10.000000" Width="8"/>
@@ -445,7 +449,7 @@
           </dxl:TableScan>
           <dxl:Sequence>
             <dxl:Properties>
-              <dxl:Cost StartupCost="0" TotalCost="68.127631" Rows="1.000000" Width="8"/>
+              <dxl:Cost StartupCost="0" TotalCost="431.000069" Rows="1.000000" Width="8"/>
             </dxl:Properties>
             <dxl:ProjList>
               <dxl:ProjElem ColId="9" Alias="a">
@@ -479,9 +483,9 @@
                 </dxl:Comparison>
               </dxl:PrintableFilter>
             </dxl:PartitionSelector>
-            <dxl:DynamicBitmapTableScan PartIndexId="1">
+            <dxl:DynamicTableScan PartIndexId="1">
               <dxl:Properties>
-                <dxl:Cost StartupCost="0" TotalCost="68.127631" Rows="1.000000" Width="8"/>
+                <dxl:Cost StartupCost="0" TotalCost="431.000069" Rows="1.000000" Width="8"/>
               </dxl:Properties>
               <dxl:ProjList>
                 <dxl:ProjElem ColId="9" Alias="a">
@@ -497,21 +501,6 @@
                   <dxl:ConstValue TypeMdid="0.23.1.0" Value="10"/>
                 </dxl:Comparison>
               </dxl:Filter>
-              <dxl:RecheckCond>
-                <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
-                  <dxl:Ident ColId="9" ColName="a" TypeMdid="0.23.1.0"/>
-                  <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
-                </dxl:Comparison>
-              </dxl:RecheckCond>
-              <dxl:BitmapIndexProbe>
-                <dxl:IndexCondList>
-                  <dxl:Comparison ComparisonOperator="=" OperatorMdid="0.96.1.0">
-                    <dxl:Ident ColId="9" ColName="a" TypeMdid="0.23.1.0"/>
-                    <dxl:Ident ColId="0" ColName="a" TypeMdid="0.23.1.0"/>
-                  </dxl:Comparison>
-                </dxl:IndexCondList>
-                <dxl:IndexDescriptor Mdid="0.27705.1.0" IndexName="tinner_ix_1_prt_1"/>
-              </dxl:BitmapIndexProbe>
               <dxl:TableDescriptor Mdid="0.27689.1.0" TableName="tinner">
                 <dxl:Columns>
                   <dxl:Column ColId="9" Attno="1" ColName="a" TypeMdid="0.23.1.0" ColWidth="4"/>
@@ -525,9 +514,9 @@
                   <dxl:Column ColId="17" Attno="-8" ColName="gp_segment_id" TypeMdid="0.23.1.0" ColWidth="4"/>
                 </dxl:Columns>
               </dxl:TableDescriptor>
-            </dxl:DynamicBitmapTableScan>
+            </dxl:DynamicTableScan>
           </dxl:Sequence>
-        </dxl:NestedLoopJoin>
+        </dxl:HashJoin>
       </dxl:GatherMotion>
     </dxl:Plan>
   </dxl:Thread>
