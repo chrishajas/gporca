@@ -1543,12 +1543,13 @@ CCostModelGPDB::CostBitmapTableScan
 			// if we aren't accessing a row every rebind, then don't charge a cost for those cases where we don't have a row
 			dNDV = rows;
 		}
-		else if (1 == pcrsLocalUsed->Size())
+		else if (1 == pcrsLocalUsed->Size()) // if you only have one local pred
 		{
 			CColRef *pcrIndexCond =  pcrsLocalUsed->PcrFirst();
 			GPOS_ASSERT(NULL != pcrIndexCond);
+			// get the num distinct for the rows returned by the predicate
 			dNDV = pci->Pcstats()->GetNDVs(pcrIndexCond);
-
+			// if there's an outerref
 			if (1 < pcrsUsed->Size() && COperator::EopScalarBitmapIndexProbe == pexprIndexCond->Pop()->Eopid())
 			{
 				CExpression *pexprScalarCmp = (*pexprIndexCond)[0];
@@ -1561,7 +1562,7 @@ CCostModelGPDB::CostBitmapTableScan
 			}
 		}
 
-		if(!GPOS_FTRACE(EopttraceCalibratedBitmapIndexCostModel))
+		if(false)//!GPOS_FTRACE(EopttraceCalibratedBitmapIndexCostModel))
 		{
 			CDouble dNDVThreshold = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapNDVThreshold)->Get();
 			if (dNDVThreshold <= dNDV)
@@ -1575,19 +1576,29 @@ CCostModelGPDB::CostBitmapTableScan
 		}
 		else
 		{
-			// The numbers below were experimentally determined using regression analysis in the cal_test.py script
-			CDouble dSize = rows * (1 + std::max(width * 0.005, 1.0)) * 0.05;
+			if (1 < pcrsUsed->Size()) // it is a join!
+			{
+
+			}
+			else
+			{
+
+			}
+			// The numbers below were experimentally determined using regression analysis in the cal_bitmap_test.py script
+			CDouble dSizeCost = rows * (1 + width * 0.005) * 0.001;
 			CDouble dBitmapIO = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapIOCostSmallNDV)->Get();
-			CDouble dBitmapPageCost = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapPageCost)->Get();
+//			CDouble dBitmapPageCost = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapPageCost)->Get();
+			CDouble dInitScan = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpInitScanFactor)->Get();
+//			const CDouble dIndexFilterCostUnit = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpIndexFilterCostUnit)->Get();
 
 			result = CCost(// cost for each byte returned by the index scan plus cost for incremental rebinds
-						   pci->NumRebinds() * (dBitmapIO * dSize + dInitRebind) +
+						   pci->NumRebinds() * (dBitmapIO * dSizeCost + 5*dInitRebind) * dNDV +
 						   // the BitmapPageCost * dNDV takes into account the idea of multiple tuples being on the same page.
 						   // If you have a small NDV, the likelihood of multiple tuples matching on one page is high and so the
 						   // page cost is reduced. Even though the page cost will decrease, the cost of accessing each tuple will
 						   // dominate. Likewise, if the NDV is large, the num of tuples matching per page is lower so the page
 						   // cost should be higher
-						   dBitmapPageCost * dNDV);
+						   dInitScan * dNDV);
 		}
 	}
 

@@ -1068,21 +1068,21 @@ def run_bitmap_index_scan_tests(conn, execute_n_times):
                              parameterize_bitmap_index_10000_wide,
                              execute_n_times)
 
-    run_one_bitmap_scan_test(conn,
-                             "Bitmap Scan Test, multi-range, NDV=10000, selectivity_pct=0.01*parameter_value, count(*)",
-                             0,
-                             100,
-                             noSetupRequired,
-                             parameterize_bitmap_index_10000_multi_narrow,
-                             execute_n_times)
+    # run_one_bitmap_scan_test(conn,
+    #                          "Bitmap Scan Test, multi-range, NDV=10000, selectivity_pct=0.01*parameter_value, count(*)",
+    #                          0,
+    #                          100,
+    #                          noSetupRequired,
+    #                          parameterize_bitmap_index_10000_multi_narrow,
+    #                          execute_n_times)
 
-    run_one_bitmap_scan_test(conn,
-                             "Bitmap Scan Test, multi-range, NDV=10000, selectivity_pct=0.01*parameter_value, max(txt)",
-                             0,
-                             60,
-                             noSetupRequired,
-                             parameterize_bitmap_index_10000_multi_wide,
-                             execute_n_times)
+    # run_one_bitmap_scan_test(conn,
+    #                          "Bitmap Scan Test, multi-range, NDV=10000, selectivity_pct=0.01*parameter_value, max(txt)",
+    #                          0,
+    #                          60,
+    #                          noSetupRequired,
+    #                          parameterize_bitmap_index_10000_multi_wide,
+    #                          execute_n_times)
 
     run_one_bitmap_scan_test(conn,
                              "Bitmap Scan Test, ndv test, rows=1000000, parameter = insert statement modulo, count(*)",
