@@ -1576,29 +1576,34 @@ CCostModelGPDB::CostBitmapTableScan
 		}
 		else
 		{
+			CDouble dBitmapIO = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapIOCostSmallNDV)->Get();
+
 			if (1 < pcrsUsed->Size()) // it is a join!
 			{
-
+				CDouble dSizeCost = rows * (1 + std::max(width * 0.005, 1.0)) * 0.05;
+				CDouble dBitmapPageCost = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapPageCost)->Get();
+				result = CCost(// cost for each byte returned by the index scan plus cost for incremental rebinds
+							   pci->NumRebinds() * (dBitmapIO * dSizeCost + dInitRebind) +
+							   dBitmapPageCost * dNDV);
 			}
 			else
 			{
+				// The numbers below were experimentally determined using regression analysis in the cal_bitmap_test.py script
+							CDouble dSizeCost = rows * (1 + width * 0.005) * 0.001;
+				//			CDouble dBitmapPageCost = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapPageCost)->Get();
+							CDouble dInitScan = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpInitScanFactor)->Get();
+				//			const CDouble dIndexFilterCostUnit = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpIndexFilterCostUnit)->Get();
 
+							result = CCost(// cost for each byte returned by the index scan plus cost for incremental rebinds
+										   pci->NumRebinds() * (dBitmapIO * dSizeCost + 5*dInitRebind) * dNDV +
+										   // the BitmapPageCost * dNDV takes into account the idea of multiple tuples being on the same page.
+										   // If you have a small NDV, the likelihood of multiple tuples matching on one page is high and so the
+										   // page cost is reduced. Even though the page cost will decrease, the cost of accessing each tuple will
+										   // dominate. Likewise, if the NDV is large, the num of tuples matching per page is lower so the page
+										   // cost should be higher
+										   dInitScan * dNDV);
 			}
-			// The numbers below were experimentally determined using regression analysis in the cal_bitmap_test.py script
-			CDouble dSizeCost = rows * (1 + width * 0.005) * 0.001;
-			CDouble dBitmapIO = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapIOCostSmallNDV)->Get();
-//			CDouble dBitmapPageCost = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpBitmapPageCost)->Get();
-			CDouble dInitScan = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpInitScanFactor)->Get();
-//			const CDouble dIndexFilterCostUnit = pcmgpdb->GetCostModelParams()->PcpLookup(CCostModelParamsGPDB::EcpIndexFilterCostUnit)->Get();
-
-			result = CCost(// cost for each byte returned by the index scan plus cost for incremental rebinds
-						   pci->NumRebinds() * (dBitmapIO * dSizeCost + 5*dInitRebind) * dNDV +
-						   // the BitmapPageCost * dNDV takes into account the idea of multiple tuples being on the same page.
-						   // If you have a small NDV, the likelihood of multiple tuples matching on one page is high and so the
-						   // page cost is reduced. Even though the page cost will decrease, the cost of accessing each tuple will
-						   // dominate. Likewise, if the NDV is large, the num of tuples matching per page is lower so the page
-						   // cost should be higher
-						   dInitScan * dNDV);
+			
 		}
 	}
 
