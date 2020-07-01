@@ -2772,9 +2772,9 @@ CUtils::PdrgpcrsMergeEquivClasses
 	for (ULONG ul = 0; ul < length; ul++)
 	{
 		CColRefSet *pcrs = (*pdrgpcrsSnd)[ul];
-		pcrs->AddRef();
 
-		CColRefSetArray *pdrgpcrs = PdrgpcrsAddEquivClass(mp, pcrs, pdrgpcrsMerged);
+		CColRefSet *pcrsCopied = GPOS_NEW(mp) CColRefSet(mp, *pcrs);
+		CColRefSetArray *pdrgpcrs = PdrgpcrsAddEquivClass(mp, pcrsCopied, pdrgpcrsMerged);
 		pdrgpcrsMerged->Release();
 		pdrgpcrsMerged = pdrgpcrs;
 	}
