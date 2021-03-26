@@ -7,13 +7,13 @@
 
 #include "gpos/base.h"
 
-#include "gpopt/xforms/CXformExploration.h"
+#include "gpopt/xforms/CXformImplementation.h"
 
 namespace gpopt
 {
 using namespace gpos;
 
-class CXformImplementFullOuterMergeJoin : public CXformExploration
+class CXformImplementFullOuterMergeJoin : public CXformImplementation
 {
 private:
 	// private copy ctor

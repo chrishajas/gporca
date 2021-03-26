@@ -16,7 +16,7 @@ using namespace gpopt;
 // ctor
 CXformImplementFullOuterMergeJoin::CXformImplementFullOuterMergeJoin(
 	CMemoryPool *mp)
-	: CXformExploration(
+	: CXformImplementation(
 		  // pattern
 		  GPOS_NEW(mp) CExpression(
 			  mp, GPOS_NEW(mp) CLogicalFullOuterJoin(mp),
@@ -31,9 +31,12 @@ CXformImplementFullOuterMergeJoin::CXformImplementFullOuterMergeJoin(
 }
 
 CXform::EXformPromise
-CXformImplementFullOuterMergeJoin::Exfp(CExpressionHandle &	 //exprhdl
-) const
+CXformImplementFullOuterMergeJoin::Exfp(CExpressionHandle &exprhdl) const
 {
+	if (exprhdl.DeriveHasSubquery(2))
+	{
+		return CXform::ExfpNone;
+	}
 	return CXform::ExfpHigh;
 }
 
