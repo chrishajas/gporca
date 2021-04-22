@@ -30,6 +30,7 @@ using namespace gpopt;
 
 #define GPOPT_COSTCTXT_HT_BUCKETS 100
 
+#define MAX_BINDINGS_PER_GROUP_EXPRESSION 10000
 // invalid group expression
 const CGroupExpression CGroupExpression::m_gexprInvalid;
 
@@ -821,7 +822,8 @@ CGroupExpression::Transform(
 		ulNumResults = pxfres->Pdrgpexpr()->Size() - ulNumResults;
 		PrintXform(mp, pxform, pexpr, pxfres, ulNumResults);
 
-		if (pxform->IsApplyOnce() ||
+                if ((*pulNumberOfBindings) > MAX_BINDINGS_PER_GROUP_EXPRESSION ||
+                        pxform->IsApplyOnce() ||
 			(0 < pxfres->Pdrgpexpr()->Size() &&
 			 !CXformUtils::FApplyToNextBinding(pxform, pexpr)))
 		{
